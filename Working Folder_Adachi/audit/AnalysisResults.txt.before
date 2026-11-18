@@ -1,0 +1,212 @@
+Analysis of ExternalPresentationDrytestPaintReverseOrder.gcode and testPaint.gcode
+
+Conclusion
+Several critical points require confirmation and correction before running the machine. For ExternalPresentationDrytestPaintReverseOrder.gcode, all 6,305 lines were checked (the same sequence of 72 commands repeated 52 times with no coordinate differences between cycles; line numbers below refer to the first cycle unless noted). In addition, testPaint.gcode (126 lines) was analyzed in comparison. The original G-code files were not edited.
+
+By inspecting the PC configuration and firmware files outside the gcodes folder—specifically printer_data/config/printer.cfg, mainsail-config/client.cfg, klipper/klippy/ (Klipper firmware source), printer_data/logs/klippy.log*, and printer_data/database/moonraker-sql.db—the previously unknown machine configuration, home positions, kinematics, velocity/acceleration limits, and macro definitions have been identified:
+- Firmware & Kinematics: Klipper firmware (`kinematics: cartesian` in `printer.cfg` line 20). `max_velocity: 125` mm/s, `max_accel: 1000` mm/s^2, `max_z_velocity: 20` mm/s, `max_z_accel: 500` mm/s^2 (`printer.cfg` lines 20–25).
+- X-axis (`[stepper_x]`, `printer.cfg` lines 57–73): Rotary turntable mapped as a linear Cartesian X-axis (`rotation_distance: 360`, `gear_ratio: 125:20`, range `0` to `360`, `position_endstop: 0`, homes in negative direction to `X=0`).
+- Y-axis (`[stepper_y]`, `printer.cfg` lines 86–102): Linear axis (`rotation_distance: 40`, range `0` to `180` mm, `position_endstop: 0`, `homing_positive_dir: false`, homes to `Y=0`).
+- Z-axis (`[stepper_z]`, `printer.cfg` lines 119–133, 288–289): Vertical leadscrew axis (`rotation_distance: 8`, range `position_min: 0` to `position_max: 60` mm). Under `#*# <---------------------- SAVE_CONFIG ---------------------->` (`printer.cfg` line 289), `position_endstop = 47.250` is active (overriding the commented-out `#position_endstop: 51` on line 127; earlier backups `printer-20251209_170800.cfg` and `printer-20251209_213242.cfg` had `49.000` and `47.750`). Because `47.250 >= 60 - 60/4` (`45.0`), Klipper automatically infers `homing_positive_dir = True` (`klipper/klippy/stepper.py` lines 368–373). Thus, increasing Z is confirmed to be upward movement, and `G28 Z` homes upward to `Z=47.250` mm.
+- Valve Macros (`printer.cfg` lines 204–231): `BALL_VALVE_OPEN` (`SET_SERVO SERVO=ballValve ANGLE=45`) and `BALL_VALVE_CLOSED` (`SET_SERVO SERVO=ballValve ANGLE=0`) only actuate PWM servo `PA1` and do not alter coordinate state or positioning mode.
+
+1. Simultaneous Z descent and movement of other axes (priority check — Confirmed & Quantified via Config)
+Because `kinematics: cartesian` (`printer.cfg` line 20) interpolates all axes linearly in a single `G0`/`G1` block (`klipper/klippy/kinematics/cartesian.py` lines 107–118), commanding Z descent together with X/Y movement produces a diagonal 3D trajectory where Z reaches its target height only at the very end of the move, and scales the Z velocity/acceleration limit by `z_ratio = move_d / abs(dz)`:
+- [ExternalPresentationDrytestPaintReverseOrder.gcode]
+  - Line 11 (`G0 Z17 Y15` from `X285, Y0, Z47.250`): Since `G28 Z` homes to `position_endstop = 47.250` (`printer.cfg` line 289) and `G28 Y` homes to `Y=0` (`printer.cfg` line 97), this move simultaneously advances `Y` by `+15` mm while descending `Z` by `-30.25` mm (`47.250 -> 17.0`). Because `|dz| = 30.25` dominates the 3D distance (`33.765` mm), `max_z_velocity: 20` caps the 3D move speed to `22.32` mm/s (Z descends at full `20.0` mm/s).
+  - Line 43 (`G0 X285 Z15` from `X265, Y15, Z17`): At the start of squeeze-out, X rotates `+20` deg while Z descends `-2` mm (`17 -> 15`) simultaneously at `25.0` mm/s.
+  - Line 54 (`G0 Y180 X0 Z11` from `X265, Y15, Z24`): Combines a huge X rotation (`-265` deg), full Y travel (`+165` mm), and Z descent (`-13` mm, from `Z24` to `Z11`) over a 3D Euclidean distance of `312.46` mm at `125` mm/s (`2.62` s). Because of linear interpolation, Z does not stay at `Z24` during travel: when crossing the `Y=77` region (where Raised Sections 1 & 2 have a working height of `Z18` in this dry-run file, or `Z13` in actual painting), the toolhead is at `X = 265 - 265*(77-15)/165 = 165.45` deg and `Z = 24 - 13*(77-15)/165 = 19.12` mm. This leaves only `1.12` mm of Z difference above the `Z18` Raised Section working height during high-speed (`125` mm/s) diagonal transit.
+  - Line 97 (`G0 X122 Z9 Y45` from `X217, Y47, Z11`): Moves from Circle 4 to Circle 3 while simultaneously shifting `X` by `-95` deg, `Y` by `-2` mm, and descending `Z` by `-2` mm (`11 -> 9`).
+  - Line 104 (`G0 X80 Z9` from `X122, Y45, Z11`): Moves from Circle 3 to Circle 2 while rotating `X` by `-42` deg and descending `Z` by `-2` mm (`11 -> 9`).
+- [testPaint.gcode]
+  - Line 11 (`G0 Z19 Y15` from `X285, Y0, Z47.250`): Simultaneously moves `Y` `+15` mm and descends `Z` `-28.25` mm (`47.250 -> 19.0`).
+  - Line 54 (`G0 X285 Z18` from `X265, Y15, Z19`): Simultaneously rotates `X` `+20` deg and descends `Z` `-1` mm (`19 -> 18`).
+  - Line 69 (`G0 Z6 Y45` from `X39, Y35, Z20`): Approaches Circle 1 by moving `Y` `+10` mm while descending `Z` `-14` mm (`20 -> 6`) diagonally.
+  - Lines 76, 83, 91 (`G0 X80 Z6`, `G0 X122 Z6`, `G0 X217 Z6`): Unlike Circle 5 (`G0 X301` at `Z25` then `G0 Z6`), transitions to Circles 2, 3, and 4 only lift to `Z10` and then descend `4` mm (`Z10 -> Z6`) simultaneously with X rotation (`+41` deg, `+42` deg, and `+95` deg). The nozzle is already descending below `Z10` throughout the angular travel between circles and reaches `Z6` only at the start angle of each circle. Furthermore, line 86 (`G0 Z10 Y47` after Circle 3) lifts `Z` (`6 -> 10`) simultaneously with `Y` (`45 -> 47`).
+  - Line 118 (`G0 Y180 X0 Z11` from `X95, Y77, Z20`): Moves from Raised Section 1 (`Y77`) to Inner Circle (`Y180`) while rotating `X` `-95` deg and descending `Z` `-9` mm (`20 -> 11`).
+Check for physical interference between the nozzle, workpiece, and fixtures along all diagonal paths above—or separate XY travel and Z descent into distinct sequential `G0` commands.
+
+2. Working and clearance heights (Confirmed & Grounded in `printer.cfg` Z-Endstop Calibration History)
+Comparing the three files (`testPaint.gcode`, `testPaintReverseOrder.gcode`, and `ExternalPresentationDrytestPaintReverseOrder.gcode`) alongside the `printer.cfg` backup history (`printer-20251209_160608.cfg`, `printer-20251209_170800.cfg`, `printer-20251209_213242.cfg`, and current `printer.cfg`) reveals both the coordinate offset structure and the physical reason for the Z shifts:
+- `printer.cfg` Z-Endstop Calibration Shift (`-3.75` mm physical drop):
+  - In `printer-20251209_160608.cfg` (2025-12-09 16:06, when `testPaint.gcode` was created on 2025-12-08), `position_endstop` was `51` mm (`printer.cfg` line 127).
+  - It was recalibrated via `SAVE_CONFIG` to `49.000` (`printer-20251209_170800.cfg`), then `47.750` (`printer-20251209_213242.cfg`), and finally `47.250` (`printer.cfg` line 289, saved 2025-12-24).
+  - Because `G28 Z` sets the homed top switch position to `Z = position_endstop` (`47.250` mm instead of `51.000` mm), every G-code `Z` coordinate is now physically `3.75` mm (`51.0 - 47.25`) lower (closer to the workpiece/fixture) than when `position_endstop: 51` was active.
+- Comparison between `ExternalPresentationDrytestPaintReverseOrder.gcode` and `testPaintReverseOrder.gcode`:
+  - Every working Z height in `ExternalPresentationDrytestPaintReverseOrder.gcode` is raised by exactly `+5` mm relative to `testPaintReverseOrder.gcode`:
+    - Purge (`Y15`): `Z12 -> Z17` (`+5` mm)
+    - Squeeze-out (`Y15`): `Z10 -> Z15` (`+5` mm)
+    - Inner Circle (`Y180`): `Z5 -> Z10` (`+5` mm)
+    - Raised Sections 1 & 2 (`Y77`): `Z13 -> Z18` (`+5` mm)
+    - Circles 5, 4, 1 (`Y47`/`Y45`): `Z3 -> Z8` (`+5` mm)
+    - Circles 3, 2 (`Y45`): `Z4 -> Z9` (`+5` mm)
+  - However, all travel/retract Z heights (`Z11`, `Z21`, `Z24`, `Z26`, `Z33`) were left unchanged (`+0` mm). Consequently, vertical lift/descent margins between working and retract positions shrunk by `5` mm across the entire cycle:
+    - Inner Circle approach (`Z11`, line 54) to working height (`Z10`, line 55): descent of only `1` mm (was `6` mm: `Z11 -> Z5`).
+    - Raised Section 1 (`Z18`) to Raised Section 2 (`Z18`) via `Z21` (lines 67–71): lift of only `3` mm over a `155` deg rotation (`X95 -> X250`) (was `8` mm: `Z13 -> Z21`).
+    - After Circle 3 and Circle 2 (`Z9` to `Z11`, lines 100 & 107): lift of only `2` mm (was `7` mm: `Z4 -> Z11`).
+    - After Circle 4 and Circle 1 (`Z8` to `Z11`, lines 93 & 115): lift of only `3` mm (was `8` mm: `Z3 -> Z11`).
+  - If the goal of `ExternalPresentationDrytestPaintReverseOrder.gcode` was to offset the entire toolpath upward by `+5` mm for a dry presentation run, the travel coordinates (`Z11 -> Z16`, `Z21 -> Z26`, `Z24 -> Z29`, `Z26 -> Z31`, `Z33 -> Z38`) were omitted from the `+5` mm shift.
+- Comparison with `testPaint.gcode` (forward order: Circles 1->5 -> Raised 2->1 -> Inner Circle):
+  - Working Z heights in `testPaint.gcode` are `Z19` (Purge), `Z18` (Squeeze-out), `Z6` (Circles 1–5), `Z16` (Raised Sections 2 & 1), and `Z8` (Inner Circle)—which are `+2` to `+3` mm higher than `testPaintReverseOrder.gcode` at the workpiece (likely written before `position_endstop` was lowered from `51` to `47.25`, meaning `Z6` under `position_endstop=51` was `45` mm below the top switch, whereas `Z3` under `position_endstop=47.25` is `44.25` mm below the top switch).
+  - However, `testPaint.gcode` uses lower travel clearances (`Z10` between Circles 1–4 instead of `Z11`; `Z20` after Squeeze-out and after Raised Section 1 instead of `Z24`/`Z33`; `Z23`/`Z25` around Circle 5 instead of `Z26`), and ends with `G0 Z53 Y2` (line 125), which exceeds `position_endstop = 47.250` by `+5.75` mm (see Section 4).
+
+3. Absolute positioning mode and unit specification (Confirmed via Klipper Source & Proven to Cause Real Print Failures in `klippy.log`)
+Neither `ExternalPresentationDrytestPaintReverseOrder.gcode` nor `testPaint.gcode` contains `G90` (absolute positioning) or `G21` (millimeter units) anywhere in the file. Inspecting `klipper/klippy/extras/gcode_move.py` and the historical logs in `printer_data/logs/` proves why this is a critical defect that has already caused actual print aborts on this machine:
+- Unit Specification (`G21` / `G20` in `gcode_move.py` lines 163–168):
+  - Klipper natively operates exclusively in millimeters: `cmd_G21` is a no-op (`pass`), and `cmd_G20` raises `Machine does not support G20 (inches) command`. Therefore, the absence of `G21` cannot cause inch-scaling on this Klipper system, though adding `G21` remains good standard G-code practice.
+- Positioning Mode (`G90` / `G91` in `gcode_move.py` lines 29, 79–82, 175–180):
+  - While Klipper initializes `self.absolute_coord = True` (`G90`) on startup (`gcode_move.py` line 29), its homing completion handler `_handle_home_rails_end` (`gcode_move.py` lines 79–82) only resets `last_position` and `base_position` and does NOT reset `self.absolute_coord` to `True`. Thus, executing `G28` does NOT restore `G90` if `G91` (relative mode) was left active by a prior operation.
+  - How `G91` remains active on this machine: Whenever the operator jogs any axis from the Mainsail web UI (or when a macro/console command switches to `G91` without completing a restore), `self.absolute_coord` remains `False` (`G91`).
+  - Direct evidence from `printer_data/logs/klippy.log*`: Across `klippy.log.2026-06-09`, `klippy.log.2026-06-10`, and `klippy.log.2026-10-11`, SD card prints repeatedly aborted immediately at `position 0` with `Move out of range`:
+    - `Move out of range: 570.000 15.000 59.250 [0.000]` (recorded 18 times across `klippy.log.2026-06-09` and `klippy.log.2026-06-10` right after `Starting SD card print (position 0)`): In `G91` relative mode, after `G28 Z` (`Z=47.250`) and `G28 X Y` (`X=0, Y=0`), line 10 (`G0 X285`) moves to `X=285`, line 11 (`G0 Z12 Y15` in `testPaintReverseOrder.gcode`) adds `+12` to `Z` (`47.250 + 12 = 59.250` mm) and `+15` to `Y` (`15.000` mm), and line 19 (`G0 X285`) adds another `+285` to `X` (`285 + 285 = 570.000` > `position_max: 360`), aborting the print while driving Z up to `59.25` mm!
+    - `Move out of range: 285.000 14.997 66.250 [0.000]` (recorded twice in `klippy.log.2026-10-11` lines 539 and 8096 right after `Starting SD card print (position 0)`): When running `testPaint.gcode` in `G91` relative mode, after `G28` (`Z=47.250`) and line 10 (`G0 X285` -> `X=285`), line 11 (`G0 Z19 Y15`) adds `+19` to `Z` (`47.250 + 19 = 66.250` > `position_max: 60`), immediately crashing the print on line 11!
+Adding `G90` at the top of both `ExternalPresentationDrytestPaintReverseOrder.gcode` and `testPaint.gcode` (before the first `G0` move) is mandatory to prevent relative-mode runaway.
+
+4. Height around homing (Verified via `printer.cfg` & `klipper/klippy/kinematics/cartesian.py` — Critical Overtravel Found in `testPaint.gcode`)
+Checking `printer_data/config/printer.cfg` and `klipper/klippy/kinematics/cartesian.py` (lines 76–95) clarifies the exact homing direction, coordinate assignment, axis order, and a critical physical overtravel bug at the end of `testPaint.gcode` (and `testPaintReverseOrder.gcode`):
+- Exact Homing Direction and Coordinate State (`printer.cfg` lines 68–72, 94–101, 126–132, 288–289):
+  - No `[homing_override]` or `[safe_z_home]` section is configured in `printer.cfg` (the helper macros `_HOME_X`, `_HOME_Y`, and `_HOME_Z` on lines 160–203 and 233–238 are not automatically called by `G28`). Therefore, standard Cartesian homing (`cartesian.py` line 91: `for axis in homing_state.get_axes():`) executes in axis order `X` (`0`), then `Y` (`1`), then `Z` (`2`) for any axes requested in a single `G28` command.
+  - Because `stepper_z` has `position_endstop = 47.250` (`printer.cfg` line 289), `position_min: 0`, and `position_max: 60` (`homing_positive_dir = True`), `G28 Z` drives the nozzle UPWARD at `homing_speed: 20` mm/s (with `second_homing_speed: 10.0` mm/s, `homing_retract_dist: 0`) until the top endstop switch (`^!PC2`) triggers, setting the Z coordinate to `Z = 47.250` mm.
+- Initial Homing Sequence (Lines 4–11 of both files):
+  - Line 4 (`G28 Z`) raises Z directly to the top endstop (`Z = 47.250` mm) at whatever XY position the machine was left in, and line 5 (`G28 X Y`) then homes X (to `0`) and Y (to `0`) while Z is already at its top endstop (`Z = 47.250` mm).
+  - Consequently, when line 10 (`G0 X285`) executes, the nozzle is already at the top endstop height `Z = 47.250` mm (the highest normal homed height on the machine), so the previous concern that "there is no explicit move to a safe Z before moving to X285" is resolved by `printer.cfg`: `G28 Z` itself places Z at `47.250` mm before `G0 X285`.
+- Cycle-End Homing in `ExternalPresentationDrytestPaintReverseOrder.gcode` (Lines 115–127):
+  - At the end of Circle 1 (`X39, Y45`), line 115 lifts to `Z11`, line 118 (`G28 Z`) drives Z straight up from `(X39, Y45, Z11)` to `(X39, Y45, Z47.250)`, and line 119 (`G28 X Y`) homes X and Y at `Z = 47.250` mm. Because Z moves strictly upward (`Z11 -> Z47.250`) before XY homing, it clears the workpiece vertically (provided no upper overhang exists at `X39, Y45`).
+- CRITICAL Defect at the End of `testPaint.gcode` (Lines 125–126) and `testPaintReverseOrder.gcode` (Lines 125–126):
+  - Both `testPaint.gcode` and `testPaintReverseOrder.gcode` end with:
+    - Line 125: `G0 Z53 Y2;`
+    - Line 126: `G28;`
+  - Why `G0 Z53 Y2` is dangerous under current `printer.cfg`: Although `position_max: 60` (`printer.cfg` line 128) allows Klipper's software range check to accept `Z53` without raising `Move out of range`, the physical Z upper endstop switch is at `position_endstop = 47.250` mm (`printer.cfg` line 289)! Commanding `G0 Z53` drives the Z axis `5.75` mm (`53.0 - 47.250`) PAST the physical upper endstop switch (`^!PC2`) toward the mechanical top limit (`position_endstop` was originally `51` and even then `Z53` was `2` mm above the switch).
+  - Furthermore, once at `Z = 53.0` mm (above the endstop switch), line 126 executes `G28` (all axes). Because Cartesian `G28` homes in `X -> Y -> Z` order (`cartesian.py` line 91), X and Y home while Z is over-travelled at `Z53`, and then `G28 Z` attempts to home Z by moving UPWARD (`homing_positive_dir = True`) starting from `Z53` (already past the switch, or with the switch already depressed)! In `printer_data/logs/klippy.log` (lines 506, 509) and `klippy.log.2026-06-08` (lines 507–508) and `klippy.log.2026-10-11` (line 506), `No trigger on stepper_z after full movement` and `TMC 'stepper_z' reports error: DRV_STATUS: c01f0010 s2vsa=1(ShortToSupply_A!)` / `drv_err=1(ErrorShutdown!)` are repeatedly logged.
+  - Therefore, the absence of `G0 Z53 Y2; G28;` from `ExternalPresentationDrytestPaintReverseOrder.gcode` (replaced by `G28 Z; G28 X Y;`) is actually an improvement, whereas `G0 Z53 Y2; G28;` in `testPaint.gcode` (lines 125–126) MUST be changed to stay below `Z = 47.250` mm (e.g., `G0 Z45 Y2` or `G28 Z` followed by `G28 X Y`).
+
+5. Critical speed bug in `testPaint.gcode` line 63 (`M220 S10` instead of `M220 S500`) and uninitialized feed rate `F`
+Inspecting `klipper/klippy/extras/gcode_move.py` (lines 34–35, 152–157, 195–199) and comparing `testPaint.gcode` with `ExternalPresentationDrytestPaintReverseOrder.gcode` reveals a severe speed bug in `testPaint.gcode`:
+- How Klipper determines feed rate when `F` is omitted (`gcode_move.py` lines 34–35):
+  - At Klipper startup, `self.speed = 25.0` mm/s (corresponding to `F1500` mm/min) and `self.speed_factor = 1. / 60.` (`100%`).
+  - Because neither `testPaint.gcode` nor `ExternalPresentationDrytestPaintReverseOrder.gcode` contains a single `F` parameter on any `G0` line, every move scales whatever `F` value happened to be left in `gcode_move.speed` prior to the print!
+  - If a macro was run before the print—for example, `TURNTABLE_TEST` (`printer.cfg` line 39: `G1 X100 F500`, which sets base speed to `8.33` mm/s), `_HOME_X` / `_HOME_Y` (`printer.cfg` lines 173, 195: `F1200` = `20.0` mm/s), or Mainsail `_TOOLHEAD_PARK_PAUSE_CANCEL` (`client.cfg` line 250: `F6000` = `100.0` mm/s)—the entire print runs at `3x` slower or `4x` faster base speed than startup default!
+  - Under the startup default (`25.0` mm/s base speed) and `max_velocity: 125` mm/s (`printer.cfg` line 21):
+    - `M220 S500` (`500%`) sets requested speed to `25.0 * 5.0 = 125.0` mm/s (matching `max_velocity: 125`).
+    - `M220 S375` (`375%`) sets requested speed to `25.0 * 3.75 = 93.75` mm/s (`75%` of `125` mm/s).
+    - `M220 S100` (`100%`) sets requested speed to `25.0 * 1.0 = 25.0` mm/s (`20%` of `125` mm/s).
+- Critical Typo in `testPaint.gcode` lines 8 and 63:
+  - Line 8 of `testPaint.gcode` reads `M220 S100; Increasing speed 500%` (comment says `500%`, but command sets `S100` = `25.0` mm/s, so `G0 X285` on line 10 takes `11.43` s instead of `2.40` s).
+  - Worse, line 63 of `testPaint.gcode` (right after Squeeze-out, before all workpiece painting movements on lines 65–125) reads:
+    `M220 S10; Increasing speed 500%`
+    Whereas `testPaintReverseOrder.gcode` (line 50) and `ExternalPresentationDrytestPaintReverseOrder.gcode` (line 50) have `M220 S500; Increasing speed 500%`, `testPaint.gcode` has a typo `S10` (`10%` speed factor = `2.5` mm/s instead of `125` mm/s—a `50x` slowdown!).
+  - As a result, in `testPaint.gcode`, every single painting and travel motion from Circle 1 through Inner Circle and `G0 Z53 Y2` crawls at `2.5` mm/s (for example, each `360` deg Inner Circle pass takes `144` seconds, and a single cycle of `testPaint.gcode` takes `1,295.2` seconds = `21.6` minutes instead of `~50` seconds!). In `moonraker-sql.db` (`job_history`), all 7 runs of `testPaint.gcode` ended in `klippy_shutdown` or `cancelled` and never once completed.
+
+6. Missing paint dispensing commands (`BALL_VALVE_OPEN` / `BALL_VALVE_CLOSED`) during workpiece movements in `testPaint.gcode`, and active purging in `ExternalPresentationDrytestPaintReverseOrder.gcode`
+Inspecting `[servo ballValve]` and the `BALL_VALVE*` macros in `printer.cfg` (lines 147–153, 204–231) alongside both G-code files reveals a fundamental discrepancy between the file names/roles and valve actuation:
+- In `testPaint.gcode`:
+  - `BALL_VALVE_OPEN` (`SET_SERVO SERVO=ballValve ANGLE=45`) is called ONLY once at line 19 (the start of `;Purge` at `X285..265, Y15, Z19`), and `BALL_VALVE_CLOSED` (`SET_SERVO SERVO=ballValve ANGLE=0`) is called at line 47 (the end of `;Purge`).
+  - Throughout the entire workpiece section (Circles 1–5 on lines 67–102, Raised Sections 2 & 1 on lines 104–116, and Inner Circle on lines 118–123), the ball valve remains CLOSED (`ANGLE=0`)! If `testPaint.gcode` is intended to actually paint the real target object (or if dispensing is controlled by `ballValve`), no paint will be dispensed onto the workpiece after line 47.
+- In `ExternalPresentationDrytestPaintReverseOrder.gcode`:
+  - Conversely, even though this file is named `Drytest`, every single cycle executes `BALL_VALVE_OPEN` (line 18) and `BALL_VALVE_CLOSED` (line 36) during the Purge section (`52` times total across the 52 cycles, opening the valve to `45` deg for `~3.4` seconds per cycle = `176.8` seconds total). If paint or liquid is loaded in the line during the presentation dry test, it will dispense 52 times at `(X285..265, Y15, Z17)`.
+- Furthermore, in `printer.cfg` (lines 147–153), `[servo ballValve]` has no `initial_angle` or `initial_pulse_width` configured (`klipper/klippy/extras/servo.py` lines 22–29), so on MCU startup the servo PWM output is `0` (unpowered) until the first `BALL_VALVE_OPEN` or `BALL_VALVE_CLOSED` command is issued.
+
+7. Z-axis stepper motor (`stepper_z`) `2.5x` over-current in `printer.cfg` causing TMC2209 `ShortToSupply` / `ErrorShutdown` mid-print crashes
+Inspecting `printer.cfg` (lines 134–145), `moonraker-sql.db` (`job_history`), and `printer_data/logs/klippy.log.2026-10-11` reveals the hardware/configuration root cause of repeated mid-print `klippy_shutdown` failures (`14` shutdowns in `ExternalPresentationDrytestPaintReverseOrder.gcode`, `15` in `testPaintReverseOrder.gcode`, and `1` in `testPaint.gcode`):
+- In `printer.cfg` lines 139–142 under `[tmc2209 stepper_z]`:
+  ```
+  ## For OMC (StepperOnline) 17LS13-0404E-200G 0.4A 
+  run_current: 1.0
+  ## For LDO-42STH25-1004CL200E 1.0A
+  #run_current: 0.37
+  ```
+  The configured `run_current: 1.0` A is `2.5x` the rated `0.4` A current of the OMC `17LS13-0404E-200G` Z-stepper motor (`cs_actual=31`, the maximum 31/31 current scale of TMC2209), and no `hold_current` is set.
+- In `printer_data/logs/klippy.log.2026-10-11` (lines 1227–1231, 2870, 6393, 7554; 22 occurrences total), Klipper transitions to shutdown mid-operation with:
+  - `TMC 'stepper_z' reports error: DRV_STATUS: c01f0010 s2vsa=1(ShortToSupply_A!) cs_actual=31 stealth=1 stst=1`
+  - `TMC 'stepper_z' reports error: GSTAT: 00000002 drv_err=1(ErrorShutdown!)`
+- Because `ExternalPresentationDrytestPaintReverseOrder.gcode` runs for `~46` minutes (`2,764.5` s in `job_history` jobs #105, #113, #114) and performs `208` homing commands and `1,040` Z moves while holding `stepper_z` at `1.0` A (`cs_actual=31`), thermal/overcurrent protection (`drv_err=1` / `s2vsa=1`) trips on `tmc2209 stepper_z` and aborts the print (e.g., jobs #104 at `688` s, #106 at `634` s, #108 at `1754` s, #115 at `1899` s, #116 at `953` s). `run_current` for `stepper_z` in `printer.cfg` should be verified against the actual installed motor rating.
+
+8. Invalid startup command `Unknown command:"SET_FAN_SPEED"` and disabled emergency stop button in `printer.cfg`
+- In `printer.cfg` lines 29–33 and 42–50:
+  - `[delayed_gcode turnFanOn]` runs `1.0` s after startup and calls macro `turnOnFan`, which executes `SET_FAN_SPEED FAN=fan SPEED=1.0`.
+  - However, `#[fan_generic fan]` (`#pin:PC6`, lines 48–49) was commented out after `printer-20251209_213242.cfg`. Consequently, every Klipper startup in `printer_data/logs/klippy.log*` logs `Unknown command:"SET_FAN_SPEED"`. If `PC6` cools the electronics/TMC2209 drivers (especially `stepper_x` and `stepper_y` at `run_current: 1.5` A and `stepper_z` at `1.0` A), having the cooling fan disabled exacerbates TMC2209 overheating (`drv_err=1`) during 46-minute runs of `ExternalPresentationDrytestPaintReverseOrder.gcode`.
+- In `printer.cfg` lines 266–268:
+  - `#[gcode_button emergency_stop]` (`#pin: ^PC15`, `#press_gcode: {action_emergency_stop()}`) is commented out, meaning the physical emergency stop button on pin `PC15` is currently inactive in software.
+
+9. Broken sensorless homing macros (`_HOME_X`, `_HOME_Y`) and shared `diag_pin: ^PC1` in `printer.cfg`
+- In `printer.cfg`, `[tmc2209 stepper_x]` (line 83) and `[tmc2209 stepper_y]` (line 113) both assign `diag_pin: ^PC1` with `driver_SGTHRS: 255` (maximum StallGuard sensitivity), while `[stepper_y]` uses `endstop_pin: ^!PC1` (line 94) and `[stepper_x]` uses `endstop_pin: ^PC0` (line 68). Having two TMC2209 drivers drive the same MCU pin `PC1` via `diag_pin` can cause spurious endstop triggers on Y when X stalls.
+- Furthermore, macros `_HOME_X` (`printer.cfg` lines 160–181) and `_HOME_Y` (lines 182–203) home to `0` (`position_endstop: 0`, `position_min: 0`) and then execute `G91` followed by `G1 X-10 F1200` / `G1 Y-10 F1200`. Because `position_min` is `0`, moving to `-10` immediately triggers `Move out of range: -10.000 -0.003 47.250 [0.000]` (recorded 6 times in `klippy.log.2026-06-09` lines 1313–1323) and aborts the macro before `G90` on line 177/199 can execute—leaving the printer stuck in `G91` relative mode (which then causes the print crash described in Section 3!).
+
+10. Coordinate and sequence differences between `testPaint.gcode` and `ExternalPresentationDrytestPaintReverseOrder.gcode` (Workpiece alignment check)
+To ensure accurate real-world motion on the target object, confirm which of the following structural differences between `testPaint.gcode` and `ExternalPresentationDrytestPaintReverseOrder.gcode` (and `testPaintReverseOrder.gcode`) match the current physical fixture and workpiece:
+- Operation Order:
+  - `testPaint.gcode`: Purge -> Squeeze-out -> Circle 1 -> Circle 2 -> Circle 3 -> Circle 4 -> Circle 5 -> Raised Section 2 -> Raised Section 1 -> Inner Circle.
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode`: Purge -> Squeeze-out -> Inner Circle -> Raised Section 1 -> Raised Section 2 -> Circle 5 -> Circle 4 -> Circle 3 -> Circle 2 -> Circle 1 (exact reverse order of features).
+- Purge Stroke Count:
+  - `testPaint.gcode` (lines 20–45): `9` back-and-forth cycles (`#1` to `#9`, `X285 <-> X265`).
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode` (lines 19–34): `6` back-and-forth cycles (`#1` to `#3` repeated twice).
+- Circle 1 Approach (`Y35` vs `Y45`):
+  - `testPaint.gcode` (lines 68–69): Moves to `X39 Y35` at `Z20`, then moves diagonally `G0 Z6 Y45`.
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode` (lines 111–112): Already at `Y45` from Circle 2; moves to `X39` at `Z11`, then descends vertically `G0 Z8` at `Y45`.
+- Raised Section 1 X-Range (`X30..X95`) and Final X Position before Next Feature:
+  - Both files sweep `X30 -> X95 -> X30 -> X95` (1.5 round trips, ending at `X95` rather than returning to `X30`).
+
+11. Inferred Author's Original Intent vs. Why the Current Unmodified G-Code Fails on the Target Workpiece
+By comparing the evolution of all G-code files in `gcodes/` (`testSpeedRun.gcode` -> `testPaintNoPurgeNoWipe.gcode` -> `testPaint.gcode` -> `testPaintReverseOrder.gcode` -> `ExternalPresentationDrytestPaintReverseOrder.gcode`) with `printer.cfg` and `moonraker-sql.db`, we can reconstruct the physical layout of the target workpiece, the author's intended machine behavior, and the exact reasons why the unmodified files fail to achieve that behavior:
+- A. Physical Layout of the Machine and Target Workpiece (Inferred from Coordinates & Config):
+  - Cylindrical Polar-like Mechanism Mapped to Cartesian `X/Y/Z`:
+    - `X` (`0..360` deg): Rotary turntable carrying the circular target workpiece.
+    - `Y` (`0..180` mm): Radial linear axis moving the nozzle/applicator from outside the turntable perimeter (`Y=0`) to the turntable rotation center (`Y=180` mm).
+    - `Z` (`0..47.250` mm): Vertical axis where `G28 Z` homes upward to the top limit switch (`Z=47.250` mm), and smaller `Z` approaches the workpiece surface.
+  - Radial Zones along `Y`:
+    - `Y=15` mm (`X=265..285` deg): Off-part Purge & Squeeze-out (wipe) station near the outer edge.
+    - `Y=45..47` mm: Outer ring of 5 circular features on the workpiece (`Circle 1` at `X=39..55`, `Circle 2` at `X=80..96`, `Circle 3` at `X=122..138`, `Circle 4` at `X=217..236`, `Circle 5` at `X=301..317`). Because transitions around Circle 5 and Raised Section 2 lift to `Z25..Z26` (whereas Circles 1–4 only lift to `Z10..Z11`), a tall obstacle or fixture clamp (~`20` mm high) exists around `X=240..300` deg.
+    - `Y=77` mm: Mid-radius raised features (`Raised Section 1` at `X=30..95`, `Raised Section 2` at `X=250..295`), whose surface is `10` mm higher than the outer Circles (`Z13` vs `Z3..Z4` in `testPaintReverseOrder.gcode`).
+    - `Y=180` mm (`X=0..360` deg): Center feature (`Inner Circle`) at the center of rotation.
+- B. What the Author Originally Intended (Operational Scenario):
+  - Step 1 (Safe Homing): Raise Z to the top switch (`G28 Z`), then home X and Y (`G28 X Y`).
+  - Step 2 (Applicator Charging via Purge & Squeeze-Out at `Y=15` mm):
+    - Across all files (`testSpeedRun.gcode`, `testPaint.gcode`, `testPaintReverseOrder.gcode`), `BALL_VALVE_OPEN` is called ONLY during `;Purge` at `Y=15` mm while sweeping `X285 <-> X265` at `75%` speed (`M220 S375`), followed by `BALL_VALVE_CLOSED` and `;SQUEEZE OUT` (`1–2` mm lower Z at `20%` speed `M220 S100`).
+    - This indicates the nozzle is equipped with a brush, sponge, or pad applicator: the author's design is to dose/saturate the applicator with paint at the `Y=15` purge station, wipe off excess paint during Squeeze-Out, and then dab/brush the 8 target features on the workpiece by physical contact without opening the valve over the part.
+  - Step 3 (Why the Author Changed `testPaint.gcode` to `ReverseOrder`):
+    - In `testPaint.gcode` (forward order: Circles 1->5 -> Raised 2->1 -> Inner Circle), the freshly saturated applicator painted the 5 small outer circles first and reached the largest feature (`Inner Circle`, 4 full turns at `Y=180`) last, when the applicator was depleted.
+    - Reversing the order in `testPaintReverseOrder.gcode` (Inner Circle at `Y=180` first -> Raised 1->2 at `Y=77` -> Circles 5->1 at `Y=47..45`) applies paint to the large center ring first while the brush is fully loaded, and finishes at `Circle 1` (`X39, Y45`), which is right next to `X0, Y0` for fast end-of-cycle homing (`~50.2` s per cycle, 76 successful completions in `moonraker-sql.db`).
+  - Step 4 (Why `ExternalPresentationDrytestPaintReverseOrder.gcode` Was Created):
+    - For an external presentation, the author took `testPaintReverseOrder.gcode`, added `+5` mm to each working Z height so the applicator would hover `5` mm above the workpiece without touching it ("Drytest"), added a 4-second pause (`G4 P4000`), and copy-pasted the block 52 times for a continuous ~46-minute demonstration.
+- C. Root Causes Why the Current Unmodified Codes Fail to Achieve the Intended Motion:
+  1. [`testPaint.gcode`] Critical Typo `M220 S10` on Line 63 (and `M220 S100` on Line 8):
+     - The author intended `M220 S500` (`125` mm/s) as written in the comment `; Increasing speed 500%`, but typed `M220 S10` (`2.5` mm/s = 1/50th speed). As soon as Squeeze-Out finishes, the machine appears to freeze (taking `21.6` minutes instead of `50` seconds), causing operators to cancel every run.
+  2. [`testPaint.gcode`] Unupdated Z Calibration (`G0 Z53 Y2` on Line 125 & Working Heights):
+     - Written when `position_endstop` was `51` mm; under the current `position_endstop = 47.250` mm, `G0 Z53 Y2` drives Z `+5.75` mm past the physical upper limit switch and causes `G28` on line 126 to fail (`No trigger on stepper_z after full movement`).
+  3. [`testPaint.gcode`] Diagonal Z Descent into Workpiece Obstacles (Lines 69, 76, 83, 91, 118):
+     - The author combined XY rotation to the next feature and Z descent to working height (`Z6`) on the same line (`G0 X80 Z6`, etc.), causing the applicator to descend diagonally across the part instead of staying at clearance height `Z10` until reaching the target angle.
+  4. [`ExternalPresentationDrytestPaintReverseOrder.gcode`] Incomplete `+5` mm Drytest Offset & Diagonal Transit at Line 54:
+     - The author added `+5` mm only to working Z heights (`Z12->17`, `Z10->15`, `Z5->10`, `Z13->18`, `Z3->8`, `Z4->9`) and forgot to add `+5` mm to the travel/clearance Z heights (`Z11`, `Z21`, `Z24`, `Z26`, `Z33`). Combined with the 3-axis diagonal move on line 54 (`G0 Y180 X0 Z11` from `Z24`), the nozzle drops to `Z=19.12` mm while crossing `Y=77` (only `1.12` mm above the `Z18` dry-test height of the Raised Sections).
+  5. [`ExternalPresentationDrytestPaintReverseOrder.gcode`] Leftover `BALL_VALVE_OPEN` (52 times) & Copy-Paste Double Homing:
+     - Because the cycle block was copy-pasted directly from `testPaintReverseOrder.gcode`, `BALL_VALVE_OPEN` (line 18) still opens the valve 52 times during a "Drytest", and the start/end `G28 Z; G28 X Y` commands back-to-back at every cycle boundary (lines 118–119 and 126–127).
+  6. [Both Files & `printer.cfg`] Missing `G90` + Broken `_HOME_X`/`_HOME_Y` Macros + `stepper_z` `1.0A` Overcurrent:
+     - Omitting `G90` at the start of the G-code causes immediate `Move out of range` crashes whenever `G91` is left active by manual jogging or by `_HOME_X`/`_HOME_Y` (`G1 X-10` / `Y-10` out-of-range bug). Meanwhile, `run_current: 1.0` A on the `0.4A` Z motor (`[tmc2209 stepper_z]`) with the cooling fan commented out (`#[fan_generic fan]`) triggers TMC2209 `ShortToSupply_A!` / `ErrorShutdown!` mid-run during the 52-cycle presentation file.
+
+12. Other points (Previously Section 5 — Verified against Machine Configuration)
+- Feed rate `F` omission and `M220` speed factor persistence (previously 5.1 & 5.2):
+  - As detailed in Section 5 above, Klipper's default `gcode_move.speed` is `25.0` mm/s (`F1500`). Under `M220 S500` (`500%`), requested speed is `125` mm/s (`printer.cfg` `max_velocity: 125`), while pure Z moves are capped to `20.0` mm/s by `max_z_velocity: 20` (`printer.cfg` line 23).
+  - Neither file resets `M220 S100` at the end (`ExternalPresentationDrytestPaintReverseOrder.gcode` leaves `M220 S500` active; `testPaint.gcode` leaves `M220 S10` active), which persists in `gcode_move.speed_factor` for subsequent manual moves or prints unless `M220 S100` is added at the end.
+  - On lines 16 (`M220 S375; Purging speed 75%`) and 42 (`M220 S100; Squeezing speed 20%`), the configured Klipper override factors are `375%` (`93.75` mm/s) and `100%` (`25.0` mm/s), which equal `75%` and `20%` of the `500%` (`125` mm/s) operating speed.
+- `BALL_VALVE_OPEN` in dry test (previously 5.3):
+  - Confirmed via `printer.cfg` line 222 (`SET_SERVO SERVO=ballValve ANGLE=45`); see Section 6 above.
+- Zero-distance first purge move `#1` (previously 5.4):
+  - In `ExternalPresentationDrytestPaintReverseOrder.gcode` line 19 (`G0 X285; #1`) and `testPaint.gcode` line 20 (`G0 X285; #1`), `X` is already at `285.0` from line 10 (`G0 X285`). Thus the first `G0 X285` after `BALL_VALVE_OPEN` is a zero-distance (`0.00` s) no-op, and actual motion begins with `G0 X265` on the following line (additionally, Because `SET_SERVO` is queued via `GCodeRequestQueue` at the current `print_time` without a dwell `G4`, `G0 X265` starts moving immediately while the servo is still physically rotating from `0` deg to `45` deg).
+- Inner Circle revolution count vs. comments (previously 5.5):
+  - Because `printer.cfg` (lines 62–63) sets `rotation_distance: 360` and `gear_ratio: 125:20`, `X=0 -> X=360` is confirmed to be exactly `1` full physical revolution (`360` deg) of the turntable.
+  - Therefore, lines 54–59 of `ExternalPresentationDrytestPaintReverseOrder.gcode` (and lines 118–123 of `testPaint.gcode`): `X0 -> X360 -> X0 -> X360 -> X0` perform `4` full revolutions (`2` clockwise/counter-clockwise round trips), even though the comments label them `Inner circle Rev 1` and two `Inner Circle Rev 2`s.
+- Duplicate homing at cycle boundaries and total cycle duration in `ExternalPresentationDrytestPaintReverseOrder.gcode` (previously 5.6):
+  - At the end of each cycle (lines 118–120), `G28 Z`, `G28 X Y`, and `G4 P4000` (`4.0` s wait) are executed, and then the next cycle immediately starts at lines 126–127 with another `G28 Z` and `G28 X Y` while already at `(X0, Y0, Z47.250)`.
+  - Even when already at the endstops, each duplicate `G28 Z` + `G28 X Y` still executes endstop trigger/second-homing checks (`208` `G28` commands total across 52 cycles). In actual machine history (`moonraker-sql.db` jobs #105, #113, #114), a full 52-cycle run takes `2,764.5` seconds (`46.1` minutes, or `53.2` seconds per cycle).
+- Modal Y coordinates for Circles 5–1 (previously 5.7):
+  - In both files, Circles 5 and 4 are executed at `Y=47` mm, while Circles 3, 2, and 1 are executed at `Y=45` mm (relying on modal Y retention across lines). Confirm that this `2` mm radial offset between Circles 5/4 (`Y47`) and Circles 3/2/1 (`Y45`) matches the target object geometry.
+
+Summary of Coordinate Ranges vs. `printer.cfg` Limits
+- Configured `printer.cfg` limits: `X = 0..360` (endstop `0`), `Y = 0..180` (endstop `0`), `Z = 0..60` (top endstop `position_endstop = 47.250`).
+- `ExternalPresentationDrytestPaintReverseOrder.gcode` commanded coordinates: `X = 0..360`, `Y = 15..180` (`0` during `G28`), `Z = 8..33` (`47.250` during `G28 Z`). All coordinates are within software and physical endstop limits (provided `G90` is active).
+- `testPaint.gcode` commanded coordinates: `X = 0..360`, `Y = 2..180` (`0` during `G28`), `Z = 6..53` (`47.250` during `G28 Z`). Line 125 (`G0 Z53 Y2`) exceeds the physical Z endstop (`47.250` mm) by `+5.75` mm and must be corrected along with adding `G90` and fixing line 63 (`M220 S10` -> `M220 S500`).
+
+References:
+- Machine configuration: `printer_data/config/printer.cfg`, `mainsail-config/client.cfg`
+- Firmware source: `klipper/klippy/stepper.py`, `klipper/klippy/kinematics/cartesian.py`, `klipper/klippy/extras/gcode_move.py`, `klipper/klippy/extras/servo.py`
+- Machine logs & database: `printer_data/logs/klippy.log*`, `printer_data/database/moonraker-sql.db`
+- Klipper G-code documentation: https://www.klipper3d.org/G-Codes.html#g-code-commands

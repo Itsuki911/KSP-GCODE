@@ -1,0 +1,3000 @@
+-------------------- Log Start | Tue Oct 13 06:37:37 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True
+
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 22:37:37,162 [confighelper.py:read_file()] - Configuration File '/home/klipper-pc/printer_data/config/moonraker.conf' parsed, total size: 993 B
+2026-10-12 22:37:37,164 [server.py:add_log_rollover_item()] - 
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 22:37:37,288 [server.py:load_component()] - Component (secrets) loaded
+2026-10-12 22:37:37,301 [server.py:load_component()] - Component (template) loaded
+2026-10-12 22:37:37,307 [server.py:load_component()] - Component (klippy_connection) loaded
+2026-10-12 22:37:38,097 [application.py:__init__()] - Detected Tornado Version 6.5.1
+2026-10-12 22:37:38,101 [server.py:load_component()] - Component (application) loaded
+2026-10-12 22:37:38,118 [server.py:load_component()] - Component (websockets) loaded
+2026-10-12 22:37:38,129 [server.py:add_log_rollover_item()] - Loading Sqlite database provider. Sqlite Version: 3.45.1
+2026-10-12 22:37:38,131 [server.py:add_log_rollover_item()] - Unsafe Shutdown Count: 6
+2026-10-12 22:37:38,133 [server.py:load_component()] - Component (database) loaded
+2026-10-12 22:37:38,205 [server.py:load_component()] - Component (dbus_manager) loaded
+2026-10-12 22:37:38,225 [file_manager.py:__init__()] - Using File System Observer: inotify
+2026-10-12 22:37:38,245 [server.py:load_component()] - Component (file_manager) loaded
+2026-10-12 22:37:38,260 [database.py:register_table()] - Found registered table authorized_users
+2026-10-12 22:37:38,262 [authorization.py:__init__()] - Authorization Configuration Loaded
+Trusted Clients:
+172.31.0.0/16
+10.0.0.0/8
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.168.0.0/16
+fc00::/7
+fe80::/10
+::1/128
+CORS Domains:
+.*\.lan
+.*\.local
+.*://localhost
+.*://localhost:.*
+.*://my\.mainsail\.xyz
+.*://app\.fluidd\.xyz
+2026-10-12 22:37:38,264 [server.py:load_component()] - Component (authorization) loaded
+2026-10-12 22:37:38,267 [server.py:load_component()] - Component (klippy_apis) loaded
+2026-10-12 22:37:38,454 [server.py:add_log_rollover_item()] - 
+System Info:
+
+***python***
+  version: (3, 12, 3, 'final', 0)
+  version_string: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) N4000 CPU @ 1.10GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 7964156
+  memory_units: kB
+
+***sd_info***
+  manufacturer_id: 32
+  manufacturer: Unknown
+  oem_id: 0101
+  product_name: MMC12
+  product_revision: 3.8
+  serial_number: 516d9d66
+  manufacturer_date: 10/2247
+  capacity: Unknown
+  total_bytes: 0
+
+***distribution***
+  name: Ubuntu 24.04.3 LTS
+  id: ubuntu
+  version: 24.04
+  version_parts: {'major': '24', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: noble
+  release_info: {}
+  kernel_version: 6.14.0-36-generic
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+2026-10-12 22:37:38,457 [server.py:load_component()] - Component (shell_command) loaded
+2026-10-12 22:37:38,457 [machine.py:__init__()] - Using System Provider: systemd_dbus
+2026-10-12 22:37:38,462 [server.py:add_log_rollover_item()] - Module libcamera unavailable, import failed
+2026-10-12 22:37:38,462 [server.py:load_component()] - Component (machine) loaded
+2026-10-12 22:37:38,464 [server.py:load_component()] - Component (data_store) loaded
+2026-10-12 22:37:38,467 [proc_stats.py:__init__()] - Unable to find 'vcgencmd', throttle checking disabled
+2026-10-12 22:37:38,467 [proc_stats.py:_get_cpu_thermal_file()] - Monitoring temperature for Intel CPU
+2026-10-12 22:37:38,468 [server.py:load_component()] - Component (proc_stats) loaded
+2026-10-12 22:37:38,469 [server.py:load_component()] - Component (job_state) loaded
+2026-10-12 22:37:38,473 [server.py:load_component()] - Component (job_queue) loaded
+2026-10-12 22:37:38,475 [database.py:register_table()] - Found registered table job_history
+2026-10-12 22:37:38,475 [database.py:register_table()] - Found registered table job_totals
+2026-10-12 22:37:38,476 [server.py:load_component()] - Component (history) loaded
+2026-10-12 22:37:38,483 [server.py:load_component()] - Component (http_client) loaded
+2026-10-12 22:37:38,488 [server.py:load_component()] - Component (announcements) loaded
+2026-10-12 22:37:38,493 [server.py:load_component()] - Component (webcam) loaded
+2026-10-12 22:37:38,495 [server.py:load_component()] - Component (extensions) loaded
+2026-10-12 22:37:38,533 [base_deploy.py:log_info()] - Git Repo moonraker: Detected virtualenv: /home/klipper-pc/moonraker-env
+2026-10-12 22:37:38,535 [base_deploy.py:log_info()] - Git Repo klipper: Detected virtualenv: /home/klipper-pc/klippy-env
+2026-10-12 22:37:38,537 [base_deploy.py:log_info()] - Web Client mainsail: Configured persistent files: ['config.json']
+2026-10-12 22:37:38,541 [server.py:load_component()] - Component (update_manager) loaded
+2026-10-12 22:37:38,544 [server.py:load_component()] - Component (octoprint_compat) loaded
+2026-10-12 22:37:38,545 [server.py:_initialize_component()] - Performing Component Post Init: [database]
+2026-10-12 22:37:38,552 [server.py:_initialize_component()] - Performing Component Post Init: [dbus_manager]
+2026-10-12 22:37:38,559 [server.py:_initialize_component()] - Performing Component Post Init: [authorization]
+2026-10-12 22:37:38,560 [server.py:_initialize_component()] - Performing Component Post Init: [machine]
+2026-10-12 22:37:38,561 [machine.py:validation_init()] - Installation version in database up to date
+2026-10-12 22:37:38,700 [machine.py:check_virt_status()] - No Virtualization Detected
+2026-10-12 22:37:38,723 [machine.py:_find_public_ip()] - Failed to detect local IP address
+2026-10-12 22:37:38,813 [server.py:add_log_rollover_item()] - 
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['sysinit.target', 'system.slice', 'network-online.target', '-.mount']
+**After=['system.slice', '-.mount', 'systemd-journald.socket', 'network-online.target', 'sysinit.target', 'basic.target']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/moonraker.env
+**ExecStart=/home/klipper-pc/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/klipper-pc/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=klipper-pc
+2026-10-12 22:37:38,813 [server.py:_initialize_component()] - Performing Component Post Init: [proc_stats]
+2026-10-12 22:37:38,813 [server.py:_initialize_component()] - Performing Component Post Init: [history]
+2026-10-12 22:37:38,818 [server.py:_initialize_component()] - Performing Component Post Init: [announcements]
+2026-10-12 22:37:38,821 [server.py:_initialize_component()] - Performing Component Post Init: [webcam]
+2026-10-12 22:37:38,837 [server.py:_initialize_component()] - Performing Component Post Init: [klippy_connection]
+2026-10-12 22:37:38,837 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', 'sysinit.target', '-.mount']
+**After=['system.slice', '-.mount', 'systemd-journald.socket', 'network-online.target', 'sysinit.target', 'basic.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 22:37:38,837 [server.py:_initialize_component()] - Performing Component Post Init: [update_manager]
+2026-10-12 22:37:38,880 [base_deploy.py:log_info()] - PackageDeploy: PackageKit Provider Configured
+2026-10-12 22:37:38,920 [extensions.py:start_unix_server()] - Creating Unix Domain Socket at '/home/klipper-pc/printer_data/comms/moonraker.sock'
+2026-10-12 22:37:38,923 [server.py:start_server()] - Starting Moonraker on (0.0.0.0, 7125), Hostname: klipper-pc
+2026-10-12 22:37:38,925 [application.py:listen()] - SSL Certificate/Key not configured, aborting HTTPS Server startup
+2026-10-12 22:37:39,179 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 22:37:39,274 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['-.mount', 'system.slice', 'sysinit.target']
+**After=['-.mount', 'sysinit.target', 'network-online.target', 'systemd-journald.socket', 'basic.target', 'system.slice']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 22:37:39,556 [server.py:add_log_rollover_item()] - Klipper Version: v0.13.0-406-gbaf188bd-dirty
+2026-10-12 22:37:39,583 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 22:37:39,587 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 22:37:39,834 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 22:37:40,091 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 22:37:40,585 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 22:37:40,857 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 22:37:41,655 [base_deploy.py:log_info()] - PackageKit: Detected 2 package updates:
+ubuntu-pro-client
+ubuntu-pro-client-l10n
+2026-10-12 22:37:41,685 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker status --porcelain -b) successfully finished
+2026-10-12 22:37:41,701 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker branch --list --no-color) successfully finished
+2026-10-12 22:37:41,729 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker remote get-url origin) successfully finished
+2026-10-12 22:37:41,808 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:42,412 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:42,904 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 22:37:42,946 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:43,483 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:44,014 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/moonraker fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:44,514 [git_deploy.py:refresh_repo_state()] - Git Repo moonraker: Initialization failure
+Traceback (most recent call last):
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 352, in refresh_repo_state
+    await self.fetch()
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 788, in fetch
+    await self._run_git_cmd_async(
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 1237, in _run_git_cmd_async
+    raise self.server.error(f"Git Command '{cmd}' failed")
+moonraker.utils.exceptions.ServerError: Git Command 'fetch origin --prune --progress' failed
+2026-10-12 22:37:44,515 [base_deploy.py:log_info()] - Git Repo moonraker: Channel: dev
+2026-10-12 22:37:44,515 [base_deploy.py:log_info()] - Git Repo moonraker: Repo validation check failed, updates disabled
+2026-10-12 22:37:44,559 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper status --porcelain -b) successfully finished
+2026-10-12 22:37:44,582 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper branch --list --no-color) successfully finished
+2026-10-12 22:37:44,610 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper remote get-url origin) successfully finished
+2026-10-12 22:37:44,668 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:45,210 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:45,756 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:46,290 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:46,846 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:47,347 [git_deploy.py:refresh_repo_state()] - Git Repo klipper: Initialization failure
+Traceback (most recent call last):
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 352, in refresh_repo_state
+    await self.fetch()
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 788, in fetch
+    await self._run_git_cmd_async(
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 1237, in _run_git_cmd_async
+    raise self.server.error(f"Git Command '{cmd}' failed")
+moonraker.utils.exceptions.ServerError: Git Command 'fetch origin --prune --progress' failed
+2026-10-12 22:37:47,347 [base_deploy.py:log_info()] - Git Repo klipper: Channel: dev
+2026-10-12 22:37:47,347 [base_deploy.py:log_info()] - Git Repo klipper: Repo validation check failed, updates disabled
+2026-10-12 22:37:48,361 [base_deploy.py:log_info()] - Web Client mainsail: Github Request Error - [Errno -3] Temporary failure in name resolution
+2026-10-12 22:37:48,361 [base_deploy.py:log_info()] - Web Client mainsail: Detected
+Repo: mainsail-crew/mainsail
+Channel: stable
+Path: /home/klipper-pc/mainsail
+Local Version: v2.14.0
+Remote Version: v2.14.0
+Valid: True
+Fallback Detected: False
+Pre-release: False
+Download Url: https://github.com/mainsail-crew/mainsail/releases/download/v2.14.0/mainsail.zip
+Download Size: 2848929
+Content Type: application/zip
+Rollback Version: v2.14.0
+Rollback Repo: mainsail-crew/mainsail
+2026-10-12 22:37:48,382 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config status --porcelain -b) successfully finished
+2026-10-12 22:37:48,400 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config branch --list --no-color) successfully finished
+2026-10-12 22:37:48,427 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config remote get-url origin) successfully finished
+2026-10-12 22:37:48,531 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:49,076 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:49,632 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:50,167 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:50,703 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/mainsail-config fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:51,204 [git_deploy.py:refresh_repo_state()] - Git Repo mainsail-config: Initialization failure
+Traceback (most recent call last):
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 352, in refresh_repo_state
+    await self.fetch()
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 788, in fetch
+    await self._run_git_cmd_async(
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 1237, in _run_git_cmd_async
+    raise self.server.error(f"Git Command '{cmd}' failed")
+moonraker.utils.exceptions.ServerError: Git Command 'fetch origin --prune --progress' failed
+2026-10-12 22:37:51,205 [base_deploy.py:log_info()] - Git Repo mainsail-config: Channel: dev
+2026-10-12 22:37:51,205 [base_deploy.py:log_info()] - Git Repo mainsail-config: Repo validation check failed, updates disabled
+2026-10-12 22:37:51,242 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect status --porcelain -b) successfully finished
+2026-10-12 22:37:51,262 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect branch --list --no-color) successfully finished
+2026-10-12 22:37:51,297 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect remote get-url origin) successfully finished
+2026-10-12 22:37:51,342 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:51,875 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:52,415 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:53,026 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:53,572 [shell_command.py:_check_proc_success()] - Command (git -C /home/klipper-pc/klipper-led_effect fetch origin --prune --progress) exited with return code 128
+2026-10-12 22:37:53,894 [authorization.py:_check_trusted_connection()] - Trusted Connection Detected, IP: 10.42.0.1
+2026-10-12 22:37:53,896 [application.py:log_request()] - 101 GET /websocket (10.42.0.1) [_TRUSTED_USER_] 3.75ms
+2026-10-12 22:37:53,896 [websockets.py:open()] - Websocket Opened: ID: 138479264030144, Proxied: True, User Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0, Host Name: 10.42.0.1
+2026-10-12 22:37:54,072 [git_deploy.py:refresh_repo_state()] - Git Repo led_effect: Initialization failure
+Traceback (most recent call last):
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 352, in refresh_repo_state
+    await self.fetch()
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 788, in fetch
+    await self._run_git_cmd_async(
+  File "/home/klipper-pc/moonraker/moonraker/components/update_manager/git_deploy.py", line 1237, in _run_git_cmd_async
+    raise self.server.error(f"Git Command '{cmd}' failed")
+moonraker.utils.exceptions.ServerError: Git Command 'fetch origin --prune --progress' failed
+2026-10-12 22:37:54,073 [base_deploy.py:log_info()] - Git Repo led_effect: Channel: dev
+2026-10-12 22:37:54,073 [base_deploy.py:log_info()] - Git Repo led_effect: Repo validation check failed, updates disabled
+2026-10-12 22:37:54,101 [websockets.py:_handle_identify()] - Websocket 138479264030144 Client Identified - Name: mainsail, Version: 2.14.0, Type: web
+2026-10-12 22:45:44,647 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testPaintReverseOrder.gcode
+2026-10-12 22:45:44,822 [job_state.py:_send_job_event()] - Job Started: testPaintReverseOrder.gcode
+2026-10-12 22:47:57,242 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:47:57,299 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:48:04,379 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 1.000 0.000 47.250 [0.000]
+2026-10-12 22:48:05,326 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 100.000 0.000 47.250 [0.000]
+2026-10-12 22:48:08,566 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 100.000 0.000 47.250 [0.000]
+2026-10-12 22:48:11,026 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 100.000 47.250 [0.000]
+2026-10-12 22:48:24,536 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:48:24,644 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:48:31,661 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:48:31,674 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:48:54,156 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:48:54,248 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:48:59,377 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:48:59,518 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:49:07,937 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:49:08,040 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:49:28,114 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testPaint.gcode
+2026-10-12 22:49:28,360 [job_state.py:_send_job_event()] - Job Started: testPaint.gcode
+2026-10-12 22:49:43,393 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 22:49:43,424 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 22:49:58,253 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 445.000 15.000 47.250 [0.000]
+2026-10-12 22:50:00,903 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 15.000 47.250 [0.000]
+2026-10-12 22:50:01,370 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 15.000 47.250 [0.000]
+2026-10-12 22:50:03,234 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 15.000 47.250 [0.000]
+2026-10-12 22:50:04,315 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 15.000 47.250 [0.000]
+2026-10-12 22:50:26,995 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -2.750 [0.000]
+2026-10-12 22:50:28,163 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -2.750 [0.000]
+2026-10-12 22:50:29,354 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -2.750 [0.000]
+2026-10-12 22:50:33,475 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:33,604 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:33,731 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:33,872 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:33,981 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,104 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,238 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,378 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,498 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,634 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,765 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:34,897 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:35,435 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:35,579 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:35,719 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:35,842 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:35,970 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:36,103 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:36,243 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.750 [0.000]
+2026-10-12 22:50:36,588 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -24.750 [0.000]
+2026-10-12 22:50:37,507 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.050 [0.000]
+2026-10-12 22:50:37,800 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:37,939 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:38,064 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:42,185 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:42,328 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:42,472 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:42,588 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:42,721 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:42,873 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:43,012 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:43,154 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:43,271 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:43,425 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:43,579 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:43,716 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:54,412 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:54,533 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:54,664 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:54,784 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:54,908 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:55,026 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:55,156 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:50:55,284 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 75.000 115.000 -0.950 [0.000]
+2026-10-12 22:51:12,969 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 375.000 115.000 0.050 [0.000]
+2026-10-12 22:51:14,086 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 375.000 115.000 0.050 [0.000]
+2026-10-12 22:51:14,432 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 375.000 115.000 0.050 [0.000]
+2026-10-12 22:51:14,750 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 375.000 115.000 0.050 [0.000]
+2026-10-12 22:51:17,538 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 375.000 115.000 0.050 [0.000]
+2026-10-12 22:51:17,762 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 375.000 115.000 0.050 [0.000]
+2026-10-12 22:51:21,663 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:21,783 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:21,888 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:22,030 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:22,142 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:22,277 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:22,379 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:22,509 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:22,736 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:23,238 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:23,415 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:23,587 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:23,762 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 365.000 115.000 0.050 [0.000]
+2026-10-12 22:51:25,338 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:25,465 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:25,587 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:25,709 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:25,835 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:25,966 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:26,087 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:26,212 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:26,371 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:26,927 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:27,115 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:27,265 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:27,757 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:27,958 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:28,140 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:29,734 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:30,551 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:30,840 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:42,247 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:43,486 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:44,051 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:44,278 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:44,480 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:51:45,042 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:45,838 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:46,190 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 361.000 115.000 0.050 [0.000]
+2026-10-12 22:51:47,098 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 460.000 115.000 0.050 [0.000]
+2026-10-12 22:51:59,751 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 115.000 0.050 [0.000]
+2026-10-12 22:52:01,141 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 115.000 0.050 [0.000]
+2026-10-12 22:52:01,983 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 115.000 0.050 [0.000]
+2026-10-12 22:52:05,331 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:06,464 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:06,778 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:06,995 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:07,205 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:07,411 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:07,617 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:07,829 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:08,030 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -100.000 115.000 0.050 [0.000]
+2026-10-12 22:52:09,115 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:10,126 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:10,472 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:10,635 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:16,552 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 400.000 115.000 0.050 [0.000]
+2026-10-12 22:52:18,433 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:18,558 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:19,022 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:19,754 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:19,914 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:27,457 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:27,569 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:27,723 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:27,859 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 370.000 115.000 0.050 [0.000]
+2026-10-12 22:52:29,111 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -40.000 115.000 0.050 [0.000]
+2026-10-12 22:52:29,216 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -40.000 115.000 0.050 [0.000]
+2026-10-12 22:52:29,607 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -40.000 115.000 0.050 [0.000]
+2026-10-12 22:52:29,777 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -40.000 115.000 0.050 [0.000]
+2026-10-12 22:52:29,905 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -40.000 115.000 0.050 [0.000]
+2026-10-12 22:52:31,132 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:31,252 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:33,591 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 115.000 0.050 [0.000]
+2026-10-12 22:52:33,860 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,022 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,188 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,323 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,429 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,607 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,820 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:34,984 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 115.000 0.050 [0.000]
+2026-10-12 22:52:58,826 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 235.000 0.050 [0.000]
+2026-10-12 22:53:01,023 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:01,158 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:01,322 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:01,469 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:01,602 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:01,770 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:01,897 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:02,092 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:02,247 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:02,396 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:02,607 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 185.000 0.050 [0.000]
+2026-10-12 22:53:11,329 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:11,488 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:11,625 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:11,797 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:11,934 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:12,085 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:12,233 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:12,391 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 181.000 0.050 [0.000]
+2026-10-12 22:53:32,408 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 200.000 0.050 [0.000]
+2026-10-12 22:53:36,109 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 200.000 0.050 [0.000]
+2026-10-12 22:53:36,277 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 200.000 0.050 [0.000]
+2026-10-12 22:53:36,442 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 200.000 0.050 [0.000]
+2026-10-12 22:53:43,968 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 200.000 0.050 [0.000]
+2026-10-12 22:53:55,344 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 190.000 0.050 [0.000]
+2026-10-12 22:53:55,518 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 190.000 0.050 [0.000]
+2026-10-12 22:54:28,214 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -24.950 [0.000]
+2026-10-12 22:54:29,156 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.950 [0.000]
+2026-10-12 22:54:29,312 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.950 [0.000]
+2026-10-12 22:54:29,465 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.950 [0.000]
+2026-10-12 22:54:29,620 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.950 [0.000]
+2026-10-12 22:54:30,047 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:30,191 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:30,345 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:30,589 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:30,717 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:30,822 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:31,303 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:31,488 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:34,214 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:54:34,346 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 180.000 -0.050 [0.000]
+2026-10-12 22:55:26,653 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -10.000 0.050 [0.000]
+2026-10-12 22:55:26,785 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -10.000 0.050 [0.000]
+2026-10-12 22:56:21,258 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 22:56:21,302 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 22:56:30,558 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -2.749 [0.000]
+2026-10-12 22:56:35,056 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:56:35,172 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:56:35,265 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:56:35,978 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:56:36,092 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:56:36,198 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:56:36,317 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:56:36,433 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:56:36,547 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:56:42,365 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 22:56:42,620 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 22:57:03,646 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 47.251 [0.000]
+2026-10-12 22:57:03,793 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 47.251 [0.000]
+2026-10-12 22:57:05,581 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.251 [0.000]
+2026-10-12 22:57:05,690 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.251 [0.000]
+2026-10-12 22:57:05,816 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.251 [0.000]
+2026-10-12 22:57:06,445 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.251 [0.000]
+2026-10-12 22:57:07,493 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 47.251 [0.000]
+2026-10-12 22:57:07,608 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 47.251 [0.000]
+2026-10-12 22:57:07,736 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 47.251 [0.000]
+2026-10-12 22:57:11,752 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:57:11,849 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:57:11,950 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:57:12,084 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:57:12,182 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:57:12,570 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:57:12,672 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:57:12,771 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:57:12,884 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:57:46,372 [klippy_apis.py:start_print()] - Requesting Job Start, filename = ExternalPresentationDrytestPaintReverseOrder.gcode
+2026-10-12 22:57:46,576 [job_state.py:_send_job_event()] - Job Started: ExternalPresentationDrytestPaintReverseOrder.gcode
+2026-10-12 22:58:43,863 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -15.000 0.000 47.251 [0.000]
+2026-10-12 22:58:47,973 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.251 [0.000]
+2026-10-12 22:58:48,194 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.251 [0.000]
+2026-10-12 22:58:53,448 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:58:53,594 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:58:53,711 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:58:53,821 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:58:55,040 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:58:55,174 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:58:55,327 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:59:04,457 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testInnerCircleOnly.gcode
+2026-10-12 22:59:04,598 [job_state.py:_send_job_event()] - Job Started: testInnerCircleOnly.gcode
+2026-10-12 22:59:44,459 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 53.251 [0.000]
+2026-10-12 22:59:44,662 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 53.251 [0.000]
+2026-10-12 22:59:45,921 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 53.251 [0.000]
+2026-10-12 22:59:45,947 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 53.251 [0.000]
+2026-10-12 22:59:46,138 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 53.251 [0.000]
+2026-10-12 22:59:46,340 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 53.251 [0.000]
+2026-10-12 22:59:50,054 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 53.251 [0.000]
+2026-10-12 22:59:53,309 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:59:53,834 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.749 [0.000]
+2026-10-12 22:59:55,039 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 22:59:55,233 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -0.049 [0.000]
+2026-10-12 23:00:18,774 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 23:00:18,851 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 23:00:43,713 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 47.251 [0.000]
+2026-10-12 23:00:44,768 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 47.251 [0.000]
+2026-10-12 23:00:45,809 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.251 [0.000]
+2026-10-12 23:01:57,912 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 23:01:57,943 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 23:02:14,460 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testPaint.gcode
+2026-10-12 23:02:14,500 [job_state.py:_send_job_event()] - Job Started: testPaint.gcode
+2026-10-12 23:02:32,003 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 23:02:32,060 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 23:02:49,370 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -70.000 15.000 47.250 [0.000]
+2026-10-12 23:02:50,377 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.250 [0.000]
+2026-10-12 23:02:50,378 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.250 [0.000]
+2026-10-12 23:02:50,378 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -10.000 15.000 47.250 [0.000]
+2026-10-12 23:02:55,306 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:55,870 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:56,050 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:56,214 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:56,392 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:56,557 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:56,738 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:56,920 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -5.000 47.250 [0.000]
+2026-10-12 23:02:57,621 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -95.000 47.250 [0.000]
+2026-10-12 23:02:59,908 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 47.250 [0.000]
+2026-10-12 23:03:00,034 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 47.250 [0.000]
+2026-10-12 23:03:00,202 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 -1.000 47.250 [0.000]
+2026-10-12 23:03:24,182 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:24,329 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:24,496 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:24,642 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:24,799 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:26,788 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:26,949 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:27,073 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: -1.000 0.000 47.250 [0.000]
+2026-10-12 23:03:35,408 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:35,619 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:35,797 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:35,963 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:36,316 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:36,506 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:36,692 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:36,913 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:37,488 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 -8.750 [0.000]
+2026-10-12 23:03:40,001 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:40,193 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:40,344 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:40,541 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:40,727 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:40,921 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:41,108 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:41,315 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:41,506 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:41,706 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:41,901 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:42,084 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:42,261 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 66.250 [0.000]
+2026-10-12 23:03:46,884 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:47,058 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:47,578 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:47,776 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:47,952 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:48,150 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:48,354 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:49,025 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.250 [0.000]
+2026-10-12 23:03:54,924 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:55,104 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:55,922 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:56,085 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:56,254 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:56,408 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:56,570 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:56,734 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:56,904 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:57,077 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:57,241 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:57,402 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:03:57,590 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 0.000 0.000 60.050 [0.000]
+2026-10-12 23:04:22,855 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testPaint.gcode
+2026-10-12 23:04:22,919 [job_state.py:_send_job_event()] - Job Started: testPaint.gcode
+2026-10-12 23:04:50,214 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testInnerCircleOnly.gcode
+2026-10-12 23:04:50,261 [job_state.py:_send_job_event()] - Job Started: testInnerCircleOnly.gcode
+2026-10-12 23:05:05,471 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testInnerCircleOnly.gcode
+2026-10-12 23:05:05,560 [job_state.py:_send_job_event()] - Job Started: testInnerCircleOnly.gcode
+2026-10-12 23:05:17,098 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 23:05:17,348 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 23:05:31,601 [klippy_apis.py:start_print()] - Requesting Job Start, filename = cableChainTest.gcode
+2026-10-12 23:05:31,643 [job_state.py:_send_job_event()] - Job Started: cableChainTest.gcode
+2026-10-12 23:06:01,685 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testPaintNoPurgeNoWipe.gcode
+2026-10-12 23:06:01,738 [job_state.py:_send_job_event()] - Job Started: testPaintNoPurgeNoWipe.gcode
+2026-10-12 23:07:21,526 [klippy_connection.py:_process_status_update()] - Klippy has shutdown
+2026-10-12 23:07:21,536 [proc_stats.py:_handle_shutdown()] - 
+Moonraker System Usage Statistics:
+System Time: 1791875212.024203, Usage: 1.49%, Memory: 55800 kB
+System Time: 1791875213.024456, Usage: 1.28%, Memory: 55800 kB
+System Time: 1791875214.026029, Usage: 1.3%, Memory: 55800 kB
+System Time: 1791875215.026974, Usage: 1.27%, Memory: 55800 kB
+System Time: 1791875216.027684, Usage: 1.23%, Memory: 55800 kB
+System Time: 1791875217.028016, Usage: 1.28%, Memory: 55800 kB
+System Time: 1791875218.029369, Usage: 1.32%, Memory: 55800 kB
+System Time: 1791875219.029184, Usage: 1.27%, Memory: 55800 kB
+System Time: 1791875220.029645, Usage: 1.29%, Memory: 55800 kB
+System Time: 1791875221.031648, Usage: 2.13%, Memory: 55800 kB
+System Time: 1791875222.031647, Usage: 1.46%, Memory: 55800 kB
+System Time: 1791875223.032604, Usage: 1.26%, Memory: 55800 kB
+System Time: 1791875224.034043, Usage: 1.27%, Memory: 55800 kB
+System Time: 1791875225.035252, Usage: 1.51%, Memory: 55800 kB
+System Time: 1791875226.036485, Usage: 1.32%, Memory: 55800 kB
+System Time: 1791875227.037231, Usage: 1.27%, Memory: 55800 kB
+System Time: 1791875228.038059, Usage: 1.32%, Memory: 55800 kB
+System Time: 1791875229.037677, Usage: 1.29%, Memory: 55800 kB
+System Time: 1791875230.037812, Usage: 1.29%, Memory: 55800 kB
+System Time: 1791875231.040802, Usage: 2.08%, Memory: 55800 kB
+System Time: 1791875232.040493, Usage: 1.48%, Memory: 55800 kB
+System Time: 1791875233.041083, Usage: 1.3%, Memory: 55800 kB
+System Time: 1791875234.042650, Usage: 1.33%, Memory: 55800 kB
+System Time: 1791875235.043748, Usage: 1.33%, Memory: 55800 kB
+System Time: 1791875236.044979, Usage: 1.29%, Memory: 55800 kB
+System Time: 1791875237.045193, Usage: 1.2%, Memory: 55800 kB
+System Time: 1791875238.047041, Usage: 1.28%, Memory: 55800 kB
+System Time: 1791875239.047120, Usage: 1.29%, Memory: 55800 kB
+System Time: 1791875240.047928, Usage: 1.3%, Memory: 55800 kB
+System Time: 1791875241.050109, Usage: 2.16%, Memory: 55800 kB
+CPU Temperature: 44.0
+2026-10-12 23:07:40,863 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:07:42,885 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:08:09,717 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:08:10,977 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:08:11,765 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:08:11,766 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:08:11,768 [klippy_connection.py:_check_ready()] - 
+Can not update MCU 'mcu' config as it is shutdown
+Once the underlying issue is corrected, use the
+"FIRMWARE_RESTART" command to reset the firmware, reload the
+config, and restart the host software.
+Error configuring printer
+
+2026-10-12 23:08:21,854 [server.py:_handle_term_signal()] - Exiting with signal SIGTERM
+2026-10-12 23:08:21,879 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:08:21,936 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.info, Code: 503, Message: Klippy Host not connected
+2026-10-12 23:08:22,080 [websockets.py:write_to_socket()] - Websocket closed while writing: 138479264030144
+2026-10-12 23:08:22,406 [websockets.py:on_close()] - Websocket Closed: ID: 138479264030144 Close Code: 1001, Close Reason: Server Shutdown, Pong Time Elapsed: 18.36
+2026-10-12 23:08:22,446 [server.py:main()] - Server Shutdown
+-------------------- Log Start | Tue Oct 13 07:09:06 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True
+2026-10-12 23:09:07,005 [confighelper.py:read_file()] - Configuration File '/home/klipper-pc/printer_data/config/moonraker.conf' parsed, total size: 993 B
+2026-10-12 23:09:07,006 [server.py:add_log_rollover_item()] - 
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 23:09:07,114 [server.py:load_component()] - Component (secrets) loaded
+2026-10-12 23:09:07,129 [server.py:load_component()] - Component (template) loaded
+2026-10-12 23:09:07,138 [server.py:load_component()] - Component (klippy_connection) loaded
+2026-10-12 23:09:07,835 [application.py:__init__()] - Detected Tornado Version 6.5.1
+2026-10-12 23:09:07,837 [server.py:load_component()] - Component (application) loaded
+2026-10-12 23:09:07,889 [server.py:load_component()] - Component (websockets) loaded
+2026-10-12 23:09:07,929 [server.py:add_log_rollover_item()] - Loading Sqlite database provider. Sqlite Version: 3.45.1
+2026-10-12 23:09:07,931 [server.py:add_log_rollover_item()] - Unsafe Shutdown Count: 6
+2026-10-12 23:09:07,932 [server.py:load_component()] - Component (database) loaded
+2026-10-12 23:09:07,987 [server.py:load_component()] - Component (dbus_manager) loaded
+2026-10-12 23:09:08,017 [file_manager.py:__init__()] - Using File System Observer: inotify
+2026-10-12 23:09:08,043 [server.py:load_component()] - Component (file_manager) loaded
+2026-10-12 23:09:08,064 [database.py:register_table()] - Found registered table authorized_users
+2026-10-12 23:09:08,068 [authorization.py:__init__()] - Authorization Configuration Loaded
+Trusted Clients:
+172.31.0.0/16
+10.0.0.0/8
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.168.0.0/16
+fc00::/7
+fe80::/10
+::1/128
+CORS Domains:
+.*\.lan
+.*\.local
+.*://localhost
+.*://localhost:.*
+.*://my\.mainsail\.xyz
+.*://app\.fluidd\.xyz
+2026-10-12 23:09:08,070 [server.py:load_component()] - Component (authorization) loaded
+2026-10-12 23:09:08,076 [server.py:load_component()] - Component (klippy_apis) loaded
+2026-10-12 23:09:08,204 [server.py:add_log_rollover_item()] - 
+System Info:
+
+***python***
+  version: (3, 12, 3, 'final', 0)
+  version_string: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) N4000 CPU @ 1.10GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 7964152
+  memory_units: kB
+
+***sd_info***
+
+***distribution***
+  name: Ubuntu 24.04.3 LTS
+  id: ubuntu
+  version: 24.04
+  version_parts: {'major': '24', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: noble
+  release_info: {}
+  kernel_version: 6.14.0-36-generic
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+2026-10-12 23:09:08,206 [server.py:load_component()] - Component (shell_command) loaded
+2026-10-12 23:09:08,206 [machine.py:__init__()] - Using System Provider: systemd_dbus
+2026-10-12 23:09:08,209 [server.py:add_log_rollover_item()] - Module libcamera unavailable, import failed
+2026-10-12 23:09:08,209 [server.py:load_component()] - Component (machine) loaded
+2026-10-12 23:09:08,212 [server.py:load_component()] - Component (data_store) loaded
+2026-10-12 23:09:08,214 [proc_stats.py:__init__()] - Unable to find 'vcgencmd', throttle checking disabled
+2026-10-12 23:09:08,215 [proc_stats.py:_get_cpu_thermal_file()] - Monitoring temperature for Intel CPU
+2026-10-12 23:09:08,215 [server.py:load_component()] - Component (proc_stats) loaded
+2026-10-12 23:09:08,216 [server.py:load_component()] - Component (job_state) loaded
+2026-10-12 23:09:08,219 [server.py:load_component()] - Component (job_queue) loaded
+2026-10-12 23:09:08,221 [database.py:register_table()] - Found registered table job_history
+2026-10-12 23:09:08,223 [database.py:register_table()] - Found registered table job_totals
+2026-10-12 23:09:08,224 [server.py:load_component()] - Component (history) loaded
+2026-10-12 23:09:08,231 [server.py:load_component()] - Component (http_client) loaded
+2026-10-12 23:09:08,237 [server.py:load_component()] - Component (announcements) loaded
+2026-10-12 23:09:08,239 [server.py:load_component()] - Component (webcam) loaded
+2026-10-12 23:09:08,242 [server.py:load_component()] - Component (extensions) loaded
+2026-10-12 23:09:08,291 [base_deploy.py:log_info()] - Git Repo moonraker: Detected virtualenv: /home/klipper-pc/moonraker-env
+2026-10-12 23:09:08,293 [base_deploy.py:log_info()] - Git Repo klipper: Detected virtualenv: /home/klipper-pc/klippy-env
+2026-10-12 23:09:08,295 [base_deploy.py:log_info()] - Web Client mainsail: Configured persistent files: ['config.json']
+2026-10-12 23:09:08,300 [server.py:load_component()] - Component (update_manager) loaded
+2026-10-12 23:09:08,304 [server.py:load_component()] - Component (octoprint_compat) loaded
+2026-10-12 23:09:08,304 [server.py:_initialize_component()] - Performing Component Post Init: [database]
+2026-10-12 23:09:08,309 [server.py:_initialize_component()] - Performing Component Post Init: [dbus_manager]
+2026-10-12 23:09:08,315 [server.py:_initialize_component()] - Performing Component Post Init: [authorization]
+2026-10-12 23:09:08,316 [server.py:_initialize_component()] - Performing Component Post Init: [machine]
+2026-10-12 23:09:08,317 [machine.py:validation_init()] - Installation version in database up to date
+2026-10-12 23:09:08,430 [machine.py:check_virt_status()] - No Virtualization Detected
+2026-10-12 23:09:08,453 [machine.py:_find_public_ip()] - Failed to detect local IP address
+2026-10-12 23:09:08,553 [server.py:add_log_rollover_item()] - 
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['sysinit.target', 'system.slice', '-.mount', 'network-online.target']
+**After=['network-online.target', 'systemd-journald.socket', 'basic.target', 'sysinit.target', '-.mount', 'system.slice']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/moonraker.env
+**ExecStart=/home/klipper-pc/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/klipper-pc/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=klipper-pc
+2026-10-12 23:09:08,553 [server.py:_initialize_component()] - Performing Component Post Init: [proc_stats]
+2026-10-12 23:09:08,553 [server.py:_initialize_component()] - Performing Component Post Init: [history]
+2026-10-12 23:09:08,558 [server.py:_initialize_component()] - Performing Component Post Init: [announcements]
+2026-10-12 23:09:08,574 [server.py:_initialize_component()] - Performing Component Post Init: [webcam]
+2026-10-12 23:09:08,579 [server.py:_initialize_component()] - Performing Component Post Init: [klippy_connection]
+2026-10-12 23:09:08,579 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['-.mount', 'system.slice', 'sysinit.target']
+**After=['-.mount', 'sysinit.target', 'network-online.target', 'systemd-journald.socket', 'basic.target', 'system.slice']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:09:08,579 [server.py:_initialize_component()] - Performing Component Post Init: [update_manager]
+2026-10-12 23:09:08,621 [base_deploy.py:log_info()] - PackageDeploy: PackageKit Provider Configured
+2026-10-12 23:09:08,622 [git_deploy.py:log_repo_info()] - Git Repo moonraker Detected:
+Owner: Arksine
+Repository Name: moonraker
+Path: /home/klipper-pc/moonraker
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Arksine/moonraker
+Recovery URL: https://github.com/Arksine/moonraker
+Current Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Upstream Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Current Version: v0.9.3-128-g960e9338
+Upstream Version: v0.9.3-128-g960e9338
+Rollback Commit: 960e933837413b4b365074580aeb14d04437204e
+Rollback Branch: master
+Rollback Version: v0.9.3-128-g960e9338
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:09:08,623 [git_deploy.py:log_repo_info()] - Git Repo klipper Detected:
+Owner: Klipper3d
+Repository Name: klipper
+Path: /home/klipper-pc/klipper
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Klipper3d/klipper
+Recovery URL: https://github.com/Klipper3d/klipper
+Current Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Upstream Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Current Version: v0.13.0-406-gbaf188bd
+Upstream Version: v0.13.0-406-gbaf188bd
+Rollback Commit: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Rollback Branch: master
+Rollback Version: v0.13.0-406-gbaf188bd
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+Repo Warnings:
+  Repo has untracked source files: ['klippy/extras/led_effect.py']
+2026-10-12 23:09:08,627 [base_deploy.py:log_info()] - Web Client mainsail: Detected
+Repo: mainsail-crew/mainsail
+Channel: stable
+Path: /home/klipper-pc/mainsail
+Local Version: v2.14.0
+Remote Version: v2.14.0
+Valid: True
+Fallback Detected: False
+Pre-release: False
+Download Url: https://github.com/mainsail-crew/mainsail/releases/download/v2.14.0/mainsail.zip
+Download Size: 2848929
+Content Type: application/zip
+Rollback Version: v2.14.0
+Rollback Repo: mainsail-crew/mainsail
+2026-10-12 23:09:08,628 [git_deploy.py:log_repo_info()] - Git Repo mainsail-config Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/mainsail-config
+Remote: origin
+Branch: master
+Remote URL: https://github.com/mainsail-crew/mainsail-config.git
+Recovery URL: https://github.com/mainsail-crew/mainsail-config.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:09:08,629 [git_deploy.py:log_repo_info()] - Git Repo led_effect Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/klipper-led_effect
+Remote: origin
+Branch: master
+Remote URL: https://github.com/julianschill/klipper-led_effect.git
+Recovery URL: https://github.com/julianschill/klipper-led_effect.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:09:08,630 [base_deploy.py:log_info()] - PackageKit: Next refresh in: 6 Days, 23 Hours, 28 Minutes, 33 Seconds
+2026-10-12 23:09:08,630 [base_deploy.py:log_info()] - Git Repo moonraker: Next refresh in: 6 Days, 23 Hours, 28 Minutes, 36 Seconds
+2026-10-12 23:09:08,630 [base_deploy.py:log_info()] - Git Repo klipper: Next refresh in: 6 Days, 23 Hours, 28 Minutes, 39 Seconds
+2026-10-12 23:09:08,630 [base_deploy.py:log_info()] - Web Client mainsail: Next refresh in: 6 Days, 23 Hours, 28 Minutes, 40 Seconds
+2026-10-12 23:09:08,630 [base_deploy.py:log_info()] - Git Repo mainsail-config: Next refresh in: 6 Days, 23 Hours, 28 Minutes, 43 Seconds
+2026-10-12 23:09:08,630 [base_deploy.py:log_info()] - Git Repo led_effect: Next refresh in: 6 Days, 23 Hours, 28 Minutes, 45 Seconds
+2026-10-12 23:09:08,640 [extensions.py:start_unix_server()] - Creating Unix Domain Socket at '/home/klipper-pc/printer_data/comms/moonraker.sock'
+2026-10-12 23:09:08,641 [server.py:start_server()] - Starting Moonraker on (0.0.0.0, 7125), Hostname: klipper-pc
+2026-10-12 23:09:08,642 [application.py:listen()] - SSL Certificate/Key not configured, aborting HTTPS Server startup
+2026-10-12 23:09:08,893 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:09:08,921 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['sysinit.target', '-.mount', 'system.slice']
+**After=['system.slice', '-.mount', 'network-online.target', 'systemd-journald.socket', 'sysinit.target', 'basic.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:09:09,173 [server.py:add_log_rollover_item()] - Klipper Version: v0.13.0-406-gbaf188bd-dirty
+2026-10-12 23:09:09,182 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:09:09,183 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:09:09,184 [klippy_connection.py:_check_ready()] - 
+Can not update MCU 'mcu' config as it is shutdown
+Once the underlying issue is corrected, use the
+"FIRMWARE_RESTART" command to reset the firmware, reload the
+config, and restart the host software.
+Error configuring printer
+
+2026-10-12 23:09:10,596 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:09:12,609 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:09:21,668 [authorization.py:_check_trusted_connection()] - Trusted Connection Detected, IP: 10.42.0.1
+2026-10-12 23:09:21,673 [application.py:log_request()] - 101 GET /websocket (10.42.0.1) [_TRUSTED_USER_] 7.00ms
+2026-10-12 23:09:21,674 [websockets.py:open()] - Websocket Opened: ID: 139638586997360, Proxied: True, User Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0, Host Name: 10.42.0.1
+2026-10-12 23:09:21,820 [websockets.py:_handle_identify()] - Websocket 139638586997360 Client Identified - Name: mainsail, Version: 2.14.0, Type: web
+2026-10-12 23:09:32,357 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:09:32,422 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.info, Code: 503, Message: Klippy Host not connected
+2026-10-12 23:09:33,613 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:09:34,715 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:09:34,716 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:09:34,966 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:09:35,220 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:09:35,721 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:09:41,663 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 10.000 0.000 0.000 [0.000]
+2026-10-12 23:09:44,403 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 10.000 0.000 0.000 [0.000]
+2026-10-12 23:09:50,295 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 23:09:50,522 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 23:09:51,774 [klippy_connection.py:_process_status_update()] - Klippy has shutdown
+2026-10-12 23:09:51,776 [proc_stats.py:_handle_shutdown()] - 
+Moonraker System Usage Statistics:
+System Time: 1791875362.562525, Usage: 37.39%, Memory: 55388 kB
+System Time: 1791875363.563169, Usage: 1.21%, Memory: 55388 kB
+System Time: 1791875364.567380, Usage: 0.47%, Memory: 55388 kB
+System Time: 1791875365.565027, Usage: 0.36%, Memory: 55388 kB
+System Time: 1791875366.568467, Usage: 0.71%, Memory: 55388 kB
+System Time: 1791875367.570679, Usage: 0.7%, Memory: 55388 kB
+System Time: 1791875368.571227, Usage: 1.01%, Memory: 55388 kB
+System Time: 1791875369.574530, Usage: 1.42%, Memory: 55388 kB
+System Time: 1791875370.571378, Usage: 1.03%, Memory: 55388 kB
+System Time: 1791875371.570467, Usage: 0.32%, Memory: 55388 kB
+System Time: 1791875372.576411, Usage: 1.02%, Memory: 55388 kB
+System Time: 1791875373.570594, Usage: 0.73%, Memory: 55388 kB
+System Time: 1791875374.571689, Usage: 3.14%, Memory: 55960 kB
+System Time: 1791875375.572855, Usage: 1.55%, Memory: 55968 kB
+System Time: 1791875376.573958, Usage: 1.11%, Memory: 55968 kB
+System Time: 1791875377.576825, Usage: 0.71%, Memory: 55968 kB
+System Time: 1791875378.576650, Usage: 0.88%, Memory: 55968 kB
+System Time: 1791875379.574694, Usage: 1.88%, Memory: 55968 kB
+System Time: 1791875380.577266, Usage: 0.93%, Memory: 55968 kB
+System Time: 1791875381.580328, Usage: 1.18%, Memory: 55968 kB
+System Time: 1791875382.576710, Usage: 1.48%, Memory: 55968 kB
+System Time: 1791875383.577318, Usage: 0.86%, Memory: 55968 kB
+System Time: 1791875384.579451, Usage: 1.24%, Memory: 55972 kB
+System Time: 1791875385.578714, Usage: 0.72%, Memory: 55972 kB
+System Time: 1791875386.581268, Usage: 0.72%, Memory: 55972 kB
+System Time: 1791875387.582605, Usage: 1.19%, Memory: 55972 kB
+System Time: 1791875388.580816, Usage: 1.18%, Memory: 55972 kB
+System Time: 1791875389.581078, Usage: 1.22%, Memory: 55972 kB
+System Time: 1791875390.582140, Usage: 1.87%, Memory: 55980 kB
+System Time: 1791875391.585171, Usage: 1.29%, Memory: 55988 kB
+CPU Temperature: 50.0
+2026-10-12 23:10:28,034 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:10:29,299 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:10:30,380 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:10:30,382 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:10:30,632 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:10:30,885 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:10:31,386 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:10:36,791 [server.py:_handle_term_signal()] - Exiting with signal SIGTERM
+2026-10-12 23:10:36,833 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:10:37,051 [websockets.py:write_to_socket()] - Websocket closed while writing: 139638586997360
+2026-10-12 23:10:37,498 [websockets.py:on_close()] - Websocket Closed: ID: 139638586997360 Close Code: 1001, Close Reason: Server Shutdown, Pong Time Elapsed: 5.81
+2026-10-12 23:10:37,659 [server.py:main()] - Server Shutdown
+-------------------- Log Start | Tue Oct 13 07:11:19 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True
+2026-10-12 23:11:19,272 [confighelper.py:read_file()] - Configuration File '/home/klipper-pc/printer_data/config/moonraker.conf' parsed, total size: 993 B
+2026-10-12 23:11:19,272 [server.py:add_log_rollover_item()] - 
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 23:11:19,367 [server.py:load_component()] - Component (secrets) loaded
+2026-10-12 23:11:19,379 [server.py:load_component()] - Component (template) loaded
+2026-10-12 23:11:19,413 [server.py:load_component()] - Component (klippy_connection) loaded
+2026-10-12 23:11:20,183 [application.py:__init__()] - Detected Tornado Version 6.5.1
+2026-10-12 23:11:20,184 [server.py:load_component()] - Component (application) loaded
+2026-10-12 23:11:20,219 [server.py:load_component()] - Component (websockets) loaded
+2026-10-12 23:11:20,238 [server.py:add_log_rollover_item()] - Loading Sqlite database provider. Sqlite Version: 3.45.1
+2026-10-12 23:11:20,241 [server.py:add_log_rollover_item()] - Unsafe Shutdown Count: 6
+2026-10-12 23:11:20,243 [server.py:load_component()] - Component (database) loaded
+2026-10-12 23:11:20,337 [server.py:load_component()] - Component (dbus_manager) loaded
+2026-10-12 23:11:20,360 [file_manager.py:__init__()] - Using File System Observer: inotify
+2026-10-12 23:11:20,377 [server.py:load_component()] - Component (file_manager) loaded
+2026-10-12 23:11:20,394 [database.py:register_table()] - Found registered table authorized_users
+2026-10-12 23:11:20,395 [authorization.py:__init__()] - Authorization Configuration Loaded
+Trusted Clients:
+172.31.0.0/16
+10.0.0.0/8
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.168.0.0/16
+fc00::/7
+fe80::/10
+::1/128
+CORS Domains:
+.*\.lan
+.*\.local
+.*://localhost
+.*://localhost:.*
+.*://my\.mainsail\.xyz
+.*://app\.fluidd\.xyz
+2026-10-12 23:11:20,397 [server.py:load_component()] - Component (authorization) loaded
+2026-10-12 23:11:20,400 [server.py:load_component()] - Component (klippy_apis) loaded
+2026-10-12 23:11:20,480 [server.py:add_log_rollover_item()] - 
+System Info:
+
+***python***
+  version: (3, 12, 3, 'final', 0)
+  version_string: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) N4000 CPU @ 1.10GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 7964152
+  memory_units: kB
+
+***sd_info***
+
+***distribution***
+  name: Ubuntu 24.04.3 LTS
+  id: ubuntu
+  version: 24.04
+  version_parts: {'major': '24', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: noble
+  release_info: {}
+  kernel_version: 6.14.0-36-generic
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+2026-10-12 23:11:20,483 [server.py:load_component()] - Component (shell_command) loaded
+2026-10-12 23:11:20,483 [machine.py:__init__()] - Using System Provider: systemd_dbus
+2026-10-12 23:11:20,489 [server.py:add_log_rollover_item()] - Module libcamera unavailable, import failed
+2026-10-12 23:11:20,490 [server.py:load_component()] - Component (machine) loaded
+2026-10-12 23:11:20,492 [server.py:load_component()] - Component (data_store) loaded
+2026-10-12 23:11:20,494 [proc_stats.py:__init__()] - Unable to find 'vcgencmd', throttle checking disabled
+2026-10-12 23:11:20,494 [proc_stats.py:_get_cpu_thermal_file()] - Monitoring temperature for Intel CPU
+2026-10-12 23:11:20,495 [server.py:load_component()] - Component (proc_stats) loaded
+2026-10-12 23:11:20,496 [server.py:load_component()] - Component (job_state) loaded
+2026-10-12 23:11:20,498 [server.py:load_component()] - Component (job_queue) loaded
+2026-10-12 23:11:20,500 [database.py:register_table()] - Found registered table job_history
+2026-10-12 23:11:20,500 [database.py:register_table()] - Found registered table job_totals
+2026-10-12 23:11:20,502 [server.py:load_component()] - Component (history) loaded
+2026-10-12 23:11:20,506 [server.py:load_component()] - Component (http_client) loaded
+2026-10-12 23:11:20,509 [server.py:load_component()] - Component (announcements) loaded
+2026-10-12 23:11:20,511 [server.py:load_component()] - Component (webcam) loaded
+2026-10-12 23:11:20,513 [server.py:load_component()] - Component (extensions) loaded
+2026-10-12 23:11:20,518 [server.py:load_component()] - Component (octoprint_compat) loaded
+2026-10-12 23:11:20,567 [base_deploy.py:log_info()] - Git Repo moonraker: Detected virtualenv: /home/klipper-pc/moonraker-env
+2026-10-12 23:11:20,569 [base_deploy.py:log_info()] - Git Repo klipper: Detected virtualenv: /home/klipper-pc/klippy-env
+2026-10-12 23:11:20,571 [base_deploy.py:log_info()] - Web Client mainsail: Configured persistent files: ['config.json']
+2026-10-12 23:11:20,575 [server.py:load_component()] - Component (update_manager) loaded
+2026-10-12 23:11:20,575 [server.py:_initialize_component()] - Performing Component Post Init: [database]
+2026-10-12 23:11:20,580 [server.py:_initialize_component()] - Performing Component Post Init: [dbus_manager]
+2026-10-12 23:11:20,586 [server.py:_initialize_component()] - Performing Component Post Init: [authorization]
+2026-10-12 23:11:20,587 [server.py:_initialize_component()] - Performing Component Post Init: [machine]
+2026-10-12 23:11:20,588 [machine.py:validation_init()] - Installation version in database up to date
+2026-10-12 23:11:20,710 [machine.py:check_virt_status()] - No Virtualization Detected
+2026-10-12 23:11:20,737 [machine.py:_find_public_ip()] - Failed to detect local IP address
+2026-10-12 23:11:20,832 [server.py:add_log_rollover_item()] - 
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['network-online.target', 'system.slice', 'sysinit.target', '-.mount']
+**After=['systemd-journald.socket', 'basic.target', 'network-online.target', '-.mount', 'sysinit.target', 'system.slice']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/moonraker.env
+**ExecStart=/home/klipper-pc/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/klipper-pc/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=klipper-pc
+2026-10-12 23:11:20,834 [server.py:_initialize_component()] - Performing Component Post Init: [proc_stats]
+2026-10-12 23:11:20,834 [server.py:_initialize_component()] - Performing Component Post Init: [history]
+2026-10-12 23:11:20,841 [server.py:_initialize_component()] - Performing Component Post Init: [announcements]
+2026-10-12 23:11:20,918 [server.py:_initialize_component()] - Performing Component Post Init: [webcam]
+2026-10-12 23:11:20,923 [server.py:_initialize_component()] - Performing Component Post Init: [klippy_connection]
+2026-10-12 23:11:20,923 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['sysinit.target', '-.mount', 'system.slice']
+**After=['system.slice', '-.mount', 'network-online.target', 'systemd-journald.socket', 'sysinit.target', 'basic.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:11:20,923 [server.py:_initialize_component()] - Performing Component Post Init: [update_manager]
+2026-10-12 23:11:20,993 [base_deploy.py:log_info()] - PackageDeploy: PackageKit Provider Configured
+2026-10-12 23:11:20,995 [git_deploy.py:log_repo_info()] - Git Repo moonraker Detected:
+Owner: Arksine
+Repository Name: moonraker
+Path: /home/klipper-pc/moonraker
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Arksine/moonraker
+Recovery URL: https://github.com/Arksine/moonraker
+Current Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Upstream Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Current Version: v0.9.3-128-g960e9338
+Upstream Version: v0.9.3-128-g960e9338
+Rollback Commit: 960e933837413b4b365074580aeb14d04437204e
+Rollback Branch: master
+Rollback Version: v0.9.3-128-g960e9338
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:11:20,997 [git_deploy.py:log_repo_info()] - Git Repo klipper Detected:
+Owner: Klipper3d
+Repository Name: klipper
+Path: /home/klipper-pc/klipper
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Klipper3d/klipper
+Recovery URL: https://github.com/Klipper3d/klipper
+Current Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Upstream Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Current Version: v0.13.0-406-gbaf188bd
+Upstream Version: v0.13.0-406-gbaf188bd
+Rollback Commit: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Rollback Branch: master
+Rollback Version: v0.13.0-406-gbaf188bd
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+Repo Warnings:
+  Repo has untracked source files: ['klippy/extras/led_effect.py']
+2026-10-12 23:11:21,004 [base_deploy.py:log_info()] - Web Client mainsail: Detected
+Repo: mainsail-crew/mainsail
+Channel: stable
+Path: /home/klipper-pc/mainsail
+Local Version: v2.14.0
+Remote Version: v2.14.0
+Valid: True
+Fallback Detected: False
+Pre-release: False
+Download Url: https://github.com/mainsail-crew/mainsail/releases/download/v2.14.0/mainsail.zip
+Download Size: 2848929
+Content Type: application/zip
+Rollback Version: v2.14.0
+Rollback Repo: mainsail-crew/mainsail
+2026-10-12 23:11:21,006 [git_deploy.py:log_repo_info()] - Git Repo mainsail-config Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/mainsail-config
+Remote: origin
+Branch: master
+Remote URL: https://github.com/mainsail-crew/mainsail-config.git
+Recovery URL: https://github.com/mainsail-crew/mainsail-config.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:11:21,009 [git_deploy.py:log_repo_info()] - Git Repo led_effect Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/klipper-led_effect
+Remote: origin
+Branch: master
+Remote URL: https://github.com/julianschill/klipper-led_effect.git
+Recovery URL: https://github.com/julianschill/klipper-led_effect.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:11:21,010 [base_deploy.py:log_info()] - PackageKit: Next refresh in: 6 Days, 23 Hours, 26 Minutes, 21 Seconds
+2026-10-12 23:11:21,010 [base_deploy.py:log_info()] - Git Repo moonraker: Next refresh in: 6 Days, 23 Hours, 26 Minutes, 24 Seconds
+2026-10-12 23:11:21,010 [base_deploy.py:log_info()] - Git Repo klipper: Next refresh in: 6 Days, 23 Hours, 26 Minutes, 26 Seconds
+2026-10-12 23:11:21,010 [base_deploy.py:log_info()] - Web Client mainsail: Next refresh in: 6 Days, 23 Hours, 26 Minutes, 27 Seconds
+2026-10-12 23:11:21,010 [base_deploy.py:log_info()] - Git Repo mainsail-config: Next refresh in: 6 Days, 23 Hours, 26 Minutes, 30 Seconds
+2026-10-12 23:11:21,010 [base_deploy.py:log_info()] - Git Repo led_effect: Next refresh in: 6 Days, 23 Hours, 26 Minutes, 33 Seconds
+2026-10-12 23:11:21,025 [extensions.py:start_unix_server()] - Creating Unix Domain Socket at '/home/klipper-pc/printer_data/comms/moonraker.sock'
+2026-10-12 23:11:21,026 [server.py:start_server()] - Starting Moonraker on (0.0.0.0, 7125), Hostname: klipper-pc
+2026-10-12 23:11:21,028 [application.py:listen()] - SSL Certificate/Key not configured, aborting HTTPS Server startup
+2026-10-12 23:11:21,279 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:11:21,335 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', '-.mount', 'sysinit.target']
+**After=['systemd-journald.socket', 'sysinit.target', 'basic.target', 'system.slice', '-.mount', 'network-online.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:11:21,587 [server.py:add_log_rollover_item()] - Klipper Version: v0.13.0-406-gbaf188bd-dirty
+2026-10-12 23:11:21,596 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:11:21,597 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:11:21,847 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:11:22,101 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:11:22,600 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:11:22,937 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:11:24,950 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:11:33,938 [authorization.py:_check_trusted_connection()] - Trusted Connection Detected, IP: 10.42.0.1
+2026-10-12 23:11:33,942 [application.py:log_request()] - 101 GET /websocket (10.42.0.1) [_TRUSTED_USER_] 6.89ms
+2026-10-12 23:11:33,942 [websockets.py:open()] - Websocket Opened: ID: 125301723815216, Proxied: True, User Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0, Host Name: 10.42.0.1
+2026-10-12 23:11:34,164 [websockets.py:_handle_identify()] - Websocket 125301723815216 Client Identified - Name: mainsail, Version: 2.14.0, Type: web
+2026-10-12 23:11:45,043 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: -10.000 0.000 0.000 [0.000]
+2026-10-12 23:11:51,456 [klippy_connection.py:_process_status_update()] - Klippy has shutdown
+2026-10-12 23:11:51,461 [proc_stats.py:_handle_shutdown()] - 
+Moonraker System Usage Statistics:
+System Time: 1791875481.840481, Usage: 8.23%, Memory: 55124 kB
+System Time: 1791875482.851088, Usage: 1.22%, Memory: 55196 kB
+System Time: 1791875483.842289, Usage: 0.94%, Memory: 55200 kB
+System Time: 1791875484.839534, Usage: 0.85%, Memory: 55208 kB
+System Time: 1791875485.839609, Usage: 0.69%, Memory: 55212 kB
+System Time: 1791875486.841033, Usage: 0.44%, Memory: 55212 kB
+System Time: 1791875487.841979, Usage: 0.43%, Memory: 55212 kB
+System Time: 1791875488.841862, Usage: 0.49%, Memory: 55216 kB
+System Time: 1791875489.844821, Usage: 0.44%, Memory: 55216 kB
+System Time: 1791875490.842797, Usage: 0.46%, Memory: 55216 kB
+System Time: 1791875491.843575, Usage: 0.98%, Memory: 55224 kB
+System Time: 1791875492.843048, Usage: 0.54%, Memory: 55224 kB
+System Time: 1791875493.846730, Usage: 0.44%, Memory: 55224 kB
+System Time: 1791875494.844409, Usage: 36.66%, Memory: 55368 kB
+System Time: 1791875495.845880, Usage: 2.02%, Memory: 55392 kB
+System Time: 1791875496.845288, Usage: 0.65%, Memory: 55392 kB
+System Time: 1791875497.847453, Usage: 0.73%, Memory: 55392 kB
+System Time: 1791875498.849421, Usage: 0.83%, Memory: 55392 kB
+System Time: 1791875499.849747, Usage: 1.29%, Memory: 55392 kB
+System Time: 1791875500.850139, Usage: 1.29%, Memory: 55392 kB
+System Time: 1791875501.848698, Usage: 1.91%, Memory: 55392 kB
+System Time: 1791875502.852720, Usage: 0.69%, Memory: 55392 kB
+System Time: 1791875503.851592, Usage: 0.75%, Memory: 55392 kB
+System Time: 1791875504.854104, Usage: 1.04%, Memory: 55392 kB
+System Time: 1791875505.854598, Usage: 1.45%, Memory: 55392 kB
+System Time: 1791875506.852970, Usage: 1.05%, Memory: 55392 kB
+System Time: 1791875507.851527, Usage: 0.86%, Memory: 55392 kB
+System Time: 1791875508.853267, Usage: 0.79%, Memory: 55392 kB
+System Time: 1791875509.853190, Usage: 0.67%, Memory: 55392 kB
+System Time: 1791875510.856210, Usage: 0.68%, Memory: 55392 kB
+CPU Temperature: 49.0
+2026-10-12 23:12:20,144 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:12:21,405 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:12:22,460 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:12:22,463 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:12:22,711 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:12:22,966 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:12:23,466 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:12:26,695 [server.py:_handle_term_signal()] - Exiting with signal SIGTERM
+2026-10-12 23:12:26,737 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:12:26,877 [websockets.py:write_to_socket()] - Websocket closed while writing: 125301723815216
+2026-10-12 23:12:27,485 [websockets.py:on_close()] - Websocket Closed: ID: 125301723815216 Close Code: 1001, Close Reason: Server Shutdown, Pong Time Elapsed: 13.54
+2026-10-12 23:12:27,536 [server.py:main()] - Server Shutdown
+-------------------- Log Start | Tue Oct 13 07:13:08 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True
+2026-10-12 23:13:08,980 [confighelper.py:read_file()] - Configuration File '/home/klipper-pc/printer_data/config/moonraker.conf' parsed, total size: 993 B
+2026-10-12 23:13:08,981 [server.py:add_log_rollover_item()] - 
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 23:13:09,080 [server.py:load_component()] - Component (secrets) loaded
+2026-10-12 23:13:09,093 [server.py:load_component()] - Component (template) loaded
+2026-10-12 23:13:09,101 [server.py:load_component()] - Component (klippy_connection) loaded
+2026-10-12 23:13:09,774 [application.py:__init__()] - Detected Tornado Version 6.5.1
+2026-10-12 23:13:09,777 [server.py:load_component()] - Component (application) loaded
+2026-10-12 23:13:09,822 [server.py:load_component()] - Component (websockets) loaded
+2026-10-12 23:13:09,842 [server.py:add_log_rollover_item()] - Loading Sqlite database provider. Sqlite Version: 3.45.1
+2026-10-12 23:13:09,846 [server.py:add_log_rollover_item()] - Unsafe Shutdown Count: 6
+2026-10-12 23:13:09,848 [server.py:load_component()] - Component (database) loaded
+2026-10-12 23:13:09,948 [server.py:load_component()] - Component (dbus_manager) loaded
+2026-10-12 23:13:09,982 [file_manager.py:__init__()] - Using File System Observer: inotify
+2026-10-12 23:13:10,011 [server.py:load_component()] - Component (file_manager) loaded
+2026-10-12 23:13:10,038 [database.py:register_table()] - Found registered table authorized_users
+2026-10-12 23:13:10,040 [authorization.py:__init__()] - Authorization Configuration Loaded
+Trusted Clients:
+172.31.0.0/16
+10.0.0.0/8
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.168.0.0/16
+fc00::/7
+fe80::/10
+::1/128
+CORS Domains:
+.*\.lan
+.*\.local
+.*://localhost
+.*://localhost:.*
+.*://my\.mainsail\.xyz
+.*://app\.fluidd\.xyz
+2026-10-12 23:13:10,041 [server.py:load_component()] - Component (authorization) loaded
+2026-10-12 23:13:10,045 [server.py:load_component()] - Component (klippy_apis) loaded
+2026-10-12 23:13:10,225 [server.py:add_log_rollover_item()] - 
+System Info:
+
+***python***
+  version: (3, 12, 3, 'final', 0)
+  version_string: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) N4000 CPU @ 1.10GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 7964156
+  memory_units: kB
+
+***sd_info***
+
+***distribution***
+  name: Ubuntu 24.04.3 LTS
+  id: ubuntu
+  version: 24.04
+  version_parts: {'major': '24', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: noble
+  release_info: {}
+  kernel_version: 6.14.0-36-generic
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+2026-10-12 23:13:10,237 [server.py:load_component()] - Component (shell_command) loaded
+2026-10-12 23:13:10,237 [machine.py:__init__()] - Using System Provider: systemd_dbus
+2026-10-12 23:13:10,245 [server.py:add_log_rollover_item()] - Module libcamera unavailable, import failed
+2026-10-12 23:13:10,245 [server.py:load_component()] - Component (machine) loaded
+2026-10-12 23:13:10,247 [server.py:load_component()] - Component (data_store) loaded
+2026-10-12 23:13:10,248 [proc_stats.py:__init__()] - Unable to find 'vcgencmd', throttle checking disabled
+2026-10-12 23:13:10,249 [proc_stats.py:_get_cpu_thermal_file()] - Monitoring temperature for Intel CPU
+2026-10-12 23:13:10,249 [server.py:load_component()] - Component (proc_stats) loaded
+2026-10-12 23:13:10,251 [server.py:load_component()] - Component (job_state) loaded
+2026-10-12 23:13:10,253 [server.py:load_component()] - Component (job_queue) loaded
+2026-10-12 23:13:10,255 [database.py:register_table()] - Found registered table job_history
+2026-10-12 23:13:10,256 [database.py:register_table()] - Found registered table job_totals
+2026-10-12 23:13:10,257 [server.py:load_component()] - Component (history) loaded
+2026-10-12 23:13:10,263 [server.py:load_component()] - Component (http_client) loaded
+2026-10-12 23:13:10,267 [server.py:load_component()] - Component (announcements) loaded
+2026-10-12 23:13:10,270 [server.py:load_component()] - Component (webcam) loaded
+2026-10-12 23:13:10,272 [server.py:load_component()] - Component (extensions) loaded
+2026-10-12 23:13:10,325 [base_deploy.py:log_info()] - Git Repo moonraker: Detected virtualenv: /home/klipper-pc/moonraker-env
+2026-10-12 23:13:10,328 [base_deploy.py:log_info()] - Git Repo klipper: Detected virtualenv: /home/klipper-pc/klippy-env
+2026-10-12 23:13:10,330 [base_deploy.py:log_info()] - Web Client mainsail: Configured persistent files: ['config.json']
+2026-10-12 23:13:10,333 [server.py:load_component()] - Component (update_manager) loaded
+2026-10-12 23:13:10,337 [server.py:load_component()] - Component (octoprint_compat) loaded
+2026-10-12 23:13:10,337 [server.py:_initialize_component()] - Performing Component Post Init: [database]
+2026-10-12 23:13:10,343 [server.py:_initialize_component()] - Performing Component Post Init: [dbus_manager]
+2026-10-12 23:13:10,349 [server.py:_initialize_component()] - Performing Component Post Init: [authorization]
+2026-10-12 23:13:10,350 [server.py:_initialize_component()] - Performing Component Post Init: [machine]
+2026-10-12 23:13:10,351 [machine.py:validation_init()] - Installation version in database up to date
+2026-10-12 23:13:10,502 [machine.py:check_virt_status()] - No Virtualization Detected
+2026-10-12 23:13:10,529 [machine.py:_find_public_ip()] - Failed to detect local IP address
+2026-10-12 23:13:10,621 [server.py:add_log_rollover_item()] - 
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['-.mount', 'sysinit.target', 'network-online.target', 'system.slice']
+**After=['sysinit.target', 'system.slice', 'systemd-journald.socket', 'network-online.target', '-.mount', 'basic.target']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/moonraker.env
+**ExecStart=/home/klipper-pc/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/klipper-pc/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=klipper-pc
+2026-10-12 23:13:10,621 [server.py:_initialize_component()] - Performing Component Post Init: [proc_stats]
+2026-10-12 23:13:10,621 [server.py:_initialize_component()] - Performing Component Post Init: [history]
+2026-10-12 23:13:10,640 [server.py:_initialize_component()] - Performing Component Post Init: [announcements]
+2026-10-12 23:13:10,645 [server.py:_initialize_component()] - Performing Component Post Init: [webcam]
+2026-10-12 23:13:10,648 [server.py:_initialize_component()] - Performing Component Post Init: [klippy_connection]
+2026-10-12 23:13:10,648 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', '-.mount', 'sysinit.target']
+**After=['systemd-journald.socket', 'sysinit.target', 'basic.target', 'system.slice', '-.mount', 'network-online.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:13:10,648 [server.py:_initialize_component()] - Performing Component Post Init: [update_manager]
+2026-10-12 23:13:10,691 [base_deploy.py:log_info()] - PackageDeploy: PackageKit Provider Configured
+2026-10-12 23:13:10,693 [git_deploy.py:log_repo_info()] - Git Repo moonraker Detected:
+Owner: Arksine
+Repository Name: moonraker
+Path: /home/klipper-pc/moonraker
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Arksine/moonraker
+Recovery URL: https://github.com/Arksine/moonraker
+Current Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Upstream Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Current Version: v0.9.3-128-g960e9338
+Upstream Version: v0.9.3-128-g960e9338
+Rollback Commit: 960e933837413b4b365074580aeb14d04437204e
+Rollback Branch: master
+Rollback Version: v0.9.3-128-g960e9338
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:13:10,695 [git_deploy.py:log_repo_info()] - Git Repo klipper Detected:
+Owner: Klipper3d
+Repository Name: klipper
+Path: /home/klipper-pc/klipper
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Klipper3d/klipper
+Recovery URL: https://github.com/Klipper3d/klipper
+Current Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Upstream Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Current Version: v0.13.0-406-gbaf188bd
+Upstream Version: v0.13.0-406-gbaf188bd
+Rollback Commit: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Rollback Branch: master
+Rollback Version: v0.13.0-406-gbaf188bd
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+Repo Warnings:
+  Repo has untracked source files: ['klippy/extras/led_effect.py']
+2026-10-12 23:13:10,700 [base_deploy.py:log_info()] - Web Client mainsail: Detected
+Repo: mainsail-crew/mainsail
+Channel: stable
+Path: /home/klipper-pc/mainsail
+Local Version: v2.14.0
+Remote Version: v2.14.0
+Valid: True
+Fallback Detected: False
+Pre-release: False
+Download Url: https://github.com/mainsail-crew/mainsail/releases/download/v2.14.0/mainsail.zip
+Download Size: 2848929
+Content Type: application/zip
+Rollback Version: v2.14.0
+Rollback Repo: mainsail-crew/mainsail
+2026-10-12 23:13:10,702 [git_deploy.py:log_repo_info()] - Git Repo mainsail-config Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/mainsail-config
+Remote: origin
+Branch: master
+Remote URL: https://github.com/mainsail-crew/mainsail-config.git
+Recovery URL: https://github.com/mainsail-crew/mainsail-config.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:13:10,706 [git_deploy.py:log_repo_info()] - Git Repo led_effect Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/klipper-led_effect
+Remote: origin
+Branch: master
+Remote URL: https://github.com/julianschill/klipper-led_effect.git
+Recovery URL: https://github.com/julianschill/klipper-led_effect.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:13:10,706 [base_deploy.py:log_info()] - PackageKit: Next refresh in: 6 Days, 23 Hours, 24 Minutes, 31 Seconds
+2026-10-12 23:13:10,706 [base_deploy.py:log_info()] - Git Repo moonraker: Next refresh in: 6 Days, 23 Hours, 24 Minutes, 34 Seconds
+2026-10-12 23:13:10,706 [base_deploy.py:log_info()] - Git Repo klipper: Next refresh in: 6 Days, 23 Hours, 24 Minutes, 37 Seconds
+2026-10-12 23:13:10,706 [base_deploy.py:log_info()] - Web Client mainsail: Next refresh in: 6 Days, 23 Hours, 24 Minutes, 38 Seconds
+2026-10-12 23:13:10,706 [base_deploy.py:log_info()] - Git Repo mainsail-config: Next refresh in: 6 Days, 23 Hours, 24 Minutes, 40 Seconds
+2026-10-12 23:13:10,706 [base_deploy.py:log_info()] - Git Repo led_effect: Next refresh in: 6 Days, 23 Hours, 24 Minutes, 43 Seconds
+2026-10-12 23:13:10,719 [extensions.py:start_unix_server()] - Creating Unix Domain Socket at '/home/klipper-pc/printer_data/comms/moonraker.sock'
+2026-10-12 23:13:10,720 [server.py:start_server()] - Starting Moonraker on (0.0.0.0, 7125), Hostname: klipper-pc
+2026-10-12 23:13:10,720 [application.py:listen()] - SSL Certificate/Key not configured, aborting HTTPS Server startup
+2026-10-12 23:13:10,971 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:13:11,001 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['-.mount', 'system.slice', 'sysinit.target']
+**After=['basic.target', 'system.slice', 'systemd-journald.socket', 'network-online.target', '-.mount', 'sysinit.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:13:11,253 [server.py:add_log_rollover_item()] - Klipper Version: v0.13.0-406-gbaf188bd-dirty
+2026-10-12 23:13:11,262 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:13:11,263 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:13:11,513 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:13:11,766 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:13:12,266 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:13:12,667 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:13:14,685 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:13:23,765 [authorization.py:_check_trusted_connection()] - Trusted Connection Detected, IP: 10.42.0.1
+2026-10-12 23:13:23,770 [application.py:log_request()] - 101 GET /websocket (10.42.0.1) [_TRUSTED_USER_] 6.59ms
+2026-10-12 23:13:23,770 [websockets.py:open()] - Websocket Opened: ID: 131244852130736, Proxied: True, User Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0, Host Name: 10.42.0.1
+2026-10-12 23:13:23,801 [websockets.py:_handle_identify()] - Websocket 131244852130736 Client Identified - Name: mainsail, Version: 2.14.0, Type: web
+2026-10-12 23:13:33,081 [klippy_connection.py:_process_status_update()] - Klippy has shutdown
+2026-10-12 23:13:33,092 [proc_stats.py:_handle_shutdown()] - 
+Moonraker System Usage Statistics:
+System Time: 1791875590.627981, Usage: -0.0%, Memory: 54240 kB
+System Time: 1791875591.625845, Usage: 8.32%, Memory: 55196 kB
+System Time: 1791875592.625854, Usage: 1.17%, Memory: 55268 kB
+System Time: 1791875593.625808, Usage: 0.87%, Memory: 55272 kB
+System Time: 1791875594.626248, Usage: 0.81%, Memory: 55280 kB
+System Time: 1791875595.626104, Usage: 0.7%, Memory: 55284 kB
+System Time: 1791875596.627661, Usage: 0.45%, Memory: 55284 kB
+System Time: 1791875597.629361, Usage: 0.47%, Memory: 55284 kB
+System Time: 1791875598.627085, Usage: 0.49%, Memory: 55288 kB
+System Time: 1791875599.629403, Usage: 0.44%, Memory: 55288 kB
+System Time: 1791875600.627498, Usage: 0.59%, Memory: 55292 kB
+System Time: 1791875601.629225, Usage: 0.92%, Memory: 55296 kB
+System Time: 1791875602.629757, Usage: 0.49%, Memory: 55296 kB
+System Time: 1791875603.633880, Usage: 0.5%, Memory: 55296 kB
+System Time: 1791875604.629867, Usage: 37.37%, Memory: 55444 kB
+System Time: 1791875605.631721, Usage: 1.06%, Memory: 55468 kB
+System Time: 1791875606.630626, Usage: 0.65%, Memory: 55468 kB
+System Time: 1791875607.632533, Usage: 0.69%, Memory: 55468 kB
+System Time: 1791875608.634561, Usage: 0.82%, Memory: 55468 kB
+System Time: 1791875609.635560, Usage: 1.18%, Memory: 55468 kB
+System Time: 1791875610.635374, Usage: 1.11%, Memory: 55468 kB
+System Time: 1791875611.633136, Usage: 1.85%, Memory: 55468 kB
+System Time: 1791875612.632923, Usage: 0.74%, Memory: 55468 kB
+CPU Temperature: 48.0
+2026-10-12 23:16:41,335 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:16:42,589 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:16:43,670 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:16:43,671 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:16:43,921 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:16:44,178 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:16:44,675 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:16:50,301 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:16:51,559 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:16:52,610 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:16:52,611 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:16:52,861 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:16:53,118 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:16:53,616 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:17:11,038 [server.py:_handle_term_signal()] - Exiting with signal SIGTERM
+2026-10-12 23:17:11,065 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:17:11,280 [websockets.py:write_to_socket()] - Websocket closed while writing: 131244852130736
+2026-10-12 23:17:11,409 [websockets.py:on_close()] - Websocket Closed: ID: 131244852130736 Close Code: 1001, Close Reason: Server Shutdown, Pong Time Elapsed: 7.62
+2026-10-12 23:17:11,453 [server.py:main()] - Server Shutdown
+-------------------- Log Start | Tue Oct 13 07:17:51 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True
+2026-10-12 23:17:51,830 [confighelper.py:read_file()] - Configuration File '/home/klipper-pc/printer_data/config/moonraker.conf' parsed, total size: 993 B
+2026-10-12 23:17:51,831 [server.py:add_log_rollover_item()] - 
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 23:17:52,083 [server.py:load_component()] - Component (secrets) loaded
+2026-10-12 23:17:52,111 [server.py:load_component()] - Component (template) loaded
+2026-10-12 23:17:52,131 [server.py:load_component()] - Component (klippy_connection) loaded
+2026-10-12 23:17:52,991 [application.py:__init__()] - Detected Tornado Version 6.5.1
+2026-10-12 23:17:52,993 [server.py:load_component()] - Component (application) loaded
+2026-10-12 23:17:53,042 [server.py:load_component()] - Component (websockets) loaded
+2026-10-12 23:17:53,064 [server.py:add_log_rollover_item()] - Loading Sqlite database provider. Sqlite Version: 3.45.1
+2026-10-12 23:17:53,070 [server.py:add_log_rollover_item()] - Unsafe Shutdown Count: 6
+2026-10-12 23:17:53,072 [server.py:load_component()] - Component (database) loaded
+2026-10-12 23:17:53,157 [server.py:load_component()] - Component (dbus_manager) loaded
+2026-10-12 23:17:53,174 [file_manager.py:__init__()] - Using File System Observer: inotify
+2026-10-12 23:17:53,191 [server.py:load_component()] - Component (file_manager) loaded
+2026-10-12 23:17:53,206 [database.py:register_table()] - Found registered table authorized_users
+2026-10-12 23:17:53,208 [authorization.py:__init__()] - Authorization Configuration Loaded
+Trusted Clients:
+172.31.0.0/16
+10.0.0.0/8
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.168.0.0/16
+fc00::/7
+fe80::/10
+::1/128
+CORS Domains:
+.*\.lan
+.*\.local
+.*://localhost
+.*://localhost:.*
+.*://my\.mainsail\.xyz
+.*://app\.fluidd\.xyz
+2026-10-12 23:17:53,210 [server.py:load_component()] - Component (authorization) loaded
+2026-10-12 23:17:53,214 [server.py:load_component()] - Component (klippy_apis) loaded
+2026-10-12 23:17:53,341 [server.py:add_log_rollover_item()] - 
+System Info:
+
+***python***
+  version: (3, 12, 3, 'final', 0)
+  version_string: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) N4000 CPU @ 1.10GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 7964156
+  memory_units: kB
+
+***sd_info***
+
+***distribution***
+  name: Ubuntu 24.04.3 LTS
+  id: ubuntu
+  version: 24.04
+  version_parts: {'major': '24', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: noble
+  release_info: {}
+  kernel_version: 6.14.0-36-generic
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+2026-10-12 23:17:53,343 [server.py:load_component()] - Component (shell_command) loaded
+2026-10-12 23:17:53,343 [machine.py:__init__()] - Using System Provider: systemd_dbus
+2026-10-12 23:17:53,347 [server.py:add_log_rollover_item()] - Module libcamera unavailable, import failed
+2026-10-12 23:17:53,347 [server.py:load_component()] - Component (machine) loaded
+2026-10-12 23:17:53,350 [server.py:load_component()] - Component (data_store) loaded
+2026-10-12 23:17:53,351 [proc_stats.py:__init__()] - Unable to find 'vcgencmd', throttle checking disabled
+2026-10-12 23:17:53,352 [proc_stats.py:_get_cpu_thermal_file()] - Monitoring temperature for Intel CPU
+2026-10-12 23:17:53,353 [server.py:load_component()] - Component (proc_stats) loaded
+2026-10-12 23:17:53,356 [server.py:load_component()] - Component (job_state) loaded
+2026-10-12 23:17:53,360 [server.py:load_component()] - Component (job_queue) loaded
+2026-10-12 23:17:53,362 [database.py:register_table()] - Found registered table job_history
+2026-10-12 23:17:53,362 [database.py:register_table()] - Found registered table job_totals
+2026-10-12 23:17:53,364 [server.py:load_component()] - Component (history) loaded
+2026-10-12 23:17:53,369 [server.py:load_component()] - Component (http_client) loaded
+2026-10-12 23:17:53,372 [server.py:load_component()] - Component (announcements) loaded
+2026-10-12 23:17:53,374 [server.py:load_component()] - Component (webcam) loaded
+2026-10-12 23:17:53,376 [server.py:load_component()] - Component (extensions) loaded
+2026-10-12 23:17:53,380 [server.py:load_component()] - Component (octoprint_compat) loaded
+2026-10-12 23:17:53,414 [base_deploy.py:log_info()] - Git Repo moonraker: Detected virtualenv: /home/klipper-pc/moonraker-env
+2026-10-12 23:17:53,416 [base_deploy.py:log_info()] - Git Repo klipper: Detected virtualenv: /home/klipper-pc/klippy-env
+2026-10-12 23:17:53,418 [base_deploy.py:log_info()] - Web Client mainsail: Configured persistent files: ['config.json']
+2026-10-12 23:17:53,422 [server.py:load_component()] - Component (update_manager) loaded
+2026-10-12 23:17:53,422 [server.py:_initialize_component()] - Performing Component Post Init: [database]
+2026-10-12 23:17:53,427 [server.py:_initialize_component()] - Performing Component Post Init: [dbus_manager]
+2026-10-12 23:17:53,432 [server.py:_initialize_component()] - Performing Component Post Init: [authorization]
+2026-10-12 23:17:53,434 [server.py:_initialize_component()] - Performing Component Post Init: [machine]
+2026-10-12 23:17:53,435 [machine.py:validation_init()] - Installation version in database up to date
+2026-10-12 23:17:53,580 [machine.py:check_virt_status()] - No Virtualization Detected
+2026-10-12 23:17:53,599 [machine.py:_find_public_ip()] - Failed to detect local IP address
+2026-10-12 23:17:53,705 [server.py:add_log_rollover_item()] - 
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['-.mount', 'system.slice', 'network-online.target', 'sysinit.target']
+**After=['sysinit.target', 'network-online.target', '-.mount', 'systemd-journald.socket', 'basic.target', 'system.slice']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/moonraker.env
+**ExecStart=/home/klipper-pc/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/klipper-pc/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=klipper-pc
+2026-10-12 23:17:53,705 [server.py:_initialize_component()] - Performing Component Post Init: [proc_stats]
+2026-10-12 23:17:53,705 [server.py:_initialize_component()] - Performing Component Post Init: [history]
+2026-10-12 23:17:53,711 [server.py:_initialize_component()] - Performing Component Post Init: [announcements]
+2026-10-12 23:17:53,714 [server.py:_initialize_component()] - Performing Component Post Init: [webcam]
+2026-10-12 23:17:53,738 [server.py:_initialize_component()] - Performing Component Post Init: [klippy_connection]
+2026-10-12 23:17:53,739 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['-.mount', 'system.slice', 'sysinit.target']
+**After=['basic.target', 'system.slice', 'systemd-journald.socket', 'network-online.target', '-.mount', 'sysinit.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:17:53,739 [server.py:_initialize_component()] - Performing Component Post Init: [update_manager]
+2026-10-12 23:17:53,825 [base_deploy.py:log_info()] - PackageDeploy: PackageKit Provider Configured
+2026-10-12 23:17:53,827 [git_deploy.py:log_repo_info()] - Git Repo moonraker Detected:
+Owner: Arksine
+Repository Name: moonraker
+Path: /home/klipper-pc/moonraker
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Arksine/moonraker
+Recovery URL: https://github.com/Arksine/moonraker
+Current Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Upstream Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Current Version: v0.9.3-128-g960e9338
+Upstream Version: v0.9.3-128-g960e9338
+Rollback Commit: 960e933837413b4b365074580aeb14d04437204e
+Rollback Branch: master
+Rollback Version: v0.9.3-128-g960e9338
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:17:53,828 [git_deploy.py:log_repo_info()] - Git Repo klipper Detected:
+Owner: Klipper3d
+Repository Name: klipper
+Path: /home/klipper-pc/klipper
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Klipper3d/klipper
+Recovery URL: https://github.com/Klipper3d/klipper
+Current Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Upstream Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Current Version: v0.13.0-406-gbaf188bd
+Upstream Version: v0.13.0-406-gbaf188bd
+Rollback Commit: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Rollback Branch: master
+Rollback Version: v0.13.0-406-gbaf188bd
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+Repo Warnings:
+  Repo has untracked source files: ['klippy/extras/led_effect.py']
+2026-10-12 23:17:53,840 [base_deploy.py:log_info()] - Web Client mainsail: Detected
+Repo: mainsail-crew/mainsail
+Channel: stable
+Path: /home/klipper-pc/mainsail
+Local Version: v2.14.0
+Remote Version: v2.14.0
+Valid: True
+Fallback Detected: False
+Pre-release: False
+Download Url: https://github.com/mainsail-crew/mainsail/releases/download/v2.14.0/mainsail.zip
+Download Size: 2848929
+Content Type: application/zip
+Rollback Version: v2.14.0
+Rollback Repo: mainsail-crew/mainsail
+2026-10-12 23:17:53,842 [git_deploy.py:log_repo_info()] - Git Repo mainsail-config Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/mainsail-config
+Remote: origin
+Branch: master
+Remote URL: https://github.com/mainsail-crew/mainsail-config.git
+Recovery URL: https://github.com/mainsail-crew/mainsail-config.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:17:53,844 [git_deploy.py:log_repo_info()] - Git Repo led_effect Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/klipper-led_effect
+Remote: origin
+Branch: master
+Remote URL: https://github.com/julianschill/klipper-led_effect.git
+Recovery URL: https://github.com/julianschill/klipper-led_effect.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:17:53,844 [base_deploy.py:log_info()] - PackageKit: Next refresh in: 6 Days, 23 Hours, 19 Minutes, 48 Seconds
+2026-10-12 23:17:53,844 [base_deploy.py:log_info()] - Git Repo moonraker: Next refresh in: 6 Days, 23 Hours, 19 Minutes, 51 Seconds
+2026-10-12 23:17:53,844 [base_deploy.py:log_info()] - Git Repo klipper: Next refresh in: 6 Days, 23 Hours, 19 Minutes, 54 Seconds
+2026-10-12 23:17:53,844 [base_deploy.py:log_info()] - Web Client mainsail: Next refresh in: 6 Days, 23 Hours, 19 Minutes, 55 Seconds
+2026-10-12 23:17:53,844 [base_deploy.py:log_info()] - Git Repo mainsail-config: Next refresh in: 6 Days, 23 Hours, 19 Minutes, 57 Seconds
+2026-10-12 23:17:53,844 [base_deploy.py:log_info()] - Git Repo led_effect: Next refresh in: 6 Days, 23 Hours, 20 Minutes
+2026-10-12 23:17:53,856 [extensions.py:start_unix_server()] - Creating Unix Domain Socket at '/home/klipper-pc/printer_data/comms/moonraker.sock'
+2026-10-12 23:17:53,857 [server.py:start_server()] - Starting Moonraker on (0.0.0.0, 7125), Hostname: klipper-pc
+2026-10-12 23:17:53,858 [application.py:listen()] - SSL Certificate/Key not configured, aborting HTTPS Server startup
+2026-10-12 23:17:54,110 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:17:54,156 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', '-.mount', 'sysinit.target']
+**After=['-.mount', 'network-online.target', 'basic.target', 'system.slice', 'sysinit.target', 'systemd-journald.socket']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:17:54,409 [server.py:add_log_rollover_item()] - Klipper Version: v0.13.0-406-gbaf188bd-dirty
+2026-10-12 23:17:54,418 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:17:54,418 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:17:54,669 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:17:54,923 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:17:55,421 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:17:55,758 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:17:57,772 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:18:07,380 [authorization.py:_check_trusted_connection()] - Trusted Connection Detected, IP: 10.42.0.1
+2026-10-12 23:18:07,383 [application.py:log_request()] - 101 GET /websocket (10.42.0.1) [_TRUSTED_USER_] 5.05ms
+2026-10-12 23:18:07,384 [websockets.py:open()] - Websocket Opened: ID: 137458730689616, Proxied: True, User Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0, Host Name: 10.42.0.1
+2026-10-12 23:18:07,396 [websockets.py:_handle_identify()] - Websocket 137458730689616 Client Identified - Name: mainsail, Version: 2.14.0, Type: web
+2026-10-12 23:18:16,997 [klippy_connection.py:_process_status_update()] - Klippy has shutdown
+2026-10-12 23:18:17,008 [proc_stats.py:_handle_shutdown()] - 
+Moonraker System Usage Statistics:
+System Time: 1791875873.718743, Usage: -0.0%, Memory: 54164 kB
+System Time: 1791875874.710430, Usage: 8.26%, Memory: 55108 kB
+System Time: 1791875875.709874, Usage: 1.21%, Memory: 55180 kB
+System Time: 1791875876.709714, Usage: 1.05%, Memory: 55188 kB
+System Time: 1791875877.711222, Usage: 0.81%, Memory: 55196 kB
+System Time: 1791875878.710363, Usage: 0.74%, Memory: 55200 kB
+System Time: 1791875879.710368, Usage: 0.44%, Memory: 55200 kB
+System Time: 1791875880.712647, Usage: 0.43%, Memory: 55200 kB
+System Time: 1791875881.711002, Usage: 0.5%, Memory: 55204 kB
+System Time: 1791875882.711497, Usage: 0.5%, Memory: 55204 kB
+System Time: 1791875883.713637, Usage: 0.4%, Memory: 55204 kB
+System Time: 1791875884.717892, Usage: 1.12%, Memory: 55212 kB
+System Time: 1791875885.722658, Usage: 0.59%, Memory: 55212 kB
+System Time: 1791875886.712914, Usage: 0.46%, Memory: 55212 kB
+System Time: 1791875887.739099, Usage: 27.21%, Memory: 55336 kB
+System Time: 1791875888.735849, Usage: 10.1%, Memory: 55376 kB
+System Time: 1791875889.736506, Usage: 0.75%, Memory: 55376 kB
+System Time: 1791875890.736088, Usage: 0.7%, Memory: 55376 kB
+System Time: 1791875891.736935, Usage: 0.69%, Memory: 55376 kB
+System Time: 1791875892.740045, Usage: 0.94%, Memory: 55376 kB
+System Time: 1791875893.739856, Usage: 1.23%, Memory: 55376 kB
+System Time: 1791875894.742743, Usage: 2.0%, Memory: 55376 kB
+System Time: 1791875895.742094, Usage: 1.37%, Memory: 55376 kB
+System Time: 1791875896.749384, Usage: 0.8%, Memory: 55376 kB
+CPU Temperature: 54.0
+2026-10-12 23:19:30,463 [server.py:_handle_term_signal()] - Exiting with signal SIGTERM
+2026-10-12 23:19:30,475 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:19:30,586 [websockets.py:write_to_socket()] - Websocket closed while writing: 137458730689616
+2026-10-12 23:19:30,719 [websockets.py:on_close()] - Websocket Closed: ID: 137458730689616 Close Code: 1001, Close Reason: Server Shutdown, Pong Time Elapsed: 13.33
+2026-10-12 23:19:30,756 [server.py:main()] - Server Shutdown
+-------------------- Log Start | Tue Oct 13 07:20:20 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True
+2026-10-12 23:20:20,073 [confighelper.py:read_file()] - Configuration File '/home/klipper-pc/printer_data/config/moonraker.conf' parsed, total size: 993 B
+2026-10-12 23:20:20,076 [server.py:add_log_rollover_item()] - 
+#################### Moonraker Configuration ####################
+
+[server]
+host = 0.0.0.0
+port = 7125
+klippy_uds_address = /home/klipper-pc/printer_data/comms/klippy.sock
+
+[authorization]
+trusted_clients = 
+	172.31.0.0/16
+	10.0.0.0/8
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.168.0.0/16
+	FC00::/7
+	FE80::/10
+	::1/128
+cors_domains = 
+	*.lan
+	*.local
+	*://localhost
+	*://localhost:*
+	*://my.mainsail.xyz
+	*://app.fluidd.xyz
+
+[octoprint_compat]
+
+[history]
+
+[update_manager]
+channel = dev
+refresh_interval = 168
+
+[update_manager mainsail]
+path = /home/klipper-pc/mainsail
+repo = mainsail-crew/mainsail
+channel = stable
+type = web
+persistent_files = 
+	config.json
+
+[update_manager mainsail-config]
+managed_services = klipper
+origin = https://github.com/mainsail-crew/mainsail-config.git
+path = /home/klipper-pc/mainsail-config
+primary_branch = master
+type = git_repo
+
+[update_manager led_effect]
+type = git_repo
+path = ~/klipper-led_effect
+origin = https://github.com/julianschill/klipper-led_effect.git
+is_system_service = False
+
+#################################################################
+All Configuration Files:
+/home/klipper-pc/printer_data/config/moonraker.conf
+#################################################################
+2026-10-12 23:20:20,190 [server.py:load_component()] - Component (secrets) loaded
+2026-10-12 23:20:20,204 [server.py:load_component()] - Component (template) loaded
+2026-10-12 23:20:20,212 [server.py:load_component()] - Component (klippy_connection) loaded
+2026-10-12 23:20:20,974 [application.py:__init__()] - Detected Tornado Version 6.5.1
+2026-10-12 23:20:20,975 [server.py:load_component()] - Component (application) loaded
+2026-10-12 23:20:20,998 [server.py:load_component()] - Component (websockets) loaded
+2026-10-12 23:20:21,011 [server.py:add_log_rollover_item()] - Loading Sqlite database provider. Sqlite Version: 3.45.1
+2026-10-12 23:20:21,013 [server.py:add_log_rollover_item()] - Unsafe Shutdown Count: 6
+2026-10-12 23:20:21,015 [server.py:load_component()] - Component (database) loaded
+2026-10-12 23:20:21,126 [server.py:load_component()] - Component (dbus_manager) loaded
+2026-10-12 23:20:21,145 [file_manager.py:__init__()] - Using File System Observer: inotify
+2026-10-12 23:20:21,162 [server.py:load_component()] - Component (file_manager) loaded
+2026-10-12 23:20:21,178 [database.py:register_table()] - Found registered table authorized_users
+2026-10-12 23:20:21,179 [authorization.py:__init__()] - Authorization Configuration Loaded
+Trusted Clients:
+172.31.0.0/16
+10.0.0.0/8
+127.0.0.0/8
+169.254.0.0/16
+172.16.0.0/12
+192.168.0.0/16
+fc00::/7
+fe80::/10
+::1/128
+CORS Domains:
+.*\.lan
+.*\.local
+.*://localhost
+.*://localhost:.*
+.*://my\.mainsail\.xyz
+.*://app\.fluidd\.xyz
+2026-10-12 23:20:21,180 [server.py:load_component()] - Component (authorization) loaded
+2026-10-12 23:20:21,183 [server.py:load_component()] - Component (klippy_apis) loaded
+2026-10-12 23:20:21,339 [server.py:add_log_rollover_item()] - 
+System Info:
+
+***python***
+  version: (3, 12, 3, 'final', 0)
+  version_string: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+
+***cpu_info***
+  cpu_count: 2
+  bits: 64bit
+  processor: x86_64
+  cpu_desc: Intel(R) Celeron(R) N4000 CPU @ 1.10GHz
+  serial_number: 
+  hardware_desc: 
+  model: 
+  total_memory: 7964144
+  memory_units: kB
+
+***sd_info***
+  manufacturer_id: 32
+  manufacturer: Unknown
+  oem_id: 0101
+  product_name: MMC12
+  product_revision: 3.8
+  serial_number: 516d9d66
+  manufacturer_date: 10/2247
+  capacity: Unknown
+  total_bytes: 0
+
+***distribution***
+  name: Ubuntu 24.04.3 LTS
+  id: ubuntu
+  version: 24.04
+  version_parts: {'major': '24', 'minor': '04', 'build_number': ''}
+  like: debian
+  codename: noble
+  release_info: {}
+  kernel_version: 6.14.0-36-generic
+
+***virtualization***
+  virt_type: none
+  virt_identifier: none
+
+***network***
+
+***canbus***
+
+***Allowed Services***
+  klipper_mcu
+  webcamd
+  MoonCord
+  KlipperScreen
+  moonraker-telegram-bot
+  moonraker-obico
+  sonar
+  crowsnest
+  octoeverywhere
+  ratos-configurator
+2026-10-12 23:20:21,341 [server.py:load_component()] - Component (shell_command) loaded
+2026-10-12 23:20:21,343 [machine.py:__init__()] - Using System Provider: systemd_dbus
+2026-10-12 23:20:21,347 [server.py:add_log_rollover_item()] - Module libcamera unavailable, import failed
+2026-10-12 23:20:21,347 [server.py:load_component()] - Component (machine) loaded
+2026-10-12 23:20:21,349 [server.py:load_component()] - Component (data_store) loaded
+2026-10-12 23:20:21,351 [proc_stats.py:__init__()] - Unable to find 'vcgencmd', throttle checking disabled
+2026-10-12 23:20:21,351 [proc_stats.py:_get_cpu_thermal_file()] - Monitoring temperature for Intel CPU
+2026-10-12 23:20:21,352 [server.py:load_component()] - Component (proc_stats) loaded
+2026-10-12 23:20:21,353 [server.py:load_component()] - Component (job_state) loaded
+2026-10-12 23:20:21,355 [server.py:load_component()] - Component (job_queue) loaded
+2026-10-12 23:20:21,357 [database.py:register_table()] - Found registered table job_history
+2026-10-12 23:20:21,357 [database.py:register_table()] - Found registered table job_totals
+2026-10-12 23:20:21,359 [server.py:load_component()] - Component (history) loaded
+2026-10-12 23:20:21,364 [server.py:load_component()] - Component (http_client) loaded
+2026-10-12 23:20:21,367 [server.py:load_component()] - Component (announcements) loaded
+2026-10-12 23:20:21,370 [server.py:load_component()] - Component (webcam) loaded
+2026-10-12 23:20:21,372 [server.py:load_component()] - Component (extensions) loaded
+2026-10-12 23:20:21,413 [base_deploy.py:log_info()] - Git Repo moonraker: Detected virtualenv: /home/klipper-pc/moonraker-env
+2026-10-12 23:20:21,415 [base_deploy.py:log_info()] - Git Repo klipper: Detected virtualenv: /home/klipper-pc/klippy-env
+2026-10-12 23:20:21,418 [base_deploy.py:log_info()] - Web Client mainsail: Configured persistent files: ['config.json']
+2026-10-12 23:20:21,422 [server.py:load_component()] - Component (update_manager) loaded
+2026-10-12 23:20:21,427 [server.py:load_component()] - Component (octoprint_compat) loaded
+2026-10-12 23:20:21,427 [server.py:_initialize_component()] - Performing Component Post Init: [database]
+2026-10-12 23:20:21,433 [server.py:_initialize_component()] - Performing Component Post Init: [dbus_manager]
+2026-10-12 23:20:21,439 [server.py:_initialize_component()] - Performing Component Post Init: [authorization]
+2026-10-12 23:20:21,439 [server.py:_initialize_component()] - Performing Component Post Init: [machine]
+2026-10-12 23:20:21,440 [machine.py:validation_init()] - Installation version in database up to date
+2026-10-12 23:20:21,668 [machine.py:check_virt_status()] - No Virtualization Detected
+2026-10-12 23:20:21,709 [machine.py:_find_public_ip()] - Failed to detect local IP address
+2026-10-12 23:20:21,805 [server.py:add_log_rollover_item()] - 
+Systemd unit moonraker.service:
+unit_name: moonraker.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', '-.mount', 'sysinit.target', 'network-online.target']
+**After=['-.mount', 'systemd-journald.socket', 'sysinit.target', 'basic.target', 'network-online.target', 'system.slice']
+**SupplementaryGroups=['moonraker-admin']
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/moonraker.env
+**ExecStart=/home/klipper-pc/moonraker-env/bin/python $MOONRAKER_ARGS
+**WorkingDirectory=/home/klipper-pc/moonraker
+**FragmentPath=/etc/systemd/system/moonraker.service
+**Description=API Server for Klipper SV1
+**User=klipper-pc
+2026-10-12 23:20:21,805 [server.py:_initialize_component()] - Performing Component Post Init: [proc_stats]
+2026-10-12 23:20:21,805 [server.py:_initialize_component()] - Performing Component Post Init: [history]
+2026-10-12 23:20:21,813 [server.py:_initialize_component()] - Performing Component Post Init: [announcements]
+2026-10-12 23:20:21,829 [server.py:_initialize_component()] - Performing Component Post Init: [webcam]
+2026-10-12 23:20:21,837 [server.py:_initialize_component()] - Performing Component Post Init: [klippy_connection]
+2026-10-12 23:20:21,837 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', '-.mount', 'sysinit.target']
+**After=['-.mount', 'network-online.target', 'basic.target', 'system.slice', 'sysinit.target', 'systemd-journald.socket']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:20:21,837 [server.py:_initialize_component()] - Performing Component Post Init: [update_manager]
+2026-10-12 23:20:21,893 [base_deploy.py:log_info()] - PackageDeploy: PackageKit Provider Configured
+2026-10-12 23:20:21,895 [git_deploy.py:log_repo_info()] - Git Repo moonraker Detected:
+Owner: Arksine
+Repository Name: moonraker
+Path: /home/klipper-pc/moonraker
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Arksine/moonraker
+Recovery URL: https://github.com/Arksine/moonraker
+Current Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Upstream Commit SHA: 960e933837413b4b365074580aeb14d04437204e
+Current Version: v0.9.3-128-g960e9338
+Upstream Version: v0.9.3-128-g960e9338
+Rollback Commit: 960e933837413b4b365074580aeb14d04437204e
+Rollback Branch: master
+Rollback Version: v0.9.3-128-g960e9338
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:20:21,896 [git_deploy.py:log_repo_info()] - Git Repo klipper Detected:
+Owner: Klipper3d
+Repository Name: klipper
+Path: /home/klipper-pc/klipper
+Remote: origin
+Branch: master
+Remote URL: https://github.com/Klipper3d/klipper
+Recovery URL: https://github.com/Klipper3d/klipper
+Current Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Upstream Commit SHA: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Current Version: v0.13.0-406-gbaf188bd
+Upstream Version: v0.13.0-406-gbaf188bd
+Rollback Commit: baf188bd62bb9c82775d679cf0db30a72f9e9173
+Rollback Branch: master
+Rollback Version: v0.13.0-406-gbaf188bd
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+Repo Warnings:
+  Repo has untracked source files: ['klippy/extras/led_effect.py']
+2026-10-12 23:20:21,900 [base_deploy.py:log_info()] - Web Client mainsail: Detected
+Repo: mainsail-crew/mainsail
+Channel: stable
+Path: /home/klipper-pc/mainsail
+Local Version: v2.14.0
+Remote Version: v2.14.0
+Valid: True
+Fallback Detected: False
+Pre-release: False
+Download Url: https://github.com/mainsail-crew/mainsail/releases/download/v2.14.0/mainsail.zip
+Download Size: 2848929
+Content Type: application/zip
+Rollback Version: v2.14.0
+Rollback Repo: mainsail-crew/mainsail
+2026-10-12 23:20:21,901 [git_deploy.py:log_repo_info()] - Git Repo mainsail-config Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/mainsail-config
+Remote: origin
+Branch: master
+Remote URL: https://github.com/mainsail-crew/mainsail-config.git
+Recovery URL: https://github.com/mainsail-crew/mainsail-config.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:20:21,904 [git_deploy.py:log_repo_info()] - Git Repo led_effect Detected:
+Owner: ?
+Repository Name: ?
+Path: /home/klipper-pc/klipper-led_effect
+Remote: origin
+Branch: master
+Remote URL: https://github.com/julianschill/klipper-led_effect.git
+Recovery URL: https://github.com/julianschill/klipper-led_effect.git
+Current Commit SHA: ?
+Upstream Commit SHA: ?
+Current Version: ?
+Upstream Version: ?
+Rollback Commit: ?
+Rollback Branch: ?
+Rollback Version: ?
+Is Dirty: False
+Is Detached: False
+Is Shallow: False
+Commits Behind Count: 0
+Diverged: False
+Pinned Commit: None
+2026-10-12 23:20:21,904 [base_deploy.py:log_info()] - PackageKit: Next refresh in: 6 Days, 23 Hours, 17 Minutes, 20 Seconds
+2026-10-12 23:20:21,904 [base_deploy.py:log_info()] - Git Repo moonraker: Next refresh in: 6 Days, 23 Hours, 17 Minutes, 23 Seconds
+2026-10-12 23:20:21,904 [base_deploy.py:log_info()] - Git Repo klipper: Next refresh in: 6 Days, 23 Hours, 17 Minutes, 25 Seconds
+2026-10-12 23:20:21,904 [base_deploy.py:log_info()] - Web Client mainsail: Next refresh in: 6 Days, 23 Hours, 17 Minutes, 26 Seconds
+2026-10-12 23:20:21,904 [base_deploy.py:log_info()] - Git Repo mainsail-config: Next refresh in: 6 Days, 23 Hours, 17 Minutes, 29 Seconds
+2026-10-12 23:20:21,904 [base_deploy.py:log_info()] - Git Repo led_effect: Next refresh in: 6 Days, 23 Hours, 17 Minutes, 32 Seconds
+2026-10-12 23:20:21,916 [extensions.py:start_unix_server()] - Creating Unix Domain Socket at '/home/klipper-pc/printer_data/comms/moonraker.sock'
+2026-10-12 23:20:21,916 [server.py:start_server()] - Starting Moonraker on (0.0.0.0, 7125), Hostname: klipper-pc
+2026-10-12 23:20:21,917 [application.py:listen()] - SSL Certificate/Key not configured, aborting HTTPS Server startup
+2026-10-12 23:20:22,169 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:20:22,200 [server.py:add_log_rollover_item()] - 
+Systemd unit klipper.service:
+unit_name: klipper.service
+is_default: True
+manager: systemd
+Properties:
+**Requires=['system.slice', 'sysinit.target', '-.mount']
+**After=['sysinit.target', '-.mount', 'system.slice', 'network-online.target', 'systemd-journald.socket', 'basic.target']
+**SupplementaryGroups=[]
+**EnvironmentFiles=/home/klipper-pc/printer_data/systemd/klipper.env
+**ExecStart=/home/klipper-pc/klippy-env/bin/python $KLIPPER_ARGS
+**WorkingDirectory=/home/klipper-pc/klipper
+**FragmentPath=/etc/systemd/system/klipper.service
+**Description=Klipper 3D Printer Firmware SV1
+**User=klipper-pc
+2026-10-12 23:20:22,451 [server.py:add_log_rollover_item()] - Klipper Version: v0.13.0-406-gbaf188bd-dirty
+2026-10-12 23:20:22,460 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:20:22,460 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:20:22,461 [klippy_connection.py:_check_ready()] - 
+Can not update MCU 'mcu' config as it is shutdown
+Once the underlying issue is corrected, use the
+"FIRMWARE_RESTART" command to reset the firmware, reload the
+config, and restart the host software.
+Error configuring printer
+
+2026-10-12 23:20:23,857 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'moonraker': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:20:25,881 [announcements.py:_fetch_moonlight()] - Failed to update subscription 'klipper': [Errno -3] Temporary failure in name resolution
+2026-10-12 23:20:34,743 [authorization.py:_check_trusted_connection()] - Trusted Connection Detected, IP: 10.42.0.1
+2026-10-12 23:20:34,748 [application.py:log_request()] - 101 GET /websocket (10.42.0.1) [_TRUSTED_USER_] 8.00ms
+2026-10-12 23:20:34,748 [websockets.py:open()] - Websocket Opened: ID: 138185083464944, Proxied: True, User Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:141.0) Gecko/20100101 Firefox/141.0, Host Name: 10.42.0.1
+2026-10-12 23:20:34,846 [websockets.py:_handle_identify()] - Websocket 138185083464944 Client Identified - Name: mainsail, Version: 2.14.0, Type: web
+2026-10-12 23:21:02,042 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:21:03,302 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:21:04,391 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:21:04,392 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:21:04,643 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:21:04,898 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:21:05,396 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:21:16,761 [klippy_apis.py:start_print()] - Requesting Job Start, filename = PaintFile.gcode
+2026-10-12 23:21:16,935 [job_state.py:_send_job_event()] - Job Started: PaintFile.gcode
+2026-10-12 23:21:18,188 [klippy_connection.py:_process_status_update()] - Klippy has shutdown
+2026-10-12 23:21:18,191 [proc_stats.py:_handle_shutdown()] - 
+Moonraker System Usage Statistics:
+System Time: 1791876048.843567, Usage: 0.92%, Memory: 55496 kB
+System Time: 1791876049.844131, Usage: 0.75%, Memory: 55496 kB
+System Time: 1791876050.845103, Usage: 0.91%, Memory: 55496 kB
+System Time: 1791876051.845799, Usage: 0.75%, Memory: 55496 kB
+System Time: 1791876052.848788, Usage: 1.82%, Memory: 55496 kB
+System Time: 1791876053.848706, Usage: 0.91%, Memory: 55496 kB
+System Time: 1791876054.849916, Usage: 0.97%, Memory: 55496 kB
+System Time: 1791876055.850751, Usage: 0.83%, Memory: 55496 kB
+System Time: 1791876056.853034, Usage: 0.92%, Memory: 55496 kB
+System Time: 1791876057.854803, Usage: 0.74%, Memory: 55496 kB
+System Time: 1791876058.856580, Usage: 0.91%, Memory: 55496 kB
+System Time: 1791876059.857503, Usage: 0.75%, Memory: 55496 kB
+System Time: 1791876060.858980, Usage: 0.92%, Memory: 55496 kB
+System Time: 1791876061.859598, Usage: 0.71%, Memory: 55496 kB
+System Time: 1791876062.861480, Usage: 2.0%, Memory: 55496 kB
+System Time: 1791876063.861722, Usage: 3.43%, Memory: 56060 kB
+System Time: 1791876064.860250, Usage: 1.72%, Memory: 56064 kB
+System Time: 1791876065.861952, Usage: 1.79%, Memory: 56072 kB
+System Time: 1791876066.863252, Usage: 0.76%, Memory: 56072 kB
+System Time: 1791876067.866518, Usage: 0.84%, Memory: 56072 kB
+System Time: 1791876068.867950, Usage: 1.26%, Memory: 56072 kB
+System Time: 1791876069.867095, Usage: 1.29%, Memory: 56072 kB
+System Time: 1791876070.869906, Usage: 0.72%, Memory: 56072 kB
+System Time: 1791876071.870283, Usage: 1.24%, Memory: 56072 kB
+System Time: 1791876072.868697, Usage: 1.92%, Memory: 56072 kB
+System Time: 1791876073.872416, Usage: 0.85%, Memory: 56072 kB
+System Time: 1791876074.871306, Usage: 1.24%, Memory: 56072 kB
+System Time: 1791876075.873149, Usage: 0.84%, Memory: 56072 kB
+System Time: 1791876076.872763, Usage: 1.48%, Memory: 56072 kB
+System Time: 1791876077.872108, Usage: 1.97%, Memory: 56092 kB
+CPU Temperature: 53.0
+2026-10-12 23:21:43,874 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:21:45,129 [klippy_connection.py:_do_connect()] - Klippy Connection Established
+2026-10-12 23:21:46,195 [klippy_connection.py:_request_initial_subscriptions()] - Webhooks Subscribed
+2026-10-12 23:21:46,196 [klippy_connection.py:_request_initial_subscriptions()] - GCode Output Subscribed
+2026-10-12 23:21:46,445 [job_state.py:_handle_started()] - Job state initialized: standby
+2026-10-12 23:21:46,699 [klippy_connection.py:_check_ready()] - Klippy ready
+2026-10-12 23:21:47,201 [data_store.py:_init_sensors()] - Configuring available sensors: ['temperature_sensor mcu_temp', 'temperature_sensor host_temp']
+2026-10-12 23:21:52,548 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 100.000 0.000 0.000 [0.000]
+2026-10-12 23:21:53,725 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 100.000 0.000 0.000 [0.000]
+2026-10-12 23:21:54,417 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 100.000 0.000 [0.000]
+2026-10-12 23:21:54,791 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 0.000 25.000 [0.000]
+2026-10-12 23:21:54,945 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 0.000 25.000 [0.000]
+2026-10-12 23:21:55,829 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 0.000 25.000 [0.000]
+2026-10-12 23:21:56,025 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 0.000 25.000 [0.000]
+2026-10-12 23:21:56,450 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 10.000 0.000 [0.000]
+2026-10-12 23:21:56,661 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Must home axis first: 0.000 10.000 0.000 [0.000]
+2026-10-12 23:22:03,534 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 72.250 [0.000]
+2026-10-12 23:22:04,036 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 72.250 [0.000]
+2026-10-12 23:22:07,351 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 -2.750 [0.000]
+2026-10-12 23:22:07,599 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 -2.750 [0.000]
+2026-10-12 23:22:07,803 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 -2.750 [0.000]
+2026-10-12 23:22:10,070 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 -2.750 [0.000]
+2026-10-12 23:22:10,280 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 -2.750 [0.000]
+2026-10-12 23:22:10,432 [common.py:build_error()] - JSON-RPC Request Error - Requested Method: printer.gcode.script, Code: 400, Message: Move out of range: 100.000 100.000 -2.750 [0.000]
+2026-10-12 23:22:34,008 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testPaint.gcode
+2026-10-12 23:22:34,105 [job_state.py:_send_job_event()] - Job Started: testPaint.gcode
+2026-10-12 23:22:57,531 [klippy_apis.py:start_print()] - Requesting Job Start, filename = cableChainTest.gcode
+2026-10-12 23:22:57,683 [job_state.py:_send_job_event()] - Job Started: cableChainTest.gcode
+2026-10-12 23:23:08,705 [klippy_apis.py:start_print()] - Requesting Job Start, filename = testSpeedRun.gcode
+2026-10-12 23:23:08,730 [job_state.py:_send_job_event()] - Job Started: testSpeedRun.gcode
+2026-10-12 23:29:44,732 [server.py:_handle_term_signal()] - Exiting with signal SIGTERM
+2026-10-12 23:29:44,753 [klippy_connection.py:_on_connection_closed()] - Klippy Connection Removed
+2026-10-12 23:29:44,879 [websockets.py:write_to_socket()] - Websocket closed while writing: 138185083464944
+2026-10-12 23:29:45,131 [websockets.py:on_close()] - Websocket Closed: ID: 138185083464944 Close Code: 1001, Close Reason: Server Shutdown, Pong Time Elapsed: 0.32
+2026-10-12 23:29:45,200 [server.py:main()] - Server Shutdown
+-------------------- Log Start | Fri Nov  6 04:16:07 2026 --------------------
+platform: Linux-6.14.0-36-generic-x86_64-with-glibc2.39
+data_path: /home/klipper-pc/printer_data
+is_default_data_path: False
+config_file: /home/klipper-pc/printer_data/config/moonraker.conf
+backup_config: /home/klipper-pc/printer_data/config/.moonraker.conf.bkp
+startup_warnings: []
+verbose: False
+debug: False
+asyncio_debug: False
+is_backup_config: False
+is_python_package: False
+instance_uuid: bb565403401c4ef69270d68bd295b3e8
+unix_socket_path: /home/klipper-pc/printer_data/comms/moonraker.sock
+structured_logging: False
+software_version: v0.9.3-128-g960e933
+git_branch: master
+git_remote: origin
+git_repo_url: https://github.com/Arksine/moonraker
+modified_files: []
+unofficial_components: []
+log_file: /home/klipper-pc/printer_data/logs/moonraker.log
+python_version: 3.12.3 (main, Nov  6 2025, 13:44:16) [GCC 13.3.0]
+launch_args: /home/klipper-pc/moonraker-env/bin/python /home/klipper-pc/moonraker/moonraker/moonraker.py -d /home/klipper-pc/printer_data
+msgspec_enabled: True
+uvloop_enabled: True

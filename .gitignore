@@ -1,0 +1,6 @@
+# Local OS metadata and repository administration are not project content.
+.DS_Store
+
+# Contains Moonraker authentication credentials. Keep only on the local machine.
+/printer_data/database/
+/printer_2_data/database/

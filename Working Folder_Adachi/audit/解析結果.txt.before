@@ -1,0 +1,209 @@
+ExternalPresentationDrytestPaintReverseOrder.gcode および testPaint.gcode 解析結果
+
+結論
+実機実行前に確認・修正すべき重大な点があります。ExternalPresentationDrytestPaintReverseOrder.gcodeについては全6,305行を確認しました（同じ72命令の動作が52回繰り返されており、周回ごとに座標が異なる箇所はありません。以下の行番号は特記ない限り最初の周回を示します）。あわせて比較対象であるtestPaint.gcode（全126行）も解析しました。元のG-codeは編集していません。
+
+gcodesフォルダ以外のPC設定ファイルおよびファームウェア・ログ・DBファイル（`printer_data/config/printer.cfg`、`mainsail-config/client.cfg`、`klipper/klippy/`内のKlipperソースコード、`printer_data/logs/klippy.log*`、`printer_data/database/moonraker-sql.db`）を確認した結果、従来「不明」とされていた機械設定・原点位置・キネマティクス・速度/加速度上限・マクロ定義がすべて特定できました：
+・ファームウェアと機構設定：Klipperファームウェア（`printer.cfg` 20行目 `kinematics: cartesian`）。上限設定は `max_velocity: 125` mm/s、`max_accel: 1000` mm/s^2、`max_z_velocity: 20` mm/s、`max_z_accel: 500` mm/s^2（`printer.cfg` 20〜25行目）。
+・X軸（`[stepper_x]`、`printer.cfg` 57〜73行目）：直交座標系のX軸として定義された回転テーブル（`rotation_distance: 360`、`gear_ratio: 125:20`、可動範囲 `0`〜`360`、`position_endstop: 0`、負方向へ原点復帰し原点は `X=0`）。
+・Y軸（`[stepper_y]`、`printer.cfg` 86〜102行目）：直動軸（`rotation_distance: 40`、可動範囲 `0`〜`180` mm、`position_endstop: 0`、`homing_positive_dir: false`、原点は `Y=0`）。
+・Z軸（`[stepper_z]`、`printer.cfg` 119〜133行目、288〜289行目）：垂直送りねじ軸（`rotation_distance: 8`、可動範囲 `position_min: 0`〜`position_max: 60` mm）。ファイル末尾の `#*# <---------------------- SAVE_CONFIG ---------------------->`（289行目）により `position_endstop = 47.250` が有効化されています（127行目の `#position_endstop: 51` はコメントアウト、過去のバックアップでは `49.000` や `47.750`）。Klipperの仕様（`klipper/klippy/stepper.py` 368〜373行目）により、`47.250 >= 60 - 60/4`（`45.0`）であるため `homing_positive_dir = True`（正方向＝上方向への原点復帰）が自動推論されます。したがって「Zの増加が上昇」であることが設定上裏付けられ、`G28 Z` 実行後は上端の `Z=47.250` mm がZ原点となります。
+・バルブマクロ（`printer.cfg` 204〜231行目）：`BALL_VALVE_OPEN`（`SET_SERVO SERVO=ballValve ANGLE=45`）および `BALL_VALVE_CLOSED`（`SET_SERVO SERVO=ballValve ANGLE=0`）はサーボピン `PA1` の角度を変更するのみで、座標状態や座標モード（G90/G91）は変更しません。
+
+1. Z下降と他軸移動の同時指示（優先確認：設定ファイルにより裏付け・定量化）
+`printer.cfg`（20行目）で `kinematics: cartesian` が設定されているため、1つの `G0`/`G1` 行でZ下降とX/Y移動を同時に指示すると、Klipper（`klipper/klippy/kinematics/cartesian.py` 107〜118行目）は全軸を3次元直線補間して斜めに同時移動させ、移動完了時点で初めて目標Zに到達します（また速度・加速度上限は `z_ratio = 移動距離 / |dz|` でスケーリングされます）：
+・【ExternalPresentationDrytestPaintReverseOrder.gcode】
+  - 11行目（`X285, Y0, Z47.250` から `G0 Z17 Y15`）：`G28 Z` で `Z=47.250`（`printer.cfg` 289行目）、`G28 Y` で `Y=0`（同97行目）に位置した状態から、`Y` が `+15` mm 進むのと同時に `Z` が `-30.25` mm（`47.250 -> 17.0`）下降します。3D移動距離 `33.765` mm に対して `|dz| = 30.25` が支配的なため、`max_z_velocity: 20` により合成速度は `22.32` mm/s（Z下降速度 `20.0` mm/s）に制限されます。
+  - 43行目（`X265, Y15, Z17` から `G0 X285 Z15`）：絞り出し開始時、速度 `25.0` mm/s で `X` が `+20` 度回転しながら同時に `Z` が `-2` mm（`17 -> 15`）下降します。
+  - 54行目（`X265, Y15, Z24` から `G0 Y180 X0 Z11`）：`X` の大回転（`-265` 度）、`Y` の大移動（`+165` mm）、`Z` 下降（`-13` mm：`24 -> 11`）を3D距離 `312.46` mm・速度 `125` mm/s（所要 `2.62` 秒）で同時実行します。直線補間のため移動中は `Z24` を維持できず、Raised Section 1・2（本Drytestでの作業高さ `Z18`、実塗装時は `Z13`）が存在する `Y=77` を通過する時点では、`X = 265 - 265*(77-15)/165 = 165.45` 度、`Z = 24 - 13*(77-15)/165 = 19.12` mm まで下がっており、`Z18` の作業高さに対してわずか `1.12` mm のZ差で高速横断します。
+  - 97行目（`X217, Y47, Z11` から `G0 X122 Z9 Y45`）：Circle 4からCircle 3への移動で、`X` `-95` 度・`Y` `-2` mm の移動と同時に `Z` が `-2` mm（`11 -> 9`）斜め下降します。
+  - 104行目（`X122, Y45, Z11` から `G0 X80 Z9`）：Circle 3からCircle 2への移動で、`X` `-42` 度回転と同時に `Z` が `-2` mm（`11 -> 9`）斜め下降します。
+・【testPaint.gcode】
+  - 11行目（`X285, Y0, Z47.250` から `G0 Z19 Y15`）：`Y` `+15` mm と同時に `Z` が `-28.25` mm（`47.250 -> 19.0`）下降します。
+  - 54行目（`X265, Y15, Z19` から `G0 X285 Z18`）：`X` `+20` 度回転と同時に `Z` が `-1` mm（`19 -> 18`）下降します。
+  - 69行目（`X39, Y35, Z20` から `G0 Z6 Y45`）：Circle 1への進入時、`Y` `+10` mm 前進と同時に `Z` が `-14` mm（`20 -> 6`）斜め下降します。
+  - 76行目・83行目・91行目（`G0 X80 Z6`、`G0 X122 Z6`、`G0 X217 Z6`）：Circle 5（`Z25` で `X301` へ移動した後に `G0 Z6` で垂直下降）と異なり、Circle 2・3・4への移動では退避高さ `Z10` から `X` 回転（それぞれ `+41` 度、`+42` 度、`+95` 度）と同時に `Z6` まで `-4` mm 斜め下降します（移動開始直後から `Z10` を下回り、各Circleの開始角度に達した瞬間に `Z6` に到達します）。また86行目（Circle 3終了後の `G0 Z10 Y47`）でも `Z` 上昇（`6 -> 10`）と `Y` 移動（`45 -> 47`）が同時指示されています。
+  - 118行目（`X95, Y77, Z20` から `G0 Y180 X0 Z11`）：Raised Section 1（`Y77`）からInner circle（`Y180`）へ向かう際、`X` `-95` 度・`Y` `+103` mm の移動と同時に `Z` が `-9` mm（`20 -> 11`）下降します。
+移動先だけでなく、上記の斜め移動経路全域でノズル・対象物（ワーク）・治具の干渉がないか確認し、干渉リスクがある箇所はXY移動とZ下降を別行の `G0` に分離してください。
+
+2. 作業高さと退避高さ（`printer.cfg` のZ原点キャリブレーション履歴により裏付け・定量化）
+3ファイル（`testPaint.gcode`、`testPaintReverseOrder.gcode`、`ExternalPresentationDrytestPaintReverseOrder.gcode`）の座標と、`printer_data/config/` 内の設定バックアップ履歴（`printer-20251209_160608.cfg`、`printer-20251209_170800.cfg`、`printer-20251209_213242.cfg`、および現在の `printer.cfg`）を照合した結果、Z座標差の構造と物理的な背景が判明しました：
+・`printer.cfg` におけるZ原点（`position_endstop`）の変更履歴（物理高さ `-3.75` mm の変化）：
+  - `testPaint.gcode` 作成時（2025-12-08）直後の `printer-20251209_160608.cfg` では、`[stepper_z]` の `position_endstop` は `51` mm（127行目）でした。
+  - その後 `SAVE_CONFIG` によって `49.000`（`printer-20251209_170800.cfg`）→ `47.750`（`printer-20251209_213242.cfg`）→ 現在の `47.250`（`printer.cfg` 289行目、2025-12-24保存）へと段階的に引き下げられています。
+  - `G28 Z` 完了時の上端スイッチ位置が `Z=51.000` から `Z=47.250` に変わったため、同じG-codeのZ座標であっても、現在の実機では当時より物理的に `3.75` mm（`51.0 - 47.25`）低い位置（ワーク・治具に近い位置）へノズルが降りる状態になっています。
+・`ExternalPresentationDrytestPaintReverseOrder.gcode` と `testPaintReverseOrder.gcode` の比較：
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode` では、パージ・絞り出し・各作業位置のZ座標が `testPaintReverseOrder.gcode` に対してすべて一律 `+5` mm 高く設定されています：
+    - パージ（`Y15`）：`Z12 -> Z17`（`+5` mm）
+    - 絞り出し（`Y15`）：`Z10 -> Z15`（`+5` mm）
+    - Inner circle（`Y180`）：`Z5 -> Z10`（`+5` mm）
+    - Raised Section 1・2（`Y77`）：`Z13 -> Z18`（`+5` mm）
+    - Circle 5・4・1（`Y47`/`Y45`）：`Z3 -> Z8`（`+5` mm）
+    - Circle 3・2（`Y45`）：`Z4 -> Z9`（`+5` mm）
+  - 一方で、移動・退避用のZ座標（`Z11`、`Z21`、`Z24`、`Z26`、`Z33`）はすべて据え置き（`+0` mm）となっているため、作業高さと退避高さの差（持ち上げ量・進入下降量）が一律 `5` mm 減少しています：
+    - Inner circleへの進入高さから作業高さ（54〜55行目）：`Z11 -> Z10`、下降量わずか `1` mm（比較元は `Z11 -> Z5` で `6` mm）
+    - Raised Section 1から2への移動（67〜71行目）：`Z18 -> Z21`、持ち上げ量 `3` mm で `155` 度回転（`X95 -> X250`）（比較元は `Z13 -> Z21` で `8` mm）
+    - Circle 3・2終了後（100行目・107行目）：`Z9 -> Z11`、持ち上げ量 `2` mm（比較元は `Z4 -> Z11` で `7` mm）
+    - Circle 4・1終了後（93行目・115行目）：`Z8 -> Z11`、持ち上げ量 `3` mm（比較元は `Z3 -> Z11` で `8` mm）
+  - プレゼン用Drytestとして全経路を `+5` mm 浮かせる意図であった場合、退避座標（`Z11 -> Z16`、`Z21 -> Z26`、`Z24 -> Z29`、`Z26 -> Z31`、`Z33 -> Z38`）への `+5` mm 反映が漏れています。
+・`testPaint.gcode`（順方向：Circle 1〜5 → Raised Section 2〜1 → Inner circle）との比較：
+  - `testPaint.gcode` の作業高さはパージ `Z19`、絞り出し `Z18`、Circle 1〜5 `Z6`、Raised Section 2・1 `Z16`、Inner circle `Z8` であり、`testPaintReverseOrder.gcode` の作業高さよりワーク部で `+2`〜`+3` mm 高い値です（`position_endstop: 51` 時代に作成された値であり、上端スイッチからの下降量で見ると当時の `Z6` は上端から `-45.0` mm、現在の `position_endstop = 47.250` における `Z3` は上端から `-44.25` mm に相当します）。
+  - ただし `testPaint.gcode` の退避高さは Circle 1〜4間が `Z10`（逆順版は `Z11`）、絞り出し後およびRaised Section 1後が `Z20`（逆順版は `Z24`/`Z33`）、Circle 5前後が `Z25`/`Z23`（逆順版は `Z26`）と低く、さらに最終125行目に現在のZ原点（`47.250`）を `+5.75` mm 超過する `G0 Z53 Y2` が残っています（4項参照）。
+
+3. 絶対座標モード・単位指定（Klipperソースコードおよび `klippy.log` の実機エラー履歴により実証）
+`ExternalPresentationDrytestPaintReverseOrder.gcode`・`testPaint.gcode` のいずれにも、ファイル全体に `G90`（絶対座標指定）および `G21`（mm単位指定）が存在しません。Klipperのソースコード（`klipper/klippy/extras/gcode_move.py`）および実機ログ（`printer_data/logs/klippy.log*`）を確認した結果、この `G90` 欠落が実際に実機でプリント異常停止を引き起こしている決定的な根拠が確認されました：
+・単位指定（`G21` / `G20`、`gcode_move.py` 163〜168行目）：
+  - Klipperは内部的にmm単位固定で動作し、`cmd_G21` は何もしない処理（`pass`）、`cmd_G20`（インチ指定）はエラー（`Machine does not support G20 (inches) command`）を送出します。したがって本機（Klipper）において `G21` の欠落自体でインチ換算暴走が起きることはありません（標準G-codeとしての明記は推奨されます）。
+・絶対/相対座標モード（`G90` / `G91`、`gcode_move.py` 29行目、79〜82行目、175〜180行目）：
+  - Klipper起動時の初期値は `self.absolute_coord = True`（`G90`）ですが、原点復帰完了時のハンドラ `_handle_home_rails_end`（79〜82行目）は現在位置（`last_position`・`base_position`）を更新するだけで、`self.absolute_coord` を `True` にリセットしません。つまり「`G28` による原点復帰では `G90`（絶対座標モード）に戻らない」ことがソースコード上で確定しています。
+  - プリント開始前にMainsailのWeb UI等から手動ジョグ移動を行った場合や、マクロ/コンソール操作で `G91`（相対座標モード）が残った状態でプリントを開始すると、ファイル内の全 `G0` 命令が相対移動として解釈されます。
+  - `printer_data/logs/klippy.log*` に記録された実際の異常停止証拠：
+    - `Move out of range: 570.000 15.000 59.250 [0.000]`（`klippy.log.2026-06-09` および `klippy.log.2026-06-10` にて `Starting SD card print (position 0)` の直後に計18回記録）：`G91` が残った状態で `testPaintReverseOrder.gcode` を実行したため、`G28 Z`（`Z=47.250`）・`G28 X Y`（`X=0, Y=0`）の後、10行目 `G0 X285` で `X=285`、11行目 `G0 Z12 Y15` でZが下降せず逆に `+12` mm 上昇して `Z = 47.250 + 12 = 59.250` mm（スイッチ位置 `47.250` を `12` mm 超過して上端構造へ突入）し、さらに19行目 `G0 X285` で `X = 285 + 285 = 570.000`（上限 `360` 超過）となって即時異常停止しています。
+    - `Move out of range: 285.000 14.997 66.250 [0.000]`（`klippy.log.2026-10-11` 539行目および8096行目にて `Starting SD card print (position 0)` 直後に2回記録）：`G91` が残った状態で `testPaint.gcode` を実行したため、`G28`（`Z=47.250`）と10行目 `G0 X285` の後、11行目 `G0 Z19 Y15` が `Z = 47.250 + 19 = 66.250` mm（上限 `position_max: 60` 超過）と解釈され、11行目で即座にプリントが強制終了しています。
+両G-codeファイルの先頭（最初の `G0` の前）に必ず `G90` を追記する必要があります。
+
+4. 原点復帰前後の高さ（`printer.cfg` と `cartesian.py` により検証：`testPaint.gcode` 末尾のZ上限スイッチ超過を特定）
+`printer_data/config/printer.cfg` および `klipper/klippy/kinematics/cartesian.py`（76〜95行目）を確認した結果、Z原点の方向・座標・復帰順序が確定し、同時に `testPaint.gcode`（および `testPaintReverseOrder.gcode`）末尾の `G0 Z53 Y2` に重大な物理スイッチ超過（オーバートラベル）問題があることが判明しました：
+・原点復帰の方向・順序・復帰後座標（`printer.cfg` 68〜72行目、94〜101行目、126〜132行目、288〜289行目）：
+  - `printer.cfg` には `[homing_override]` や `[safe_z_home]` が設定されていません（160〜203行目・233〜238行目の `_HOME_X`・`_HOME_Y`・`_HOME_Z` マクロは `G28` から自動呼び出しされません）。そのため通常の `G28` は `cartesian.py`（91行目）に従い、指定された軸を `X` → `Y` → `Z` の順番で個別に復帰します。
+  - `[stepper_z]` は `position_endstop = 47.250`（289行目）、`position_min: 0`、`position_max: 60`（`homing_positive_dir = True`）であるため、`G28 Z` は現在位置から上方向（`+Z` 方向）へ `homing_speed: 20` mm/s（2回目 `10.0` mm/s、`homing_retract_dist: 0`）で上昇し、上端エンドストップ（`^!PC2`）が反応した位置を `Z = 47.250` mm と確定します。
+・開始時の原点復帰（両ファイル 4〜11行目）：
+  - 4行目 `G28 Z` で最上端のエンドストップ位置（`Z = 47.250` mm）まで上昇した後に、5行目 `G28 X Y` で `Z = 47.250` mm を保ったまま `X=0, Y=0` へ復帰します。
+  - したがって10行目 `G0 X285` の時点では、ノズルはすでに実機の正規最上端である `Z = 47.250` mm に位置しており、旧解析にあった「X285への移動前に明示的な安全Zへの移動がありません」という懸念は `printer.cfg` の上方向Z原点仕様（`position_endstop = 47.250`）によって解消されます。
+・`ExternalPresentationDrytestPaintReverseOrder.gcode` における周回末尾の原点復帰（115〜127行目）：
+  - Circle 1終了後（`X39, Y45`）、115行目で `Z11` に上げた状態から、118行目 `G28 Z` で `(X39, Y45, Z11)` から真上の `(X39, Y45, Z47.250)` まで直上復帰し、その後119行目 `G28 X Y` で `Z = 47.250` mm のままXY原点へ戻ります（`X39, Y45` の真上に干渉物がなければ、XY移動前にZが最上端まで退避するため安全です）。
+・【重大問題】`testPaint.gcode`（および `testPaintReverseOrder.gcode`）末尾 125〜126行目の `G0 Z53 Y2` → `G28`：
+  - `testPaint.gcode`（および比較元の `testPaintReverseOrder.gcode`）の末尾125〜126行目には以下が記載されています：
+    - 125行目：`G0 Z53 Y2;`
+    - 126行目：`G28;`
+  - 現在の `printer.cfg` ではソフトウェア上限 `position_max: 60`（128行目）が `60` mm のため、Klipperは `G0 Z53` を範囲外エラー（`Move out of range`）として弾きません。しかし、物理的なZ上端エンドストップスイッチの位置は `position_endstop = 47.250` mm（289行目）です。つまり `G0 Z53` を実行すると、Z軸が物理エンドストップスイッチ（`47.250` mm）をさらに `+5.75` mm も上方に突き抜けて駆動されます（初期設定の `position_endstop: 51` 時代ですら `+2` mm 超過していました）。
+  - さらに `Z=53` mm まで突き上げた直後の126行目で全軸一括の `G28` を実行すると、`X` → `Y` → `Z` の順で復帰するため、`Z=53` の状態でXYを復帰した後、すでにスイッチ位置（`47.250`）を通過・押下している状態からさらに上方向へ `G28 Z` を試みることになります。実際に `printer_data/logs/klippy.log`（506, 509行目）、`klippy.log.2026-06-08`（507〜508行目）、`klippy.log.2026-10-11`（506, 1227〜1231行目）では、`No trigger on stepper_z after full movement`（Z原点復帰失敗）やZドライバの異常シャットダウン（`TMC 'stepper_z' reports error: DRV_STATUS: c01f0010 s2vsa=1(ShortToSupply_A!)` / `drv_err=1(ErrorShutdown!)`）が繰り返し発生しています。
+  - したがって、`ExternalPresentationDrytestPaintReverseOrder.gcode` で `G0 Z53 Y2` が削除され `G28 Z` → `G28 X Y` に変更されている点は適切であり、逆に `testPaint.gcode` の125〜126行目（`G0 Z53 Y2` → `G28`）は `Z = 47.250` mm 以下（例：`G0 Z45 Y2`、または `G28 Z` → `G28 X Y`）へ必ず修正が必要です。
+
+5. `testPaint.gcode` 63行目の重大な速度指定ミス（`M220 S10`）および送り速度 `F` 未指定による事前状態への依存
+`klipper/klippy/extras/gcode_move.py`（34〜35行目、152〜157行目、195〜199行目）および両G-codeファイルを比較した結果、実機動作速度に関する重大な問題が確認されました：
+・送り速度 `F` 省略時のKlipper内部動作（`gcode_move.py` 34〜35行目）：
+  - Klipper起動時の初期送り速度は `self.speed = 25.0` mm/s（`F1500` mm/min 相当）、速度倍率は `100%` です。
+  - `testPaint.gcode`・`ExternalPresentationDrytestPaintReverseOrder.gcode` ともにファイル内で一度も `F` を指定していないため、すべての `G0` 移動は「プリント開始直前に残っていた `F` の値」に `M220` 倍率を掛けた速度で動作します。
+  - もしプリント前にマクロを実行していた場合（例：`printer.cfg` 39行目 `TURNTABLE_TEST` の `F500`＝基本速度 `8.33` mm/s、173/195行目 `_HOME_X`/`_HOME_Y` の `F1200`＝基本速度 `20.0` mm/s、`mainsail-config/client.cfg` 250行目 `_TOOLHEAD_PARK_PAUSE_CANCEL` の `F6000`＝基本速度 `100.0` mm/s）、プリント全体の基準速度が初期値の1/3〜4倍に変動してしまいます。
+  - 起動直後の初期値（基準 `25.0` mm/s）および `printer.cfg` の `max_velocity: 125` mm/s（21行目）のもとでは、`M220 S500`（`500%`）で `25.0 * 5.0 = 125.0` mm/s（上限値と一致）、`M220 S375`（`375%`）で `93.75` mm/s（`125` mm/sの`75%`）、`M220 S100`（`100%`）で `25.0` mm/s（`125` mm/sの`20%`）となります。
+・【重大不具合】`testPaint.gcode` 8行目および63行目の `M220` 記述ミス：
+  - `testPaint.gcode` 8行目は `M220 S100; Increasing speed 500%` となっており、コメントは `500%` ですが実際には `S100`（`25.0` mm/s）が指定されています（そのため10行目 `G0 X285` に `11.43` 秒かかります）。
+  - さらに致命的な点として、絞り出し直後・全ワーク塗装開始前である `testPaint.gcode` 63行目が以下のようになっています：
+    `M220 S10; Increasing speed 500%`
+    `testPaintReverseOrder.gcode`（50行目）および `ExternalPresentationDrytestPaintReverseOrder.gcode`（50行目）では `M220 S500; Increasing speed 500%` ですが、`testPaint.gcode` では `S500` のゼロが1つ抜けて `S10`（速度倍率 `10%` ＝ 実速度 `2.5` mm/s、通常の `125` mm/s の **1/50の超低速**）になっています。
+  - このため `testPaint.gcode` を実行すると、65行目以降のすべてのワーク移動・塗装動作（Circle 1〜5、Raised Section 2・1、Inner circle、および最後の `G0 Z53 Y2`）が `2.5` mm/s の超スローモーションになり、たとえばInner circleの1周（`360`度）だけで `144` 秒（4周で `576` 秒＝約10分）、1サイクル全体で `1,295.2` 秒（約 `21.6` 分：正常時約50秒の約26倍）かかります。`moonraker-sql.db` の実行履歴（`job_history`）でも、`testPaint.gcode` は過去7回すべてが途中で `cancelled` または `klippy_shutdown` となっており、一度も完走していません。
+
+6. `testPaint.gcode` におけるワーク塗装時のバルブ開命令（`BALL_VALVE_OPEN`）欠落、および `ExternalPresentationDrytestPaintReverseOrder.gcode` でのバルブ開動作
+`printer.cfg`（147〜153行目、204〜231行目）のサーボ設定 `[servo ballValve]` およびマクロ定義を確認し、両G-codeのコマンド列と照合した結果、各ファイルの目的とバルブ動作に重大な乖離が確認されました：
+・`testPaint.gcode` におけるワーク上での未吐出：
+  - `BALL_VALVE_OPEN`（`SET_SERVO SERVO=ballValve ANGLE=45`）は19行目の `;Purge` 開始時（`X285..265, Y15, Z19`）に1回呼ばれるだけで、47行目の `;Purge` 終了時に `BALL_VALVE_CLOSED`（`SET_SERVO SERVO=ballValve ANGLE=0`）で閉じられます。
+  - その後、67〜123行目のすべての対象物（ワーク）上の動作（Circle 1〜5、Raised Section 2・1、Inner circle）では一度も `BALL_VALVE_OPEN`（または `BALL_VALVE P=...`）が呼ばれておらず、バルブが全閉（`ANGLE=0`）のままワーク上をなぞるだけになっています。実世界の対象物に対して塗装を行う場合は、各塗装区間の前後でバルブ開閉コマンドの挿入が必要です。
+・`ExternalPresentationDrytestPaintReverseOrder.gcode` における52回のバルブ開動作：
+  - 逆に、ファイル名に `Drytest`（ドライテスト）と付いているにもかかわらず、毎サイクル18行目で `BALL_VALVE_OPEN`、36行目で `BALL_VALVE_CLOSED` が実行されます（52サイクルで計52回、1回あたり約 `3.4` 秒 × 52回 ＝ 計 `176.8` 秒間バルブが45度開きます）。流路に塗料や液体が入った状態でこのDrytestを実行すると、パージ位置 `(X285..265, Y15, Z17)` で52回実際に吐出されます。
+・起動時のサーボ初期角度未設定（`printer.cfg` 147〜153行目）：
+  - `[servo ballValve]` に `initial_angle` または `initial_pulse_width` が設定されていないため（`klipper/klippy/extras/servo.py` 22〜29行目）、Klipper起動直後から最初の `BALL_VALVE_*` 実行まではサーボへのPWM出力がオフ（`0`）で角度が保持されません。
+
+7. `printer.cfg` におけるZ軸モーター（`stepper_z`）の定格2.5倍過電流設定と、それに伴うTMC2209過電流/過熱シャットダウン
+`printer.cfg`（134〜145行目）、`moonraker-sql.db`（`job_history`）、および `printer_data/logs/klippy.log.2026-10-11` を照合した結果、`ExternalPresentationDrytestPaintReverseOrder.gcode`（14回 `klippy_shutdown`）、`testPaintReverseOrder.gcode`（15回 `klippy_shutdown`）、`testPaint.gcode`（1回 `klippy_shutdown`）で頻発している稼働途中のシステム停止の根本原因が判明しました：
+・`printer.cfg` 139〜142行目（`[tmc2209 stepper_z]`）：
+  ```
+  ## For OMC (StepperOnline) 17LS13-0404E-200G 0.4A 
+  run_current: 1.0
+  ## For LDO-42STH25-1004CL200E 1.0A
+  #run_current: 0.37
+  ```
+  コメントに記載された OMC `17LS13-0404E-200G` モーターの定格電流は `0.4A` であるにもかかわらず、`run_current: 1.0` A（定格の **2.5倍**、TMC2209の最大電流スケール `cs_actual=31`）が設定されており、`hold_current` も未設定です。
+・`printer_data/logs/klippy.log.2026-10-11`（1227〜1231行目、2870行目、6393行目、7554行目など計22箇所）に、動作中のTMC2209ハードウェアエラーによる強制シャットダウンが記録されています：
+  - `TMC 'stepper_z' reports error: DRV_STATUS: c01f0010 s2vsa=1(ShortToSupply_A!) cs_actual=31 stealth=1 stst=1`
+  - `TMC 'stepper_z' reports error: GSTAT: 00000002 drv_err=1(ErrorShutdown!)`
+・特に `ExternalPresentationDrytestPaintReverseOrder.gcode` は全52周で約46分間（`2,764.5` 秒：ジョブ #105, #113, #114）にわたり `208` 回の `G28` と `1,040` 回のZ移動を連続実行するため、`stepper_z` の過電流・発熱によって途中（例：ジョブ #104の `688` 秒時点、#106の `634` 秒時点、#108の `1754` 秒時点、#115の `1899` 秒時点、#116の `953` 秒時点）でTMC2209の保護回路が作動し `klippy_shutdown` に陥っています。実機のZ軸モーター型番を確認し、`run_current` を適正値へ下げる必要があります。
+
+8. `printer.cfg` における冷却ファン定義のコメントアウト（`Unknown command:"SET_FAN_SPEED"`）および非常停止ボタンの無効化
+・冷却ファン設定の不整合（`printer.cfg` 29〜33行目、42〜50行目）：
+  - `[delayed_gcode turnFanOn]` が起動1秒後に `turnOnFan` マクロ（`SET_FAN_SPEED FAN=fan SPEED=1.0`）を実行していますが、肝心の `#[fan_generic fan]`（`#pin:PC6`、48〜49行目）がコメントアウトされています。
+  - そのため、全 `klippy.log*` で起動のたびに毎回 `Unknown command:"SET_FAN_SPEED"` エラーが発生しており、`PC6` に接続されたファンが一切回転していません。このファンが電装基板・TMC2209ドライバ（X/Y軸 `1.5A`、Z軸 `1.0A`）の冷却用である場合、ファン停止が7項のTMC2209熱シャットダウンをさらに加速させています。
+・非常停止ボタンの無効化（`printer.cfg` 266〜268行目）：
+  - `#[gcode_button emergency_stop]`（`#pin: ^PC15`、`#press_gcode: {action_emergency_stop()}`）がコメントアウトされており、物理非常停止ボタン（`PC15`）を押してもKlipperの緊急停止が機能しない状態になっています。実機動作の安全確保のため有効化を確認してください。
+
+9. `printer.cfg` の `_HOME_X`・`_HOME_Y` マクロの不具合（`G91` 残留の原因）および `diag_pin: ^PC1` の重複割り当て
+・`[tmc2209 stepper_x]`（83行目）と `[tmc2209 stepper_y]`（113行目）の双方に同じ `diag_pin: ^PC1`（`driver_SGTHRS: 255`）が設定されており、かつ `[stepper_y]` のエンドストップに `endstop_pin: ^!PC1`（94行目）が使用されています（X軸は `^PC0`）。2つのTMC2209のDIAG出力が同一の `PC1` ピンに結線されている場合、X軸モーターの負荷変動でStallGuardが出力されるとY軸エンドストップが誤検知する恐れがあります。
+・また、`_HOME_X`（160〜181行目）および `_HOME_Y`（182〜203行目）は、`G28 X` / `G28 Y` で `0`（`position_min: 0`）に復帰した直後に `G91` に切り替えて `G1 X-10 F1200` / `G1 Y-10 F1200` を実行しています。可動範囲の下限が `0` のため、`-10` への移動は確実に範囲外エラー `Move out of range: -10.000 -0.003 47.250 [0.000]`（`klippy.log.2026-06-09` 1313〜1323行目で6回記録）を引き起こし、マクロ後半の `G90`（177/199行目）に到達する前に異常終了します。その結果、プリンタが `G91`（相対座標モード）のまま放置され、3項で実証したプリント開始直後の暴走・異常停止の直接の引き金となっています。
+
+10. `testPaint.gcode` と `ExternalPresentationDrytestPaintReverseOrder.gcode` 間の経路・対象物座標の相違点（実ワークとの整合確認）
+実世界の対象物に対して正常にG-codeの動きを反映させるため、両ファイル（および `testPaintReverseOrder.gcode`）間にある以下の構造的相違のうち、どちらが現在の治具・対象物（ワーク）に適合しているかを確認してください：
+・加工順序（順方向 vs 逆方向）：
+  - `testPaint.gcode`：パージ → 絞り出し → Circle 1 → Circle 2 → Circle 3 → Circle 4 → Circle 5 → Raised Section 2 → Raised Section 1 → Inner circle
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode`（および `testPaintReverseOrder.gcode`）：パージ → 絞り出し → Inner circle → Raised Section 1 → Raised Section 2 → Circle 5 → Circle 4 → Circle 3 → Circle 2 → Circle 1（完全な逆順）
+・パージの往復回数：
+  - `testPaint.gcode`（20〜45行目）：`#1`〜`#9` の計9往復（`X285 <-> X265`）
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode`（19〜34行目）：`#1`〜`#3` × 2回の計6往復
+・Circle 1へのアプローチ経路（`Y35` 経由の有無）：
+  - `testPaint.gcode`（68〜69行目）：`Z20` で `X39 Y35` へ移動後、`G0 Z6 Y45` でYを `+10` mm 進めながら斜め下降
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode`（111〜112行目）：Circle 2終了時の `Y45, Z11` からそのまま `G0 X39` で回転し、`Y45` 上で `G0 Z8` へ垂直下降
+・Raised Section 1の終了角度：
+  - 両ファイルとも `X30 -> X95 -> X30 -> X95`（1.5往復）で動作し、開始端の `X30` ではなく `X95` で終了して次の工程へ移動します。
+
+11. 現行コード群から推論される「作成者が本来想定した対象ワーク構造・動作」と「現状のコードが正常動作しない根本原因」
+`gcodes/` 内の全G-codeファイルの変遷（`testSpeedRun.gcode` → `testPaintNoPurgeNoWipe.gcode` → `testPaint.gcode` → `testPaintReverseOrder.gcode` → `ExternalPresentationDrytestPaintReverseOrder.gcode`）と `printer.cfg`・`moonraker-sql.db` を総合すると、作成者が本来想定していた実世界の対象物（ワーク）の構造・塗布プロセスと、現在の未修正コードが想定通りに動作しない原因は以下の通り推論・特定されます：
+・A. 座標と設定から推論される装置・対象物（ワーク）の物理構造：
+  - 極座標（円筒座標）機構のKlipper直交座標（`X/Y/Z`）への割り当て：
+    - `X`軸（`0〜360` 度）：円盤状の対象物（ワーク）を載せて回転するターンテーブル。
+    - `Y`軸（`0〜180` mm）：ターンテーブルの外周外側（`Y=0`）から回転中心（`Y=180` mm）へ向かって半径方向に直進するノズル移動軸。
+    - `Z`軸（`0〜47.250` mm）：`G28 Z` で上端エンドストップ（`Z=47.250` mm）へ上昇復帰し、値が小さいほどワーク表面へ降下する垂直軸。
+  - `Y`軸（半径方向）に沿った各ステーション・ワーク部位の配置：
+    - `Y=15` mm（`X=265〜285` 度）：ターンテーブル外縁の「パージ（液出し）＆ 絞り出し（ワイプ/液切り）ステーション」。
+    - `Y=45〜47` mm（ワーク外周部）：円周上に5箇所配置された円形塗布部（`Circle 1`：`X=39..55`、`Circle 2`：`X=80..96`、`Circle 3`：`X=122..138`、`Circle 4`：`X=217..236`、`Circle 5`：`X=301..317`）。Circle 5とRaised Section 2の前後でのみ退避高さを `Z25〜Z26` まで大きく引き上げている（Circle 1〜4間は `Z10〜Z11`）ことから、`X=240〜300` 度付近には高さ約 `20` mm 前後の高い突起物または治具クランプが存在します。
+    - `Y=77` mm（ワーク中間半径）：外周Circle面より約 `10` mm 高く隆起した2箇所の凸部（`Raised Section 1`：`X=30..95`、`Raised Section 2`：`X=250..295`、`testPaintReverseOrder.gcode` での作業高さ `Z13` vs Circle部 `Z3〜4`）。
+    - `Y=180` mm（`X=0〜360` 度）：ターンテーブル回転中心にある中央円（`Inner circle`）。
+・B. 作成者が本来想定していた基本動作シナリオ：
+  - Step 1（安全な原点復帰）：まず `G28 Z` でノズルを最上端（`Z=47.250` mm）へ引き上げてワーク・治具との干渉を完全に避け、次に `G28 X Y` で回転角と半径位置を `0` に戻す。
+  - Step 2（パージ位置 `Y=15` でのアプリケータへの塗料チャージと液切り）：
+    - 初期の `testSpeedRun.gcode` から `testPaint.gcode`・`testPaintReverseOrder.gcode` に至るまで、一貫して `BALL_VALVE_OPEN` はパージ位置（`Y=15` mm）での往復中（`M220 S375`＝速度 `75%`）にのみ実行され、直後に `BALL_VALVE_CLOSED` で閉じたうえで、Zを `1〜2` mm 下げた `;SQUEEZE OUT`（速度 `20%`：`M220 S100`）で2往復してからワークへ向かっています。
+    - これにより、ノズル先端にはハケ（ブラシ）・スポンジ・パッド等の塗布具（アプリケータ）が装着されており、作成者の本来の設計は「パージ位置（`Y=15`）でバルブを開けて塗布具に塗料を含ませ、Squeeze Outで余分な塗料を絞ってから、その塗布具をワーク上の8箇所（Inner circle、Raised Section 1・2、Circle 1〜5）へ順番に押し当てて擦り塗りする」という接触塗布方式であると推論されます。
+  - Step 3（なぜ `testPaint.gcode` の順方向から `ReverseOrder` の逆順へ変更したのか）：
+    - 当初の `testPaint.gcode`（外周の Circle 1→2→3→4→5 → 中間の Raised 2→1 → 中心の Inner circle）では、パージで塗料を含ませた直後に面積の小さい外周Circle 1〜5を先に塗り、最も塗布距離が長い中心の Inner circle（`360` 度×4周）を一番最後に塗るため、最後には塗布具の塗料が枯渇する（または最初期に外周で液垂れする）問題がありました。
+    - そこで `testPaintReverseOrder.gcode` では順序を完全に逆転させ、塗料がたっぷり含まれた直後に最も面積の大きい中心の `Inner circle`（`Y=180`）を4周塗り、そこから外周へ向かって `Raised Section 1→2`（`Y=77`）→ `Circle 5→4→3→2→1`（`Y=47→45`）と塗り進め、原点（`X0, Y0`）に最も近い `Circle 1`（`X39, Y45`）で終えて最短距離で原点復帰する合理的ルート（1周約 `50.2` 秒、`moonraker-sql.db` で76回完走）へ改良されています。
+  - Step 4（なぜ `ExternalPresentationDrytestPaintReverseOrder.gcode` を作成したのか）：
+    - 実塗装用の `testPaintReverseOrder.gcode` をベースに、「外部プレゼン（展示会・デモ）でワーク表面に接触させずに（空運転＝Drytest）、約45分間（52周）連続で自動デモ動作を見せる」ことを意図して、各作業高さのZに `+5` mm を足してノズルを5mm浮かせ、周回間に4秒待機（`G4 P4000`）を入れて52回コピー＆ペーストしたものです。
+・C. 作成者の本来の想定に対し、現在の修正前コードが正常に動作しない根本原因のまとめ：
+  1. 【`testPaint.gcode`】63行目の `M220 S10`（および8行目の `M220 S100`）のタイプミス：
+     - 作成者はコメント `; Increasing speed 500%` の通り、Squeeze Out終了後に `M220 S500`（`125` mm/s）へ戻す意図でしたが、誤って `M220 S10`（`2.5` mm/s ＝ 想定の **1/50の速度**）と入力しています。そのためワークへ向かい始めた瞬間に機械が止まったかのような超低速（1周 `21.6` 分）になり、実機履歴でも毎回異常とみなされて途中キャンセルされています。
+  2. 【`testPaint.gcode`】Z原点再キャリブレーション（`51` → `47.250` mm）の未反映と125行目 `G0 Z53 Y2` の上端突破：
+     - `position_endstop: 51` 時代に書かれたまま更新されていないため、最終125行目の退避移動 `G0 Z53 Y2` が現在の物理上端スイッチ（`Z=47.250` mm）を `+5.75` mm も上方へ突き抜けてしまい、直後の126行目 `G28` でZ軸がスイッチを見つけられずエラー停止（`No trigger on stepper_z after full movement`）します。またワーク各部のZ高さ（`Z6, Z16, Z8`）も旧基準のままです。
+  3. 【`testPaint.gcode`】Circle 1〜4およびInner circle移動時の斜め降下（69, 76, 83, 91, 118行目）：
+     - 退避高さ `Z10` で次のCircleの角度まで回転してから垂直に `Z6` へ降ろす意図にもかかわらず、`G0 X80 Z6` のように1行にまとめて書いたため、回転開始直後から斜めに降下してワーク表面や治具に干渉する軌道になっています。
+  4. 【`ExternalPresentationDrytestPaintReverseOrder.gcode`】Drytest化での「退避Zの `+5` mm 漏れ」と54行目の斜め横断：
+     - 作業Zだけ `+5` mm 上げて移動用Z（`Z11, Z21, Z24, Z26, Z33`）を据え置いたうえ、54行目の `G0 Y180 X0 Z11` が3軸同時移動になっているため、`Y=15, Z=24` から中心 `Y=180, Z=11` へ斜めに降りる途中、隆起部（`Raised Section`：`Y=77`、Drytest高さ `Z18`）を横切る瞬間に `Z=19.12` mm（`Z18` との差わずか `1.12` mm）まで接近してしまいます。
+  5. 【`ExternalPresentationDrytestPaintReverseOrder.gcode`】Drytestでの `BALL_VALVE_OPEN` 消し忘れ（52回）とコピペによる2重ホーミング：
+     - `testPaintReverseOrder.gcode` をそのまま52回複製したため、空運転（Drytest）にもかかわらず毎周パージ部でバルブが開き（計52回）、さらに周回末尾（118〜119行目）と次周先頭（126〜127行目）で `G28 Z; G28 X Y` が2回連続実行されます。
+  6. 【両ファイルおよび `printer.cfg` 共通】`G90` 欠落 × `_HOME_X`/`Y` の範囲外バグによる開始直後の暴走、およびZ軸過電流（`1.0A`）× ファン無効化による途中熱停止：
+     - 作成者は「`G28` を実行すれば絶対座標（`G90`）になる」と想定して `G90` を省いていますが、Klipperは `G28` で `G91` を解除しません。特に `printer.cfg` の `_HOME_X`/`_HOME_Y` が `G91` のまま `X-10`/`Y-10` で範囲外エラー停止するバグを持つため、手動操作後にプリントを開始すると `G91` のまま11行目・19行目でZ上端やX上限へ暴走します。また46分間の連続運転では、`stepper_z` の定格2.5倍の電流設定（`1.0A`）と冷却ファン（`#[fan_generic fan]`）のコメントアウトにより、TMC2209が過熱・過電流保護（`ShortToSupply_A!` / `ErrorShutdown!`）を起こして途中停止します。
+
+12. その他（旧「5. その他」の検証・詳細化）
+・送り速度 `F` 未指定および終了時の `M220` 倍率未リセット（旧5-1・5-2）：
+  - 5項で詳述したとおり、Klipper初期値 `F1500`（`25` mm/s）のもとでは `M220 S500` で `125` mm/s（`printer.cfg` の `max_velocity: 125` と一致）、Z単独移動は `max_z_velocity: 20` により `20` mm/s に制限されます。
+  - 両ファイルとも終了時に `M220 S100` へ戻していないため、プリント終了後も `ExternalPresentationDrytestPaintReverseOrder.gcode` では `500%`、`testPaint.gcode` では `10%` の速度倍率がKlipper内部（`gcode_move.speed_factor`）に残留します。ファイル末尾に `M220 S100` の追加を推奨します。
+  - 16行目の `M220 S375; Purging speed 75%`（`93.75` mm/s）および42行目の `M220 S100; Squeezing speed 20%`（`25.0` mm/s）は、`500%`（`125` mm/s）運転時を基準とした相対比率（`75%`・`20%`）として合致しています。
+・Drytestでの `BALL_VALVE_OPEN` 実行（旧5-3）：
+  - `printer.cfg` 222行目のマクロ定義により、実際にサーボ `ballValve`（ピン `PA1`）を `45` 度へ開く命令であることが確定しました（6項参照）。
+・パージ開始時の最初の移動命令の空振りおよびサーボ動作待ち時間（旧5-4）：
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode` 19行目（`G0 X285; #1`）および `testPaint.gcode` 20行目（`G0 X285; #1`）は、10行目で既に `X285` へ移動済みのため移動量 `0`（所要 `0.00` 秒）の空振りとなり、次の行の `G0 X265` から実際の移動が始まります。また、`BALL_VALVE_OPEN` 直後に `G4`（待機）がないため、サーボが物理的に0度から45度へ開き切る前に `G0 X265` の移動が開始されます。
+・Inner circleの周回数とコメント表記（旧5-5）：
+  - `printer.cfg`（62〜63行目）の `rotation_distance: 360`・`gear_ratio: 125:20` により、`X=0` から `X=360` への移動がターンテーブルの物理的な1回転（`360` 度）であることが裏付けられました。
+  - したがって、`ExternalPresentationDrytestPaintReverseOrder.gcode` 54〜59行目（および `testPaint.gcode` 118〜123行目）の `X0 -> X360 -> X0 -> X360 -> X0` は、コメント上は `Rev 1` と2つの `Rev 2` ですが、実際には正転・逆転を2往復する計4回転（`1,440` 度）の動作となります。
+・周回境目での原点復帰の重複と実機所要時間（旧5-6）：
+  - `ExternalPresentationDrytestPaintReverseOrder.gcode` では各周回の末尾（118〜120行目）で `G28 Z`・`G28 X Y`・`G4 P4000`（4秒待機）を実行した直後、次周回の先頭（126〜127行目）で既に原点 `(X0, Y0, Z47.250)` にいる状態で再度 `G28 Z`・`G28 X Y` を実行しています（全52周で `G28` 計 `208` 回）。`moonraker-sql.db` の実測履歴（ジョブ #105, #113, #114）では、52周全体の完走所要時間は `2,764.5` 秒（約 `46.1` 分、1周あたり約 `53.2` 秒）です。
+・Circle 5〜1のY座標の引き継ぎ（旧5-7）：
+  - 両ファイルとも Circle 5・4 は `Y=47` mm、Circle 3・2・1 は `Y=45` mm で実行されます（モーダル座標により省略された `Y` は直前の値を保持）。対象物の形状に対してこの `2` mm の半径方向オフセットが意図通りか確認してください。
+
+座標範囲と `printer.cfg` 可動範囲のまとめ
+・`printer.cfg` の設定範囲：`X = 0〜360`（原点 `0`）、`Y = 0〜180`（原点 `0`）、`Z = 0〜60`（上端スイッチ原点 `position_endstop = 47.250`）。
+・`ExternalPresentationDrytestPaintReverseOrder.gcode` の指示座標範囲：`X = 0〜360`、`Y = 15〜180`（`G28` 時は `0`）、`Z = 8〜33`（`G28 Z` 時は `47.250`）。`G90`（絶対座標モード）であれば全座標が物理・ソフト上限内に収まります。
+・`testPaint.gcode` の指示座標範囲：`X = 0〜360`、`Y = 2〜180`（`G28` 時は `0`）、`Z = 6〜53`（`G28 Z` 時は `47.250`）。125行目の `G0 Z53 Y2` が物理Z上端スイッチ位置（`47.250` mm）を `+5.75` mm 超過しているため、先頭への `G90` 追加・63行目の `M220 S10` → `M220 S500` 修正・ワーク塗装時の `BALL_VALVE_OPEN`/`CLOSED` 追加とあわせて必ず修正が必要です。
+
+参照ファイル・根拠：
+・実機設定ファイル：`printer_data/config/printer.cfg`（および同フォルダ内バックアップ `printer-20251209_*.cfg`）、`mainsail-config/client.cfg`
+・Klipperファームウェアソース：`klipper/klippy/stepper.py`、`klipper/klippy/kinematics/cartesian.py`、`klipper/klippy/extras/gcode_move.py`、`klipper/klippy/extras/servo.py`
+・実機稼働ログ・履歴DB：`printer_data/logs/klippy.log*`、`printer_data/database/moonraker-sql.db`
+・Klipper G-code仕様：https://www.klipper3d.org/G-Codes.html#g-code-commands

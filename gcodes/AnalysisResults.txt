@@ -1,0 +1,212 @@
+Independent G-code audit — corrected report, 2026-11-18
+Targets: gcodes/testPaint.gcode; gcodes/ExternalPresentationDrytestPaintReverseOrder.gcode
+Candidate reviewed: Working Folder_Adachi/testPaint.gcode
+
+Conclusion
+Neither original nor the candidate can presently be certified collision-free, interruption-free, or suitable for the intended coating process on the actual workpiece. The candidate fixes significant software defects, but important physical and process assumptions remain unverified.
+The previous report also contained substantial errors: the physical sign of the Z-origin change was reversed; short-to-supply diagnostics were treated as proof of overheating; Z53 was said to inevitably cause a homing failure; and inferred geometry and author intent were presented as established facts. Those conclusions are withdrawn.
+This report replaces the old numbered sections 1–12 and adds findings and candidate review in sections 13–15. Previous English/Japanese reports are preserved as Working Folder_Adachi/audit/*.before. No G-code, machine configuration, or database was modified. No printer connection, motion, or coating test was performed.
+
+Evidence and scope
+CONFIRMED means directly supported by the supplied files, implementation, or logs. CONDITIONAL CALCULATION assumes G90, zero G-code offsets, F1500, configured runtime limits, successful homing, and a mechanism matching the configuration. UNRESOLVED includes actual geometry, wiring, installed motor, liquid-transfer method, and author intent.
+Software bounds do not establish physical clearance from the workpiece, applicator, fixtures, hoses, or cables.
+Directly inspected:
+- printer_data/config/printer.cfg and all three printer-20251209_*.cfg backups; mainsail-config/client.cfg and mainsail.cfg; kiauh_backups/printer_data/config_20251124-214637/printer.cfg; printer_2_data/config/printer.cfg.
+- klipper/klippy/stepper.py, kinematics/cartesian.py, toolhead.py, extras/{gcode_move,homing,servo,output_pin,tmc,tmc2208,tmc2209,tmc2130,idle_timeout,pause_resume,virtual_sdcard}.py, and klipper/src/endstop.c.
+- All six klippy.log files and three moonraker.log files, with targeted context around errors; moonraker-sql.db opened read-only.
+- All lines of all nine gcodes/*.gcode files. All nine installed copies under printer_data/gcodes are byte-identical. Every G-code member of the seven config ZIP archives is byte-identical to its corresponding current file.
+Reproduce with: python3 'Working Folder_Adachi/audit/verify.py'
+Output: Working Folder_Adachi/audit/evidence.json. It records movement endpoints, requested/limited speeds, planner times, SHA-256 hashes, ZIP comparisons, DB aggregates, and current log line numbers.
+The timing harness uses the supplied toolhead.py Move and LookAheadQueue classes offline. It excludes homing time, host/MCU delays, servo response, and mechanical dynamics. It is not a complete printer emulator or a collision simulation.
+CodeGraph was initialized with user approval, but the default root index did not cover the Klipper source. Direct reads of the named implementation files remained the principal evidence.
+
+1. Diagonal motion, Z direction, and z_ratio — mostly confirmed, qualifications required
+Sources: printer.cfg:119–144,285–289; stepper.py:325–389; cartesian.py:76–118; toolhead.py:15–58.
+SAVE_CONFIG supplies position_endstop=47.250. With range 0..60 and no explicit homing_positive_dir, 47.25 >= 45 selects positive homing. This proves the commanded direction, not the physical wiring or assembly. Physical descriptions below assume the positive direction is upward toward the upper switch.
+G0/G1 use the same movement handling. Each block linearly interpolates its numerical XYZ coordinates. Because X is rotary, the planner's distance must not be confused with a physical millimetre distance.
+Drytest L11: (285,0,47.25) -> (285,15,17).
+  D=33.76481156; z_ratio=D/30.25=1.11619212.
+  Speed limit=min(125,20*z_ratio)=22.32384236.
+  Acceleration limit=min(1000,500*z_ratio)=558.09606.
+  Z reaches at most 20 mm/s during cruise, not throughout acceleration/deceleration.
+Drytest L54: (265,15,24) -> (0,180,11).
+  D=sqrt(265^2+165^2+13^2)=312.44039432, correcting 312.46.
+  z_ratio=24.03387649, so Z permits 480.67753 planner units/s; the global 125 limit dominates. Global acceleration 1000 also dominates.
+  At cruise, components are approximately X=-106.02 deg/s, Y=66.01 mm/s, Z=-5.20 mm/s.
+  At Y77, interpolation fraction=62/165, X=165.42424242 (not 165.45), Z=19.11515152. Rounded Z19.12 is correct. Differences from commanded dry working Z18 and painting Z13 are 1.11515 and 6.11515 respectively.
+Crucial qualification: X165.424 lies outside the known Raised Section stroke ranges X30..95 and X250..295. Crossing Y77 alone does not prove passage directly over either raised feature. Z18 is a commanded dry working height, not a measured surface height. Thus “1.12 mm physical clearance above the raised feature” is not established. Tool footprint, fixture envelope, and unmodelled geometry still require examination.
+L54 takes 2.61618 s in the offline planner, consistent with an approximate 2.62 s including acceleration; D/125 alone is 2.49952 s. Both depend on the assumed feed and runtime limits.
+The previously identified simultaneous-Z moves in testPaint L11,54,69,76,83,86,91,118 and Drytest L11,43,54,97,104 do exist. A diagonal is not inherently a programming error; it is an unverified physical path. Separating travel and descent helps control the commanded path but does not validate the chosen clearance height.
+
+2. Endstop history and Z offsets — history confirmed, physical sign corrected
+printer-20251209_160608.cfg: position_endstop:51.
+printer-20251209_170800.cfg: saved 49.000.
+printer-20251209_213242.cfg: saved 47.750.
+Current printer.cfg: saved 47.250.
+For an unchanged physical switch and tool, with positive Z upward:
+  physical height = switch height + commanded Z - position_endstop.
+Changing endstop 51 -> 47.25 moves the same commanded Z physically UP by 3.75 mm, not down. The old “3.75 mm physical drop” was a sign error.
+Old Z6 with endstop51 is 45 mm below the switch; new Z3 with endstop47.25 is 44.25 mm below it, hence 0.75 mm higher. To preserve the old physical Z6 position solely under this coordinate change, the corresponding new command would be Z2.25. This arithmetic is not authorization to use Z2.25 as a safe coating height.
+File timestamps and DB metadata.modified are not creation-time records or proof of which calibration was used in each job. The current cfg mtime is consistent with 2025-12-24 but does not prove the purpose of its changes or unchanged hardware.
+ReverseOrder -> Drytest working heights are exactly +5:
+  purge12->17, squeeze10->15, Inner5->10, Raised13->18,
+  Circles5/4/1:3->8, Circles3/2:4->9.
+Travel heights Z11/21/24/26/33 remain unchanged. Numerical separation from the working heights therefore shrinks by 5. Calling this an accidental omission is speculative: existing travel heights could have been retained deliberately. Blindly raising every travel height by five also does not establish physical safety.
+testPaint working heights are purge19, squeeze18, Circles6, Raised16, Inner8. Differences from ReverseOrder are not uniform: +7/+8 at purge/squeeze and +2..3 on the workpiece. A single origin change does not explain all differences.
+
+3. Missing G90, retained G91, and log evidence — reproducible mechanism, limited attribution
+Sources: gcode_move.py:29–35,79–82,134–180; printer.cfg:160–203.
+G28 does not change absolute_coord. G21 is a no-op and G20 errors, so missing G21 cannot introduce inch scaling here; missing G90 can be consequential.
+_HOME_X/Y home to zero, switch to G91, then request X-10/Y-10 despite position_min=0. The out-of-range command aborts before the subsequent G90. F1200 also remains set.
+Offline G91 replay produces:
+- testPaint L11: (285,15,66.25).
+- ReverseOrder L19: (570,15,59.25).
+- Drytest L11: (285,15,64.25).
+An out-of-range block is rejected before being queued. These are requested invalid targets, not proof that X reached570 or Z reached66.25. However, preceding ReverseOrder Z59.25 is software-valid and can exceed the switch coordinate.
+Current evidence: klippy.log.2026-06-09:1313–1323 contains six X-10 error lines; around1417 contains570/15/59.25. klippy.log.2026-10-11 around756 contains285/14.997/66.25, and1724 contains285/15/64.251.
+Repeated adjacent log lines are not independent incidents. The exact570/15/59.25 text occurs eight times in June09 and five in June10: thirteen lines, not the previously stated eighteen. There are additional Y14.997 variants. Six X-10 lines occur in three adjacent pairs.
+The observations strongly support a retained-relative-mode failure mechanism. They do not provide a complete pre-command state and macro-invocation history for every failure, so attribution of all failures to _HOME is not proven.
+Ordinary Mainsail jogging does not necessarily leave G91: _CLIENT_LINEAR_MOVE uses SAVE_GCODE_STATE/RESTORE_GCODE_STATE. Normal restoration must be distinguished from an interrupted macro.
+
+4. Z53 and homing — overtravel arithmetic confirmed; inevitable failure claim withdrawn
+Sources: cartesian.py:76–118; homing.py:77–145,188–225,276 onward; src/endstop.c:29–65.
+testPaint and ReverseOrder end with G0 Z53 Y2 followed by G28. Since53<60, the block passes the software range check; it does not cross the software maximum60. With zero offsets it commands5.75 mm beyond the switch coordinate47.25. The switch is not proven to coincide with the mechanical hard stop.
+Normal moves do not use this homing switch as an always-active emergency limit. The unverified allowed software interval47.25..60 is therefore significant.
+All-axis G28 homes X, then Y, then Z. Drytest's explicit G28 Z followed by G28 X Y improves this order.
+All three axes have homing_retract_dist=0. Therefore the second homing pass and the “still triggered after retract” test are skipped. Configured Z second_homing_speed10 is not used.
+The MCU samples the requested switch LEVEL, not necessarily a new edge. If already pressed, it may immediately report success and assign47.25 at a different physical location. If the mechanism has passed the actuation region and the switch is no longer active, homing can fail. Thus “Z53 inevitably makes the next G28 fail” is incorrect.
+The cited logs do not prove an L126 failure. klippy.log:564–572 and605–611, and klippy.log.2026-10-11:564–572 show No trigger immediately after print start, exiting at SD position0. This does not establish causation by the end-of-file Z53.
+The maximum configured search displacement without a trigger is70.875 mm for Z (1.5*47.25),540 degrees for X, and270 mm for Y. Homing uses a forced coordinate origin and is not an ordinary bounded move. Failed switches, wrong direction, wiring faults, or loss of motion can therefore request substantial travel.
+Replacing Z53 with G28 Z; G28 X Y eliminates that explicit overtravel command, but does not validate the switch state, upper obstructions, or homing repeatability.
+
+5. M220, inherited F, and timing — slowdown confirmed conditionally
+Initial speed25 and speed_factor1/60 correspond to F1500. G28 resets neither F nor M220. M220 specifies an absolute override relative to base F, not a cumulative multiplication of the previous percentage.
+At F1500: S500=125, S375=93.75, S100=25, S10=2.5 planner units/s; a pure rotary X move uses degrees/s. S10 requests1/50 of S500, but total job duration is not exactly50 times longer because of Z and acceleration limits.
+testPaint L8 S100 and L63 S10 contradict their500% comments. A typo is strongly suggested by ReverseOrder, but deliberate slow-test edits cannot be excluded. Neither interpretation establishes125 as a safe coating speed.
+Offline G0/G1 planning totals1295.086 s (21.585 min) for testPaint; the constant-speed lower bound is1293.324 s. Homing and system delays are excluded. The previous1295.2 s is approximately plausible as a conditional motion estimate, not a measured complete job. A360-degree pass at2.5 has a constant-speed duration144 s.
+DB counts are six cancelled, one klippy_shutdown, zero completed. The claim that operators cancelled all seven because they perceived excessive slowness is unsupported; the DB does not contain that explanation.
+TURNTABLE_TEST sets F500 and _HOME_X/Y set F1200. The default client park movement uses recover_velocity (default50), so without customization it requests F3000, not F6000. Bounds125/Z20 also prevent simple claims that every segment becomes uniformly3x slower or4x faster.
+
+6. Valve commands and coating purpose — placement confirmed, “cannot coat” not proven
+Both targets open the valve only during purge and command closure before workpiece motion. OPEN requests45 degrees, CLOSED0. Drytest still opens52 times; with liquid connected it is not necessarily a no-liquid demonstration.
+A brush/pad holding liquid can coat after the supply valve closes. Therefore the previous recommendation to necessarily add OPEN/CLOSED over every feature is withdrawn. First establish continuous dispensing versus contact transfer; adding flow without that knowledge can over-apply liquid.
+The servo starts without PWM. No PWM is not an ANGLE0 command and is not removal of servo power. Mechanical closure at startup is not guaranteed.
+Drytest purge actually moves11 strokes/220 degrees per cycle. Offline scheduled opening interval is3.37266 s/cycle, about175.38 s over52 cycles. The old3.4/176.8 figures are coarse rounded estimates, not measured liquid-delivery durations.
+
+7. TMC2209 errors — separate configuration, diagnostic, and root cause
+Sources: printer.cfg:134–145; tmc2208.py:135–150; tmc.py:108–159; tmc2130.py:120–162.
+Configured run_current1.0, sense_resistor0.110, and omitted hold_current are confirmed. Comments mention both an OMC0.4A motor and an LDO1.0A motor; the installed motor is unresolved. Arithmetic1/0.4=2.5 is correct, but “the machine is running at2.5x its motor rating” is not established. Klipper current is expressed as RMS; nameplate convention, actual sense resistance, and thermal conditions must be checked.
+DRV_STATUS c01f0010 decodes as s2vsa1, cs_actual31, stealth1, stst1, with ot0 and otpw0. It is a phase-A short-to-supply diagnostic, not an overtemperature diagnostic. GSTAT drv_err indicates a driver fault without uniquely identifying its cause.
+No ot=1, otpw=1, or Overtemp text was found in the provided klippy logs. Absence does not prove the hardware never overheated, but it does not justify a thermal root-cause claim.
+cs_actual31 is a scale value, not proof of absolute maximum current or overcurrent. It depends on vsense and resistance. With0.110+0.020 ohm and0.18 V reference, scale31 represents approximately0.979A RMS.
+klippy.log.2026-10-11 has six Transition to shutdown events at2504,4393,5702,6991,8823,10283: four s2vsa and two GSTAT. Repeated diagnostic summaries are not separate shutdowns. Some follow completion of the44-byte PaintFile, so the fault is not exclusive to long Drytest operation.
+DB counts of14 Drytest,15 ReverseOrder, and1 testPaint klippy_shutdown records are correct. However, major DB jobs date to December2025 while the cited log sessions date internally to October/November2026. Without resolving clock/history discrepancies, they cannot be assigned one-to-one.
+Investigate actual motor and RMS rating, driver, winding/connectors, shorts to supply, actual current/sense resistors, and thermal state. Do not treat reducing current alone as a proven fix; Z holding torque and possible drop must also be considered.
+
+8. Fan and emergency stop — software inconsistency confirmed, physical state unknown
+The startup delayed macro calls SET_FAN_SPEED while fan_generic is commented out. Unknown command occurs in all six supplied klippy logs, so this configuration does not control the intended fan successfully.
+The existence, cooling role, and alternative power supply of a PC6 fan are unknown. “The fan never turns” and “the fan caused TMC overheating” are not established.
+The commented PC15 gcode_button is not registered as a software emergency-stop input. This does not prove that the machine has no independent hardware power-cutoff circuit. A G-code stop and a hardware emergency stop are distinct safeguards.
+
+9. _HOME macros and DIAG — macro defect confirmed; pin interpretation corrected
+The negative retreat and residual G91 defect is confirmed in section3. Adding a later G90 does not help if the macro aborts first. Design a validated positive retreat, state preservation/restoration, and explicit recovery of state after errors.
+Both TMC sections name diag_pin:^PC1, but actual endstop_pin entries use physical PC0/PC1, not tmc2209_stepper_x/y:virtual_endstop.
+In tmc.py:556–600 the DIAG string is stored and the hardware endstop pin is assigned when virtual_endstop is set up. The two declarations alone do not make two drivers electrically drive PC1 and do not demonstrate a software duplicate-pin conflict.
+Actual DIAG jumper/wiring connections could interfere with the Y switch and require inspection. driver_SGTHRS255 alone does not make this a sensorless-homing configuration.
+
+10. Path and count differences — order confirmed, purge counts corrected
+Forward: purge -> squeeze -> Circles1..5 -> Raised2 -> Raised1 -> Inner.
+Reverse/Dry: purge -> squeeze -> Inner -> Raised1 -> Raised2 -> Circles5..1.
+The old “9/6 round trips” counted labels including a zero-distance first X285. Actual purge motion is17 one-way strokes (8.5 round-trip equivalents) in testPaint and11 strokes (5.5 equivalents) in Drytest. Both start X285 and end X265.
+Circles5/4 retain Y47; Circles3/2/1 retain Y45. testPaint approaches Circle1 via Y35; Drytest approaches vertically at Y45.
+Raised1 performs30->95->30->95, three strokes; Raised2 similarly250->295->250->295. Inner performs0->360->0->360->0: four full-revolution equivalents with alternating direction, not four same-direction revolutions.
+Cartesian X does not wrap to the shortest angular route. For example, forward Raised2 exit X295->30 is a negative265-degree sweep, not positive95 degrees. Check fixtures and hoses along the entire swept path.
+
+11. Author intent and workpiece geometry — hypotheses, not reconstructed facts
+The OPEN -> CLOSED -> SQUEEZE OUT -> coating sequence is consistent with charging a liquid-retaining applicator and contact transfer. Applicator material, contact pressure, and dose are not documented.
+Withdraw the claims that reversal was definitely caused by paint depletion at the largest Inner feature, that a20 mm clamp definitely exists at X240..300, that the reverse path is shortest, or that the author assumed G28 means G90. These are unproven explanations.
+Y is radial, but no supplied calibration establishes Y180 as the exact rotation center. If it is exactly centered, a point applicator has radius zero and no circumferential displacement when X rotates. That assumption is incompatible with asserting this is necessarily the largest coated circular path. The label “Inner circle” does not establish radius or area.
+rotation_distance360 and gear_ratio125:20 imply one output revolution for X360 only if the actual motor/gear arrangement matches the configured200 full steps/revolution and ratio. Settings do not prove assembly, backlash, or absence of slip.
+The52 identical72-command blocks, +5 working heights, and4-second dwells are confirmed. Copy/paste generation is plausible, but actual5 mm clearance and non-contact operation are not proven.
+
+12. Other previous claims and history corrections
+Drytest:6305 lines,3744 effective commands=72*52,208 G28 commands,52 opens,52 closes,52 G4 P4000 commands,1040 nonzero G0 moves specifying Z. End/start duplicate homing occurs at51 inter-cycle boundaries.
+With retract_dist0, the previous assertion that every duplicate home executes second-homing checks is false.
+DB has four completed Drytest records, but #101 was a different1062-byte version lasting58.25156 s. #105/#113/#114 match the current55861-byte size and have total_duration2764.54522/2764.54323/2764.54422 s. Their print_duration is0; the quoted duration uses total_duration. Dividing by52 gives53.1643 s/cycle. Size and metadata do not replace a historical content hash.
+ReverseOrder has76 completed records, with total_duration48.35..146.41 s, not a uniform50.2 s. Completion status does not prove collision-free operation or acceptable coating.
+Original testPaint leaves override10%, Drytest500%. The candidate restores100%. Override restoration is separate from base-feed and coordinate-offset restoration.
+DB dates, log filenames/internal dates, and repeated diagnostics limit precise event attribution. Many previous line references did not match the current copies; use evidence.json for current references.
+
+13. Additional findings and missing analysis
+13.1 Highest priority: no guaranteed valve closure on pause/cancel/error/startup/shutdown
+Sources: client.cfg:59–110; servo.py:22–35; pause_resume.py:63–100.
+CANCEL_PRINT, PAUSE, and virtual_sdcard on_error_gcode=CANCEL_PRINT contain no BALL_VALVE_CLOSED. If execution fails or is cancelled after OPEN, the later CLOSED line is skipped and the open PWM can remain. Default CANCEL_PRINT does not park either.
+Servo shutdown output is PWM0, not the PWM for ANGLE0. Unless mechanically fail-closed, loss of PWM does not guarantee liquid isolation. Validate startup closure and settling, normal/error termination, and an actual mechanism that stops liquid on power or communication loss. Do not depend on executing another G-code after MCU shutdown.
+
+13.2 Highest priority: generic PAUSE/RESUME bypass the intended safe path
+client.cfg:214–254 defaults to lifting only2 mm and parking at X355/Y175. At Circle Z6 this permits a large transit at Z8, below the intended program clearances. Pausing at home Z47.25 can request Z49.25 because the software maximum is60.
+pause_resume.py:77–88 restores the saved position using RESTORE_GCODE_STATE MOVE=1, which can return with simultaneous XY/Z motion. Fixing diagonals in the main file does not fix this recovery path. Machine-specific parking, return paths, and valve-state handling are required.
+
+13.3 High: G90 and G28 do not clear SET_GCODE_OFFSET
+Sources: gcode_move.py:79–82,134–155,208–226.
+After homing, base_position is set from homing_position; persistent XYZ G-code offsets survive. The candidate therefore remains dependent on incoming offset state. An offline Z+1 offset example changes commanded working Z19 to machine Z20. This is a demonstrated state dependency, not evidence that an offset was active in a recorded job.
+Define whether fixture/tool offsets are intentional before clearing them. If zero is required, initialize it explicitly. Runtime SET_VELOCITY_LIMIT/M204 changes also alter calculations based on printer.cfg and belong in the starting-state specification.
+
+13.4 High: mixed angular/linear units produce radius-dependent surface speed and loading
+toolhead.py:24–26 calculates sqrt(dX^2+dY^2+dZ^2), treating X degrees as Cartesian distance without a radius conversion.
+For known r(Y), omega=(pi/180)*dX/dt, planar relative surface speed is sqrt((dr/dt)^2+(r*omega)^2); including vertical tool motion adds(dZ/dt)^2.
+At pure X125 deg/s: r135 gives294.52 mm/s; r103 gives224.71; r5 gives10.91; r0 gives0. Assuming r=180-Y is only an illustration, not an established calibration. Constant F/M220 does not imply constant coating speed, contact behavior, or film thickness.
+At r135 and125 deg/s, centripetal acceleration is about642.55 mm/s^2. X acceleration1000 deg/s^2 corresponds to tangential acceleration2356.19 mm/s^2. The numerical max_accel1000 is not a direct bound on physical surface acceleration. Simultaneous rotary/radial movement is also not a physical straight line.
+
+13.5 High: junction planning does not geometrically round corners; servo is motion-timestamped
+Sources: toolhead.py:66–113,263 onward,526–537; output_pin.py:60–62.
+SCV6 sets a reference for90-degree junction speed. junction_deviation=36*(sqrt(2)-1)/1000=0.01491169 in the planner's mixed numerical space, not a measured14.9 micrometre workpiece clearance.
+The implementation queues straight segments into trapq; it does not replace their corners with arcs. Separate XY then Z commands remain separated ideal commanded paths. Mechanical tracking errors, compliance, and lost steps are separate questions.
+At a180-degree reversal the junction speed is zero. Short Circle strokes may never reach125; default minimum_cruise_ratio0.5 also affects them. Constant flow or contact transfer can accumulate material near slow/reversing endpoints.
+SET_SERVO uses register_lookahead_callback, tying the request to the scheduled completion of preceding motion. It does not actuate early merely because the host has parsed ahead. Missing M400 alone does not mean the previous stroke is closed off prematurely. However, a valve command does not force a complete mechanical stop at every junction and does not confirm servo or fluid response. Subsequent motion can overlap valve actuation, including closing followed by squeeze-out.
+If a stationary transition is required, design a validated M400 -> SET_SERVO -> G4 P... sequence at the intended position, using measured response time. G4 uses milliseconds; M400 alone does not detect servo arrival. Do not invent a dwell and present it as validated.
+
+13.6 High: zero retract, holding current, and temperature monitoring
+The no-retract setup cannot robustly distinguish a valid switch position from an already-active/stuck switch. Rotary homing errors magnify positional errors at larger radii. Validate retreat direction/distance and repeat homing against the real mechanism.
+Omitted hold_current yields approximately run-current holding, potentially heating stationary motors. Conversely, idle M84 removes torque and could allow a non-self-holding Z mechanism to drop. Do not lower current arbitrarily.
+MCU/host min=-273.15,max=999 do not provide useful operational overtemperature trip thresholds and do not measure TMC or winding temperature. MCU temperature in logs is not driver temperature.
+
+13.7 Investigated without a confirmed defect: UART, StealthChop, interpolation, timeout, communications
+PC11/PC10 are shared with distinct UART addresses X0/Y2/Z1; shared UART is not itself a collision. Verify actual sense resistors against0.110. interpolate=False with64 microsteps is not inherently invalid. Very large stealthchop_threshold values imply StealthChop throughout the operating range; torque/load and missed-step margins remain untested, but the configuration alone does not prove lost steps.
+idle_timeout1800 is not a30-minute job runtime limit. idle_timeout.py checks motion queue activity and idle duration. Continuous motion with4-second dwells does not automatically stop after30 minutes. Long pauses or post-job idle can execute M84, requiring consideration of holding and re-homing.
+No Lost communication, Timer too close, or Unable to read tmc text was found in the supplied klippy logs. This is not a communication guarantee, but no such failure is evidenced as the principal cause. Host v0.13.0-406-gbaf188bd-dirty and MCU v0.13.0-253-g96c3ca160 differ; that alone does not prove incompatibility, and logs show successful MCU connection/configuration.
+force_move is enabled. TURNTABLE_TEST assigns coordinates with SET_KINEMATIC_POSITION and ends with M18; it is not a safe replacement for homing and also changes the retained feed.
+
+13.8 Restoration and other recorded problems
+printer_data/config/mainsail.cfg is an absolute symlink to /home/klipper-pc/mainsail-config/mainsail.cfg, broken in this Mac copy. Logs include its expanded configuration, so this is not proof that the original installation could not boot. Restoring on a different host requires correcting paths.
+The KIAUH November24 backup and printer_2_data config contain placeholder serial identifiers and kinematics:none. They are templates, not an alternative calibrated configuration for this machine.
+moonraker.log files contain DNS failures, git-fetch failures, and disabled-update tracebacks. These are maintenance/network issues, not proof that locally buffered virtual_sdcard motion must stop.
+klippy.log and June09 include Shutdown due to webhooks request; separate those from TMC failures. testInnerCircleOnly.gcode starts with unknown DE3, also seen around October log1821. Comparison files are not automatically validated execution references.
+
+14. Candidate review: Working Folder_Adachi/testPaint.gcode
+Verdict: an improved candidate, not a validated ready-to-run machine program. It was not modified by this audit.
+Confirmed improvements:
+- Explicit G21/G90/M220 S100 and F1500 after homing.
+- S500 changes, removal of Z53, separate Z-before-XY homing, and final S100.
+- Separation of simultaneous XY/Z moves. All normal moves are within configured bounds with G90 and zero offsets. Workpiece working Z values (Circles6, Raised16, Inner8) and main coating strokes remain those of original testPaint.
+Process/path changes beyond simple fixes:
+- Purge approach now moves high to X265/Y15 then descends toZ19 instead of approaching atX285. It adds a real first stroke:17 strokes/340 degrees ->18/360 (+5.88%). Offline scheduled opening interval changes5.21539 ->5.51921 s. Charge amount, initial contact end, and accumulation can change.
+- Squeeze now descends fully atX265 before moving to285, rather than descending Z19->18 while moving. Initial contact position and contact time change.
+- Before Circle1, travelZ20->24; Y35 waypoint removed; direct XY toX39/Y45. An unknown avoidance purpose for the old waypoint must be considered.
+- Circle1–3 clearanceZ10->11; Y47 shift moves into Circle3->4 XY transit; post-Circle5Z23->25; post-Raised1Z20->24; Inner approachZ11 stage omitted in favor of direct descent toZ8; finalZ33 added. “Safe” comments are not measurement evidence.
+Remaining limitations:
+- Working heights remain the old testPaint values. ReverseOrder completion history and the old incorrect origin interpretation do not validate contact heights.
+- Startup/abort closure, generic PAUSE/RESUME, residual offsets, actual surface speed, servo settling, and zero-retract homing weaknesses remain.
+- Changing S10 to S500 is a large process-speed change, requiring assessment of dose, contact force, compliance, and coating quality. Retaining17 versus18 purge strokes must be an explicit process decision.
+Recommended improvement sequence:
+1. Measure switch direction/actuation/physical travel, full tool/fixture envelope, r(Y), and each coating height; define clearances and contact penetration.
+2. Investigate the electrical diagnostics and validate motor, current, cooling, and holding behavior.
+3. Design machine-specific liquid stop and park/resume behavior for normal and abnormal termination.
+4. Specify initial mode/feed/override/offset/runtime limits and distinguish coating from travel speeds.
+5. Establish the actual charging/transfer method, measured valve/flow delay, and intended purge stroke count.
+6. With liquid actually isolated, verify a slow single cycle, all transit and stop/resume paths, then coating quality and monitored52-cycle repeatability/temperature/fault performance.
+For Drytest, define whether valve actuation is allowed and verify liquid isolation; the filename alone does not make it dry.
+
+15. Information that remains physically unresolved
+Allowed travel beyond the upper switch; calibrated Y-to-radius relation; tool/applicator dimensions and compliance; workpiece/fixture height over all angles; installed motor, actual resistors and wiring; servo angle-to-valve relation and closure verification; behavior on loss of power/signal; coating method and film/contact requirements.
+Until these are established, the previous “100% correct and physically safe” implications are not supportable. This audit establishes reproducible software behavior and explicitly separates it from unverified physical conditions.

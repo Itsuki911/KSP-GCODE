@@ -1,0 +1,135 @@
+; Code start here 
+; Corrected version of gcodes/testPaint.gcode for actual machine execution
+; Fixes applied based on printer.cfg (position_endstop = 47.250) and Klipper specifications:
+; 1. Added explicit G21 (mm units), G90 (absolute positioning), and initial F1500 (25 mm/s base feedrate)
+; 2. Fixed line 8 (M220 S100 -> M220 S500) and line 63 (M220 S10 -> M220 S500) speed factor typos
+; 3. Separated simultaneous XY travel and Z descent into sequential moves (XY travel at safe Z, then vertical Z descent)
+; 4. Removed zero-distance initial purge move (started at X265 before BALL_VALVE_OPEN so #1 X285 is an actual stroke)
+; 5. Fixed end-of-file Z53 overtravel above physical Z endstop (47.250 mm) -> safe G28 Z then G28 X Y, and restored M220 S100
+
+G21; Set units to millimeters
+G90; Absolute positioning mode
+M220 S100; Reset speed factor to 100%
+
+G28 Z; Initial Z homing (moves upward to Z=47.250)
+G28 X Y; Initial XY homing (moves to X=0, Y=0 at Z=47.250)
+
+G0 F1500; Initialize base feedrate to 1500 mm/min (25 mm/s)
+M220 S500; Increasing speed 500% (125 mm/s)
+
+; Move to Purge start position (XY first at Z=47.250, then descend Z vertically)
+G0 X265 Y15;
+G0 Z19;
+
+;Purge 
+M220 S375; Purging speed 75% (93.75 mm/s)
+
+BALL_VALVE_OPEN 
+G0 X285; #1
+G0 X265;
+
+G0 X285; #2
+G0 X265;
+
+G0 X285; #3
+G0 X265;
+
+G0 X285; #4
+G0 X265;
+
+G0 X285; #5
+G0 X265;
+
+G0 X285; #6
+G0 X265;
+
+G0 X285; #7
+G0 X265;
+
+G0 X285; #8
+G0 X265;
+
+G0 X285; #9
+G0 X265;
+
+BALL_VALVE_CLOSED 
+
+
+;SQUEEZE OUT
+M220 S100; Squeezing speed 20% (25 mm/s)
+G0 Z18; Descend vertically to squeeze-out height first
+G0 X285; #1
+G0 X265;
+
+G0 X285; #2
+G0 X265;
+
+
+M220 S500; Increasing speed 500% (125 mm/s, fixed from S10)
+
+G0 Z24; Lift to safe travel height before moving to Circle 1
+
+; Circle 1 Rev 1-2
+G0 X39 Y45; Move to Circle 1 XY position at safe Z
+G0 Z6; Descend vertically to working height
+G0 X55;
+G0 X39; 
+G0 Z11; Lift vertically before rotating to Circle 2
+
+; Circle 2 Rev 1 
+G0 X80; Rotate at safe Z
+G0 Z6; Descend vertically
+G0 X96;
+G0 X80;
+G0 Z11; Lift vertically before rotating to Circle 3
+
+; Circle 3 Rev 1-2
+G0 X122; Rotate at safe Z
+G0 Z6; Descend vertically
+G0 X138;
+G0 X122;
+G0 Z11; Lift vertically before moving to Circle 4
+
+; Circle 4 Rev 1 
+G0 X217 Y47; Rotate and shift Y at safe Z
+G0 Z6; Descend vertically
+G0 X236;
+G0 X217;
+G0 Z25; Lift to high clearance Z25 before obstacle region
+
+; Circle 5 Rev 1 
+G0 X301; Rotate at Z25
+G0 Z6; Descend vertically
+G0 X317;
+G0 X301;
+G0 Z25; Lift to Z25 before moving to Raised Section 2
+
+; Raised Section 2 Rev 1
+G0 Y77 X250; Move to Raised Section 2 XY at Z25
+G0 Z16; Descend vertically
+G0 X295;
+G0 X250;
+G0 X295;
+G0 Z21; Lift vertically before rotating to Raised Section 1
+
+; Raised Section 1 Rev 1 
+G0 X30; Rotate at Z21
+G0 Z16; Descend vertically
+G0 X95;
+G0 X30;
+G0 X95;
+G0 Z24; Lift to safe travel height before moving to Inner Circle
+
+; Inner circle Rev 1-2
+G0 Y180 X0; Move to Inner Circle XY at Z24 (no diagonal descent)
+G0 Z8; Descend vertically to working height
+G0 X360;
+G0 X0; Inner Circle Rev 2
+G0 X360;
+G0 X0; Inner Circle Rev 2
+
+; Safe end-of-cycle return (avoids Z53 overtravel past position_endstop = 47.250)
+G0 Z33; Lift vertically clear of Inner Circle
+G28 Z; Home Z upward to top endstop (Z=47.250)
+G28 X Y; Home X and Y at safe top height (Z=47.250)
+M220 S100; Restore speed factor to 100%

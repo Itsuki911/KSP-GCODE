@@ -1,0 +1,112 @@
+<mujoco model="ksp_coating_machine">
+  <!--
+    KSP Rotary Coating Machine 3-DOF + Ball Valve Mechanical Model (SI units: m, rad, kg)
+    Matches printer_data/config/printer.cfg:
+      - turntable_x : revolute around +Z (X in [0, 360] deg)
+      - carriage_y  : radial slide along -X from r=0.180 m (Y=0) to r=0.000 m (Y=180 mm)
+      - head_z      : vertical slide along +Z (Z in [0, 47.250] mm, nozzle tip at z=Z)
+      - ball_valve  : revolute indicator (0 deg closed, 45 deg open)
+  -->
+  <compiler angle="radian" coordinate="local"/>
+  <option timestep="0.005" gravity="0 0 -9.81" integrator="implicitfast"/>
+
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+    <headlight diffuse="0.7 0.7 0.7" ambient="0.35 0.35 0.35" specular="0.2 0.2 0.2"/>
+    <rgba haze="0.12 0.14 0.18 1"/>
+  </visual>
+
+  <asset>
+    <texture type="2d" name="grid_tex" builtin="checker" rgb1="0.16 0.18 0.22" rgb2="0.20 0.22 0.27" width="256" height="256"/>
+    <material name="floor_mat" texture="grid_tex" texrepeat="8 8" reflectance="0.1"/>
+    <material name="frame_mat" rgba="0.22 0.24 0.28 1"/>
+    <material name="rail_mat" rgba="0.72 0.76 0.80 1"/>
+    <material name="platter_mat" rgba="0.30 0.34 0.40 1"/>
+    <material name="mark_zero_mat" rgba="0.92 0.22 0.20 1"/>
+    <material name="mark_ring_mat" rgba="0.55 0.75 0.95 0.55"/>
+    <material name="carriage_mat" rgba="0.18 0.48 0.78 1"/>
+    <material name="nozzle_mat" rgba="0.95 0.65 0.12 1"/>
+    <material name="valve_mat" rgba="0.92 0.25 0.22 1"/>
+    <material name="workpiece_mat" rgba="0.30 0.70 0.45 0.85"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.3 -0.4 0.8" dir="-0.3 0.4 -0.8" diffuse="0.85 0.85 0.85"/>
+    <light pos="-0.4 0.4 0.6" dir="0.4 -0.4 -0.6" diffuse="0.4 0.4 0.4"/>
+
+    <!-- Lab bench floor (visual only) -->
+    <geom name="bench_floor" type="plane" pos="0 0 -0.06" size="0.8 0.8 0.01"
+          material="floor_mat" contype="0" conaffinity="0"/>
+
+    <!-- Machine base & gantry structure (visual) -->
+    <body name="machine_frame" pos="0 0 0">
+      <geom name="base_pedestal" type="cylinder" pos="0 0 -0.036" size="0.195 0.022"
+            material="frame_mat" contype="0" conaffinity="0"/>
+      <geom name="gantry_pillar" type="box" pos="0.225 0 0.075" size="0.018 0.024 0.135"
+            material="frame_mat" contype="0" conaffinity="0"/>
+      <geom name="gantry_bridge" type="box" pos="0.105 0 0.195" size="0.138 0.016 0.014"
+            material="rail_mat" contype="0" conaffinity="0"/>
+      <geom name="y_linear_rail" type="box" pos="0.090 0 0.178" size="0.105 0.007 0.005"
+            material="rail_mat" contype="0" conaffinity="0"/>
+    </body>
+
+    <!-- X-Axis: Rotating Turntable Platter (top face at z = 0.000 m) -->
+    <body name="turntable" pos="0 0 0">
+      <joint name="turntable_x" type="hinge" axis="0 0 1" limited="false" damping="0.05"/>
+      <inertial pos="0 0 -0.006" mass="1.8" diaginertia="0.016 0.016 0.031"/>
+      <!-- Collidable platter top surface: z in [-0.012, 0.000] -->
+      <geom name="platter_top" type="cylinder" pos="0 0 -0.006" size="0.185 0.006"
+            material="platter_mat" contype="1" conaffinity="1"/>
+      <!-- 0 deg alignment tape mark along +X -->
+      <geom name="zero_deg_mark" type="box" pos="0.092 0 0.0002" size="0.090 0.003 0.0002"
+            material="mark_zero_mat" contype="0" conaffinity="0"/>
+      <!-- Reference tick marks at 90, 180, 270 deg -->
+      <geom name="mark_90" type="box" pos="0 0.165 0.0002" size="0.002 0.016 0.0002"
+            rgba="0.85 0.85 0.85 0.8" contype="0" conaffinity="0"/>
+      <geom name="mark_180" type="box" pos="-0.165 0 0.0002" size="0.016 0.002 0.0002"
+            rgba="0.85 0.85 0.85 0.8" contype="0" conaffinity="0"/>
+      <geom name="mark_270" type="box" pos="0 -0.165 0.0002" size="0.002 0.016 0.0002"
+            rgba="0.85 0.85 0.85 0.8" contype="0" conaffinity="0"/>
+      <!-- Center dot (Y=180 -> r=0) -->
+      <geom name="center_dot" type="cylinder" pos="0 0 0.0002" size="0.005 0.0002"
+            material="mark_zero_mat" contype="0" conaffinity="0"/>
+      <!-- Concentric calibration disks (visual, translucent) -->
+      <geom name="ring_y45" type="cylinder" pos="0 0 0.0001" size="0.135 0.0001"
+            rgba="0.35 0.55 0.80 0.18" contype="0" conaffinity="0"/>
+      <geom name="ring_y77" type="cylinder" pos="0 0 0.00015" size="0.103 0.0001"
+            rgba="0.45 0.75 0.55 0.18" contype="0" conaffinity="0"/>
+      <!-- WORKPIECE_PLACEHOLDER -->
+    </body>
+
+    <!-- Y-Axis: Radial Linear Carriage (Y=0 -> x=+0.180 m, Y=180 mm -> x=0.000 m) -->
+    <body name="carriage_y_body" pos="0.180 0 0.162">
+      <joint name="carriage_y" type="slide" axis="-1 0 0" range="-0.005 0.185" damping="0.5"/>
+      <inertial pos="0 0 0" mass="0.65" diaginertia="0.001 0.001 0.001"/>
+      <geom name="y_carriage_block" type="box" pos="0 0 0" size="0.022 0.020 0.015"
+            material="carriage_mat" contype="0" conaffinity="0"/>
+      <geom name="z_rail_post" type="box" pos="0 0 -0.048" size="0.008 0.008 0.048"
+            material="rail_mat" contype="0" conaffinity="0"/>
+
+      <!-- Z-Axis: Vertical Nozzle Head (qpos_z = Z [m], nozzle tip bottom at z_world = Z) -->
+      <body name="head_z_body" pos="0 0 -0.162">
+        <joint name="head_z" type="slide" axis="0 0 1" range="-0.005 0.065" damping="0.5"/>
+        <inertial pos="0 0 0.045" mass="0.45" diaginertia="0.0005 0.0005 0.0005"/>
+
+        <!-- Collidable nozzle tip: bottom face at local z=0.000, top at z=0.024 -->
+        <geom name="nozzle_tip" type="cylinder" pos="0 0 0.012" size="0.0035 0.012"
+              material="nozzle_mat" contype="1" conaffinity="1"/>
+        <!-- Upper nozzle manifold (collidable cylinder - avoids MuJoCo box-box mj_geomDistance edge case) -->
+        <geom name="nozzle_body" type="cylinder" pos="0 0 0.044" size="0.014 0.020"
+              material="carriage_mat" contype="1" conaffinity="1"/>
+
+        <!-- Ball Valve Servo Indicator (0 deg = horizontal closed, 45 deg = tilted open) -->
+        <body name="ball_valve_body" pos="0 0.018 0.044">
+          <joint name="ball_valve" type="hinge" axis="0 1 0" range="-0.1 2.7" damping="0.02"/>
+          <inertial pos="0 0 0" mass="0.03" diaginertia="1e-5 1e-5 1e-5"/>
+          <geom name="valve_lever" type="box" pos="0.016 0 0" size="0.016 0.004 0.004"
+                material="valve_mat" contype="0" conaffinity="0"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+</mujoco>

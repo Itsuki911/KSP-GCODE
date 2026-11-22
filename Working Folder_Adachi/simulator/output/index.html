@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <title>KSP-GCODE Local Simulation Dashboard (with 3D Workpiece)</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0f172a; color: #e2e8f0; margin: 24px; }
+    h1 { margin-bottom: 6px; }
+    p.sub { color: #94a3b8; margin-top: 0; }
+    table { border-collapse: collapse; width: 100%; background: #1e293b; border-radius: 8px; overflow: hidden; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid #334155; text-align: left; font-size: 13px; }
+    th { background: #0b1220; color: #93c5fd; }
+    a { color: #38bdf8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .ok { color: #4ade80; font-weight: 600; }
+    .warn { color: #fbbf24; font-weight: 600; }
+    .bad { color: #f87171; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>KSP-GCODE Local OSS Simulation Dashboard</h1>
+  <p class="sub">Klipper GCodeMove + LookAheadQueue + Parametric 3D Workpiece (Worker-Image.jpeg) + MuJoCo Collision/Clearance Verification</p>
+  <table>
+    <thead>
+      <tr>
+        <th>G-code</th>
+        <th>Total Time</th>
+        <th>Moves</th>
+        <th>Valve (O/C)</th>
+        <th>Z Range [mm]</th>
+        <th>Peak Surface [mm/s]</th>
+        <th>Min Bed Clear</th>
+        <th>Min Workpiece Clear</th>
+        <th>MuJoCo Status</th>
+        <th>Warnings</th>
+        <th>Outputs</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td><code>01_home_z_only.gcode</code></td><td>0.00s</td><td>0</td><td>0/1</td><td>[47.25, 47.25]</td><td>0.0</td><td>47.25 mm</td><td>71.01 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="01_home_z_only.html">3D HTML</a> | <a href="01_home_z_only_summary.png">PNG</a> | <a href="01_home_z_only_trace.csv">CSV</a></td></tr><tr><td><code>02_home_xy_only.gcode</code></td><td>0.00s</td><td>0</td><td>0/1</td><td>[47.25, 47.25]</td><td>0.0</td><td>47.25 mm</td><td>71.01 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="02_home_xy_only.html">3D HTML</a> | <a href="02_home_xy_only_summary.png">PNG</a> | <a href="02_home_xy_only_trace.csv">CSV</a></td></tr><tr><td><code>03_valve_static.gcode</code></td><td>21.00s</td><td>0</td><td>3/4</td><td>[47.25, 47.25]</td><td>0.0</td><td>47.25 mm</td><td>71.01 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="03_valve_static.html">3D HTML</a> | <a href="03_valve_static_summary.png">PNG</a> | <a href="03_valve_static_trace.csv">CSV</a></td></tr><tr><td><code>04_z_step_small.gcode</code></td><td>5.12s</td><td>2</td><td>0/2</td><td>[42.00, 47.25]</td><td>0.0</td><td>42.0 mm</td><td>68.17 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="04_z_step_small.html">3D HTML</a> | <a href="04_z_step_small_summary.png">PNG</a> | <a href="04_z_step_small_trace.csv">CSV</a></td></tr><tr><td><code>05_x_step_small.gcode</code></td><td>10.02s</td><td>2</td><td>0/2</td><td>[47.25, 47.25]</td><td>31.4</td><td>47.25 mm</td><td>63.50 mm (wp_boss_c1)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="05_x_step_small.html">3D HTML</a> | <a href="05_x_step_small_summary.png">PNG</a> | <a href="05_x_step_small_trace.csv">CSV</a></td></tr><tr><td><code>06_y_step_small.gcode</code></td><td>8.02s</td><td>2</td><td>0/2</td><td>[47.25, 47.25]</td><td>10.0</td><td>47.25 mm</td><td>55.70 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="06_y_step_small.html">3D HTML</a> | <a href="06_y_step_small_summary.png">PNG</a> | <a href="06_y_step_small_trace.csv">CSV</a></td></tr><tr><td><code>07_homing_repeatability.gcode</code></td><td>44.84s</td><td>9</td><td>0/2</td><td>[33.00, 47.25]</td><td>157.1</td><td>33.0 mm</td><td>49.32 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="07_homing_repeatability.html">3D HTML</a> | <a href="07_homing_repeatability_summary.png">PNG</a> | <a href="07_homing_repeatability_trace.csv">CSV</a></td></tr><tr><td><code>08a_z_full_range_slow.gcode</code></td><td>27.45s</td><td>10</td><td>0/2</td><td>[6.00, 47.25]</td><td>0.0</td><td>6.0 mm</td><td>53.23 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="08a_z_full_range_slow.html">3D HTML</a> | <a href="08a_z_full_range_slow_summary.png">PNG</a> | <a href="08a_z_full_range_slow_trace.csv">CSV</a></td></tr><tr><td><code>08b_z_full_range_rated.gcode</code></td><td>20.02s</td><td>10</td><td>0/2</td><td>[6.00, 47.25]</td><td>0.0</td><td>6.0 mm</td><td>53.23 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="08b_z_full_range_rated.html">3D HTML</a> | <a href="08b_z_full_range_rated_summary.png">PNG</a> | <a href="08b_z_full_range_rated_trace.csv">CSV</a></td></tr><tr><td><code>09a_x_full_360_slow.gcode</code></td><td>61.00s</td><td>9</td><td>0/2</td><td>[47.25, 47.25]</td><td>78.5</td><td>47.25 mm</td><td>30.25 mm (wp_purge_0)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="09a_x_full_360_slow.html">3D HTML</a> | <a href="09a_x_full_360_slow_summary.png">PNG</a> | <a href="09a_x_full_360_slow_trace.csv">CSV</a></td></tr><tr><td><code>09b_x_full_360_purge_speed.gcode</code></td><td>21.36s</td><td>9</td><td>0/2</td><td>[47.25, 47.25]</td><td>294.5</td><td>47.25 mm</td><td>30.25 mm (wp_purge_1)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="09b_x_full_360_purge_speed.html">3D HTML</a> | <a href="09b_x_full_360_purge_speed_summary.png">PNG</a> | <a href="09b_x_full_360_purge_speed_trace.csv">CSV</a></td></tr><tr><td><code>09c_x_full_360_coating_speed.gcode</code></td><td>18.02s</td><td>9</td><td>0/2</td><td>[47.25, 47.25]</td><td>392.7</td><td>47.25 mm</td><td>30.25 mm (wp_purge_2)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="09c_x_full_360_coating_speed.html">3D HTML</a> | <a href="09c_x_full_360_coating_speed_summary.png">PNG</a> | <a href="09c_x_full_360_coating_speed_trace.csv">CSV</a></td></tr><tr><td><code>10_y_calibration_stops.gcode</code></td><td>40.58s</td><td>7</td><td>0/2</td><td>[47.25, 47.25]</td><td>25.0</td><td>47.25 mm</td><td>40.25 mm (wp_cast_body)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="10_y_calibration_stops.html">3D HTML</a> | <a href="10_y_calibration_stops_summary.png">PNG</a> | <a href="10_y_calibration_stops_trace.csv">CSV</a></td></tr><tr><td><code>11_cablechain_safe_short.gcode</code></td><td>97.49s</td><td>21</td><td>0/2</td><td>[10.00, 47.25]</td><td>157.1</td><td>10.0 mm</td><td>38.88 mm (wp_boss_c2)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="11_cablechain_safe_short.html">3D HTML</a> | <a href="11_cablechain_safe_short_summary.png">PNG</a> | <a href="11_cablechain_safe_short_trace.csv">CSV</a></td></tr><tr><td><code>12_turntable_breakin_safe_short.gcode</code></td><td>159.59s</td><td>10</td><td>0/2</td><td>[47.25, 47.25]</td><td>157.1</td><td>47.25 mm</td><td>30.25 mm (wp_purge_2)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="12_turntable_breakin_safe_short.html">3D HTML</a> | <a href="12_turntable_breakin_safe_short_summary.png">PNG</a> | <a href="12_turntable_breakin_safe_short_trace.csv">CSV</a></td></tr><tr><td><code>13_clearance_check_high_z.gcode</code></td><td>95.39s</td><td>16</td><td>0/2</td><td>[24.00, 47.25]</td><td>78.5</td><td>24.0 mm</td><td>7.00 mm (wp_purge_2)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="13_clearance_check_high_z.html">3D HTML</a> | <a href="13_clearance_check_high_z_summary.png">PNG</a> | <a href="13_clearance_check_high_z_trace.csv">CSV</a></td></tr><tr><td><code>testPaint.gcode</code></td><td>53.32s</td><td>71</td><td>1/3</td><td>[6.00, 47.25]</td><td>392.7</td><td>6.0 mm</td><td>1.00 mm (wp_purge_2)</td><td><span class="ok">OK</span></td><td><span class="ok">0</span></td><td><a href="testPaint.html">3D HTML</a> | <a href="testPaint_summary.png">PNG</a> | <a href="testPaint_trace.csv">CSV</a></td></tr>
+    </tbody>
+  </table>
+</body>
+</html>

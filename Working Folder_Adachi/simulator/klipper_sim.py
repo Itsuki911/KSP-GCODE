@@ -528,6 +528,16 @@ def simulate_gcode(
                 homed.add(ax)
             g._handle_home_rails_end(SimpleNamespace(get_axes=lambda a=axes: a), [])
 
+        elif op in ("QUERY_ENDSTOPS", "M119"):
+            flush_queue()
+            events.append(SimEvent(sim_time, line, op, text, tuple(machine[:3]),
+                                   "Sensor state unavailable: manual hardware check required"))
+            warnings.append(f"L{line}: endstop query not simulated; physical sensor state unknown")
+
+        elif op == "M118":
+            flush_queue()
+            events.append(SimEvent(sim_time, line, op, text, tuple(machine[:3]), text[4:].strip()))
+
         elif op == "M400":
             flush_queue()
             events.append(SimEvent(sim_time, line, "M400", text, tuple(machine[:3])))

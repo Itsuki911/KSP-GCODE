@@ -13,7 +13,7 @@
 
 ## 使い方
 
-### 1. 全16本 (`single_motion_tests/*.gcode`) + `testPaint.gcode` を一括シミュレーション
+### 1. 全単一モーションテスト (`single_motion_tests/*.gcode`) + `testPaint*.gcode` を一括シミュレーション
 ```bash
 cd /Users/adachiitsuki/KSP-GCODE
 python3 "Working Folder_Adachi/simulator/run_sim.py" --all
@@ -51,3 +51,21 @@ python3 "Working Folder_Adachi/simulator/run_sim.py" \
 ## 注意事項（実機検証との切り分け）
 - 本シミュレータは Klipper の軌道計画・円筒/極座標運動学・3D幾何干渉を検証するものであり、TMC2209 電気異常（`s2vsa`）、StealthChop 実負荷脱調、リミットスイッチ配線極性、実液体の流体挙動は代替しません。
 - 元の `gcodes/*.gcode`、`printer_data/`、`Working Folder_Adachi/testPaint.gcode` は一切変更しません。
+
+### エンドストップ入力確認のシミュレーション
+
+`00_endstop_sensor_check.gcode` は `--all` に含まれます。個別実行も可能です。
+
+```bash
+python3 "Working Folder_Adachi/simulator/run_sim.py" "Working Folder_Adachi/single_motion_tests/00_endstop_sensor_check.gcode"
+```
+
+待機とメッセージ・読み取り時刻を再現しますが、実センサーの遮光、入力レベル、配線、合否はシミュレーションできません。`QUERY_ENDSTOPS` の結果は不明として警告します。実機のコンソールで確認してください。
+
+### Inner円環上のシミュレーション候補
+
+`testPaint_inner_ring_simulation.gcode` は `--all` に含まれ、元の `testPaint.gcode` と別のHTMLに表示されます。innerのY座標のみを `Y180` から `Y131` に変更しています。既定の回転中心 `r_center=180 mm` と、モデルの円環半径 `40..58 mm` の仮定では、半径49 mmの円環中央を通ります。形状、Y原点、ローラーの接触幅とZ高さは未実測であり、実機への使用は校正まで行わないでください。シミュレーターは実際の塗膜やローラー接触を検証しません。
+
+```bash
+python3 "Working Folder_Adachi/simulator/run_sim.py" "Working Folder_Adachi/testPaint_inner_ring_simulation.gcode" --no-mujoco
+```

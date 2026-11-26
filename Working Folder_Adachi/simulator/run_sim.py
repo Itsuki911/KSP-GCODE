@@ -16,7 +16,6 @@ if str(SIM_DIR) not in sys.path:
     sys.path.insert(0, str(SIM_DIR))
 
 from klipper_sim import DEFAULT_PRINTER_CFG, load_machine_config, simulate_gcode
-from mujoco_sim import launch_mujoco_viewer, run_mujoco_headless
 from visualize import generate_index_html, generate_interactive_html, generate_summary_png
 
 
@@ -32,7 +31,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument(
         "--all",
         action="store_true",
-        help="Simulate all 16 single_motion_tests/*.gcode + Working Folder_Adachi/testPaint.gcode.",
+        help="Simulate all single-motion tests and testPaint*.gcode candidates.",
     )
     p.add_argument(
         "--config",
@@ -98,13 +97,17 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    if not args.no_mujoco or args.view:
+        try:
+            from mujoco_sim import launch_mujoco_viewer, run_mujoco_headless
+        except ImportError as exc:
+            print(f"Error: MuJoCo is required unless --no-mujoco is used without --view: {exc}", file=sys.stderr)
+            return 2
     cfg = load_machine_config(args.config, r_center_mm=args.r_center)
 
     if args.all:
         targets = sorted(SINGLE_MOTION_DIR.glob("*.gcode"))
-        test_paint = ADACHI_DIR / "testPaint.gcode"
-        if test_paint.exists():
-            targets.append(test_paint)
+        targets.extend(sorted(ADACHI_DIR.glob("testPaint*.gcode")))
     elif args.gcode:
         targets = [Path(args.gcode).resolve()]
     else:

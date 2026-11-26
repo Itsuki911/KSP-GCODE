@@ -9,6 +9,7 @@ import ast
 import hashlib
 import json
 import logging
+import math
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -119,9 +120,15 @@ def replay_file(path: Path, relative, factor, feed, offsets):
                 assert 0.0 <= end[i] <= BOUNDS[i] + 1e-9, (
                     f'{path.name}:{line} axis {i} out of safe bounds: {end[i]}'
                 )
-            assert not (2 in moved_axes and len(moved_axes) > 1), (
-                f'{path.name}:{line} simultaneous Z+XY diagonal move: {machine[:3]} -> {end[:3]}'
-            )
+            if 2 in moved_axes and len(moved_axes) > 1:
+                assert path.name == '14_purge_7deg_simulation_only.gcode', (
+                    f'{path.name}:{line} unexpected simultaneous Z+XY move')
+                assert moved_axes == [0, 2] and machine[1] == end[1] == 15.0
+                points = {(round(machine[0], 4), round(machine[2], 4)),
+                          (round(end[0], 4), round(end[2], 4))}
+                assert points == {(277.0, 16.1712), (285.0, 19.0)}
+                assert speed * abs(end[2] - machine[2]) / math.dist(end[:3], machine[:3]) <= 20.0
+
             if moved_axes == [2]:
                 assert speed <= 20.0 + 1e-9, f'{path.name}:{line} Z speed {speed} > 20 mm/s'
             else:
@@ -220,7 +227,7 @@ def main():
     assert sensor_ops == ['M400', 'M118', 'G4', 'M400', 'QUERY_ENDSTOPS'] + (['M118', 'G4', 'M400', 'QUERY_ENDSTOPS'] * 6) + ['M118']
     assert all(text == 'G4 P15000' for _, text in parse_commands(sensor_check) if text.startswith('G4 '))
     gcode_files = sorted(p for p in HERE.glob('*.gcode') if p != sensor_check)
-    assert len(gcode_files) == 16, f'Expected 16 test gcode files, found {len(gcode_files)}'
+    assert len(gcode_files) == 17, f'Expected 17 test gcode files, found {len(gcode_files)}'
 
     summary = {}
     for path in gcode_files:
@@ -256,7 +263,7 @@ def main():
 
     print('PASS: endstop check uses seven timed queries and commands no motion or valve.')
     print(f'PASS: {len(gcode_files)} single-motion test files validated across 3 hostile modal states.')
-    print('  - All files enforce safety preamble/epilogue, M220 S100, explicit F, Z<=47.25, no Z+XY diagonals, M400 valve barriers.')
+    print('  - All files enforce safety preamble/epilogue, M220 S100, explicit F, Z<=47.25, only approved test 14 X/Z slopes, M400 valve barriers.')
     print('  - All 9 original gcodes/*.gcode and Working Folder_Adachi/testPaint.gcode remain byte-identical.')
     for name, info in summary.items():
         print(

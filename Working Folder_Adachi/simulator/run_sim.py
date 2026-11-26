@@ -107,7 +107,8 @@ def main() -> int:
 
     if args.all:
         targets = sorted(SINGLE_MOTION_DIR.glob("*.gcode"))
-        targets.extend(sorted(ADACHI_DIR.glob("testPaint*.gcode")))
+        targets.extend(sorted(path for path in ADACHI_DIR.glob("testPaint*.gcode")
+                              if not path.name.endswith("_machine.gcode")))
     elif args.gcode:
         targets = [Path(args.gcode).resolve()]
     else:

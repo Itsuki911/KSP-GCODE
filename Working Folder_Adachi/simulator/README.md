@@ -69,3 +69,9 @@ python3 "Working Folder_Adachi/simulator/run_sim.py" "Working Folder_Adachi/sing
 ```bash
 python3 "Working Folder_Adachi/simulator/run_sim.py" "Working Folder_Adachi/testPaint_inner_ring_simulation.gcode" --no-mujoco
 ```
+
+### 坂付きpurge・inner修正版
+
+`testPaint_finalReviced_simulation.gcode` は7度の仮想坂をX/Zで9往復し、innerではY131を使用します。独立した `14_purge_7deg_simulation_only.gcode` と合わせて `--all` に含まれます。青いpurge台は平面のままで、ローラー接触の検証はできません。
+
+`testPaint_finalReviced_machine.gcode` は同じ実行命令を持つマシン用候補ですが、寸法・原点・ローラー接触・干渉・エンドストップ・バルブ動作は未確認です。実機実行前に検証が必要です。重複表示を避けるため `--all` から除外します。

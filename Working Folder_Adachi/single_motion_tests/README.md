@@ -19,7 +19,7 @@ The motion and valve `.gcode` files in this folder enforce the modal and motion 
    - Removes reliance on `M220 S500` and inherited feedrates. Every moving `G0` block specifies `F` explicitly (`Z <= F1200` / `20 mm/s`, `XY <= F7500` / `125 planner units/s`).
    - Remember: `X` is in **degrees** while `Y`/`Z` are in **mm**. `F` is in mixed planner units/min, not uniform linear surface speed.
 4. **Strict Separation of Z and XY & Strict Z Bound (`0 <= Z <= 47.250`)**:
-   - Zero simultaneous Z+XY (diagonal) moves.
+   - No simultaneous Z+XY moves in tests 01–13. Test 14 intentionally combines X and Z on the assumed slope and is simulation-only.
    - Zero commands exceeding the configured upper switch coordinate (`47.250`), eliminating legacy `Z50` / `Z53` overtravel commands.
 5. **Valve Motion Barriers**:
    - Every `BALL_VALVE_OPEN` / `BALL_VALVE_CLOSED` is preceded by `M400`. (Measured servo/fluid settling `G4 P...` delays must be populated after Test `03`.)
@@ -73,6 +73,10 @@ Run **one file at a time**. After every file, inspect physical alignment marks, 
 | [`10_y_calibration_stops.gcode`](./10_y_calibration_stops.gcode) | Y only (Z=47.25, X=0) | Stops `4 s` at every `testPaint` Y coordinate (`15, 35, 45, 47, 77, 180`) at `F1500`. | Measure physical radius `r(Y)` at every stop and verify whether `Y=180` aligns with turntable rotation center. |
 | [`11_cablechain_safe_short.gcode`](./11_cablechain_safe_short.gcode) | Y only, then X, then Z only | Safe short revision of `gcodes/cableChainTest.gcode`: 5× `Y0↔180` (`F1500`) at `Z=47.25`, then `X=100` at `Z=47.25`, then 5× `Z10↔45` (`F1200`). | Smooth cable-chain flexing without pinching, snagging, or exceeding `Z=47.25`. |
 | [`12_turntable_breakin_safe_short.gcode`](./12_turntable_breakin_safe_short.gcode) | X+Y (Z=47.25) | Safe short revision of `gcodes/turntableBreakin.gcode`: 5× `X0 Y180 ↔ X360 Y0` at `F1500` with Z held at `47.25`. | Smooth simultaneous XY spiral motion; zero skipped steps or hose interference. |
+
+### Simulation-only — 7° Purge Motion
+
+[`14_purge_7deg_simulation_only.gcode`](./14_purge_7deg_simulation_only.gcode) isolates the candidate's nine full X/Z purge cycles with Y15 fixed. It homes and positions the machine, keeps the valve closed, then returns to home. **Do not run on hardware:** the slope, contact height and clearances are unmeasured. The simulator still draws the original flat pad and cannot verify contact. Eighteen simultaneous X/Z warnings are expected; they do not certify safety.
 
 ### Phase 3 — Workpiece-Installed High-Z Static Clearance Check (Dry)
 
@@ -128,7 +132,7 @@ python3 'Working Folder_Adachi/single_motion_tests/validate_tests.py'
 ```
 
 What `validate_tests.py` verifies using the local `klipper/klippy/extras/gcode_move.py` (`GCodeMove`) implementation:
-- All 16 motion/valve `.gcode` files produce **identical trajectories** across 3 hostile incoming modal states (`G91`, non-100% `M220`, arbitrary `F`, non-zero XYZ `SET_GCODE_OFFSET`).
+- All 17 motion/valve `.gcode` files produce **identical trajectories** across 3 hostile incoming modal states (`G91`, non-100% `M220`, arbitrary `F`, non-zero XYZ `SET_GCODE_OFFSET`).
 - Complete safety preamble before any homing/motion, Z-before-XY homing order, and clean closed/restored epilogue.
 - Zero simultaneous Z+XY diagonal moves and strict `0 <= X <= 360`, `0 <= Y <= 180`, `0 <= Z <= 47.250` bounds.
 - Explicit `F` on every moving block (`Z <= 20 mm/s`, `XY <= 125 units/s`) and `M400` immediately before every valve command.

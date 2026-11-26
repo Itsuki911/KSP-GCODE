@@ -10,3 +10,6 @@ This folder contains the independent G-code audit evidence, the revised full-cyc
 - [`testPaint.gcode`](./testPaint.gcode) — Audit-revised full-cycle coating candidate (requires hardware validation of clearances, valve delays, and TMC diagnostics).
 - [`testPaint_changes.md`](./testPaint_changes.md) — Summary of audit-driven edits applied to `testPaint.gcode` (Japanese).
 - [`audit/`](./audit/README.txt) — Independent audit scripts (`verify.py`, `validate_followup.py`), pre-revision snapshots (`*.before`), and JSON evidence (`evidence.json`, `followup_validation.json`).
+
+- [`testPaint_finalReviced_simulation.gcode`](./testPaint_finalReviced_simulation.gcode) — 7度の仮想坂とinner Y131を用いたシミュレーション候補。
+- [`testPaint_finalReviced_machine.gcode`](./testPaint_finalReviced_machine.gcode) — 同じ実行命令を持つマシン用候補。実機寸法・干渉・ローラー接触・エンドストップ・バルブ動作の確認前には実行しないでください。

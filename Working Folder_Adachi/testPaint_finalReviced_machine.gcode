@@ -1,0 +1,172 @@
+; MACHINE CANDIDATE - VALIDATION REQUIRED BEFORE ANY HARDWARE EXECUTION.
+; Coordinates are copied from the simulation and have NOT been measured on the machine.
+; Verify Y origin, workpiece/purge positions, roller clearance and 7-degree slope.
+; Validate endstops, homing, fixture clearance, X/Z synchronization and stopping.
+; Verify valve behavior and response delay; liquid isolation on abort is unresolved.
+; This file does not establish machine safety or coating quality.
+; X is turntable degrees, Y/Z are mm. Slope X277..285, Y15, Z16.1712..19.
+; Inner circle Y131 assumes a model radius 49 mm and an unverified Y origin.
+;
+G21; Set units to millimeters
+G90; Absolute positioning mode
+M220 S100; Reset speed factor to 100%
+SET_GCODE_OFFSET X=0 Y=0 Z=0 MOVE=0; Clear inherited offsets without moving
+M400; Finish any previously queued motion before issuing initial closure
+BALL_VALVE_CLOSED
+; Add measured closing/settling G4 here before homing; currently unmeasured.
+
+G28 Z; Initial Z homing (moves upward to Z=47.250)
+G28 X Y; Initial XY homing (moves to X=0, Y=0 at Z=47.250)
+
+G0 F1500; Initialize base feedrate to 1500 mm/min (25 mm/s)
+
+; Move at homed Z, preserving the original purge start angle X285
+G0 X285 F7500;
+G0 Y15 F7500;
+G0 Z19 F1200;
+
+; Purge: ASSUMED slope on high-X 40% of X265..285.
+; X is turntable degrees; Y remains 15. Surface rise is 7 degrees along
+; the arc at assumed radius 165 mm; Z19 at X285, Z16.1712 at X277.
+; Nine complete cycles finish at the original X285 Y15 Z19 start point.
+; F3000 limits Z to about 17.7 mm/s on the slope; combined X/Z is intentional.
+
+M400
+BALL_VALVE_OPEN
+; Roller and valve response are unmeasured.
+
+; Purge round trip 1
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 2
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 3
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 4
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 5
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 6
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 7
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 8
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+; Purge round trip 9
+G0 X277 Z16.1712 F3000; descend the slope
+G0 X265 F5625; flat section
+G0 X277 F5625; flat section
+G0 X285 Z19 F3000; ascend the slope
+
+M400
+BALL_VALVE_CLOSED
+; Next: unchanged squeeze-out; physical clearances must be validated.
+
+;SQUEEZE OUT
+; Squeeze: requested 25 deg/s; pure Z limited explicitly to 20 mm/s
+G0 Z18 F1200; Descend vertically to squeeze-out height first
+G0 X285 F1500; #1
+G0 X265 F1500;
+
+G0 X285 F1500; #2
+G0 X265 F1500;
+
+
+; Travel/coating: requested 125 planner units/s, subject to runtime limits
+
+G0 Z24 F1200; Lift to proposed travel height before moving to Circle 1
+
+; Circle 1 Rev 1-2
+G0 X39 Y35 F7500; Retain the original Y35 approach waypoint at proposed Z24
+G0 Y45 F7500; Complete radial approach at Z24 before descending
+G0 Z6 F1200; Descend vertically to working height
+G0 X55 F7500;
+G0 X39 F7500;
+G0 Z11 F1200; Lift vertically before rotating to Circle 2
+
+; Circle 2 Rev 1
+G0 X80 F7500; Rotate at proposed travel Z
+G0 Z6 F1200; Descend vertically
+G0 X96 F7500;
+G0 X80 F7500;
+G0 Z11 F1200; Lift vertically before rotating to Circle 3
+
+; Circle 3 Rev 1-2
+G0 X122 F7500; Rotate at proposed travel Z
+G0 Z6 F1200; Descend vertically
+G0 X138 F7500;
+G0 X122 F7500;
+G0 Z11 F1200; Lift vertically before moving to Circle 4
+
+; Circle 4 Rev 1
+G0 X217 Y47 F7500; Rotate and shift Y at proposed travel Z
+G0 Z6 F1200; Descend vertically
+G0 X236 F7500;
+G0 X217 F7500;
+G0 Z25 F1200; Lift to high clearance Z25 before Circle 5 transit (clearance unverified)
+
+; Circle 5 Rev 1
+G0 X301 F7500; Rotate at Z25
+G0 Z6 F1200; Descend vertically
+G0 X317 F7500;
+G0 X301 F7500;
+G0 Z25 F1200; Lift to Z25 before moving to Raised Section 2
+
+; Raised Section 2 Rev 1
+G0 Y77 X250 F7500; Move to Raised Section 2 XY at Z25
+G0 Z16 F1200; Descend vertically
+G0 X295 F7500;
+G0 X250 F7500;
+G0 X295 F7500;
+G0 Z21 F1200; Lift vertically before rotating to Raised Section 1
+
+; Raised Section 1 Rev 1
+G0 X30 F7500; Rotate at Z21
+G0 Z16 F1200; Descend vertically
+G0 X95 F7500;
+G0 X30 F7500;
+G0 X95 F7500;
+G0 Z24 F1200; Lift to proposed travel height before moving to Inner Circle
+
+; Inner circle Rev 1-2
+G0 Y131 X0 F7500; ASSUMED: ring center r=49 mm when r_center=180 mm
+G0 Z8 F1200; Descend vertically to working height
+G0 X360 F7500;
+G0 X0 F7500; Inner Circle Rev 2
+G0 X360 F7500;
+G0 X0 F7500; Inner Circle Rev 2
+
+; Normal completion only: finish coating and explicitly command valve closure
+M400
+BALL_VALVE_CLOSED
+; Add measured closing/settling G4 here; currently unmeasured.
+; End-of-cycle return removes the former Z53 command; clearance remains unverified.
+G0 Z33 F1200; Lift vertically to proposed Z33
+G28 Z; Home Z upward to top endstop (Z=47.250)
+G28 X Y; Home X and Y at homed Z (Z=47.250)
+M400; Complete homing before normal file completion
+M220 S100; Restore speed factor to 100%
+G0 F1500; Leave a defined base feed for subsequent commands

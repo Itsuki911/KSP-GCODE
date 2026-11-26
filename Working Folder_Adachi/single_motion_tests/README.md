@@ -9,7 +9,7 @@ This directory contains staged, single-motion commissioning G-code tests designe
 
 ## 1. Shared G-code Standard (Aligned with `Working Folder_Adachi/testPaint.gcode`)
 
-Every `.gcode` file in this folder enforces the same modal and motion safety invariants introduced after the independent audit:
+The motion and valve `.gcode` files in this folder enforce the modal and motion safety invariants introduced after the independent audit:
 
 1. **Deterministic Safety Preamble** (before any homing or motion):
    - `G21` (millimeters), `G90` (absolute coordinates), `M220 S100` (100% feed override), `SET_GCODE_OFFSET X=0 Y=0 Z=0 MOVE=0` (zero inherited XYZ offsets), `M400` + `BALL_VALVE_CLOSED`.
@@ -32,7 +32,7 @@ Every `.gcode` file in this folder enforces the same modal and motion safety inv
 
 **Do not run `G28` until Phase 0 passes.** Because `printer.cfg` sets `homing_retract_dist: 0`, Klipper skips second-pass switch verification and will travel up to **70.875 mm (Z), 540° (X), or 270 mm (Y)** if a switch fails to trigger.
 
-Execute these checks manually from the Mainsail/Klipper console with **no workpiece** and **liquid physically isolated**:
+Execute these checks from the Mainsail/Klipper console with **no workpiece** and **liquid physically isolated**. For step 0.2, [`00_endstop_sensor_check.gcode`](./00_endstop_sensor_check.gcode) provides timed prompts and readings without commanding axes, homing, or the valve. It is intentionally exempt from the motion-test preamble and epilogue.
 
 | Step | Command / Action | Pass Criterion | Stop / Investigate If |
 | --- | --- | --- | --- |
@@ -40,6 +40,8 @@ Execute these checks manually from the Mainsail/Klipper console with **no workpi
 | 0.2 | `QUERY_ENDSTOPS` (unpressed, then press each switch by hand) | `x`, `y`, `z` each toggle cleanly between `open` and `TRIGGERED` on the correct axis. | Wrong axis triggers, inverted logic, or stuck `TRIGGERED` / `open`. |
 | 0.3 | `DUMP_TMC STEPPER=stepper_x`, `stepper_y`, `stepper_z` | Valid UART response; no `drv_err`, `s2vsa`, `s2vsb`, `s2ga`, `s2gb`, `ot`, or `otpw` flags. | Any TMC fault (note: historical logs show Z-axis `s2vsa` short-to-supply faults even after short runs). |
 | 0.4 | `STEPPER_BUZZ STEPPER=stepper_z`, then `stepper_x`, then `stepper_y` | Each motor oscillates a few mm/deg smoothly on the **expected axis and direction** (Z positive = upward toward switch). | Wrong axis moves, reversed direction, grinding, or shutdown. |
+
+Run `00_endstop_sensor_check.gcode` only when the machine is idle and the console is visible. First release all sensors; then, at each prompt, block or release the named optical sensor by hand and keep the other sensors released. Hold each state until the console prints the reading. The script waits 15 seconds per prompt, including the baseline (about 105 seconds total). Expect all three `open` at baseline and after each release, and only the named axis `TRIGGERED` when blocked. Review all seven readings manually; the script does not stop automatically or declare a pass. If the timing is missed, rerun it or issue `QUERY_ENDSTOPS` manually. A wrong axis, inverted or stuck state is a failure: stop before `G28` and inspect wiring and `printer.cfg`. This verifies input response, not physical homing direction or repeatability.
 
 ---
 
@@ -126,7 +128,7 @@ python3 'Working Folder_Adachi/single_motion_tests/validate_tests.py'
 ```
 
 What `validate_tests.py` verifies using the local `klipper/klippy/extras/gcode_move.py` (`GCodeMove`) implementation:
-- All 16 `.gcode` files produce **identical trajectories** across 3 hostile incoming modal states (`G91`, non-100% `M220`, arbitrary `F`, non-zero XYZ `SET_GCODE_OFFSET`).
+- All 16 motion/valve `.gcode` files produce **identical trajectories** across 3 hostile incoming modal states (`G91`, non-100% `M220`, arbitrary `F`, non-zero XYZ `SET_GCODE_OFFSET`).
 - Complete safety preamble before any homing/motion, Z-before-XY homing order, and clean closed/restored epilogue.
 - Zero simultaneous Z+XY diagonal moves and strict `0 <= X <= 360`, `0 <= Y <= 180`, `0 <= Z <= 47.250` bounds.
 - Explicit `F` on every moving block (`Z <= 20 mm/s`, `XY <= 125 units/s`) and `M400` immediately before every valve command.

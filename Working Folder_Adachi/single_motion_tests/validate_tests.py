@@ -215,7 +215,11 @@ def replay_file(path: Path, relative, factor, feed, offsets):
 
 
 def main():
-    gcode_files = sorted(HERE.glob('*.gcode'))
+    sensor_check = HERE / '00_endstop_sensor_check.gcode'
+    sensor_ops = [text.split()[0] for _, text in parse_commands(sensor_check)]
+    assert sensor_ops == ['M400', 'M118', 'G4', 'M400', 'QUERY_ENDSTOPS'] + (['M118', 'G4', 'M400', 'QUERY_ENDSTOPS'] * 6) + ['M118']
+    assert all(text == 'G4 P15000' for _, text in parse_commands(sensor_check) if text.startswith('G4 '))
+    gcode_files = sorted(p for p in HERE.glob('*.gcode') if p != sensor_check)
     assert len(gcode_files) == 16, f'Expected 16 test gcode files, found {len(gcode_files)}'
 
     summary = {}
@@ -250,6 +254,7 @@ def main():
     candidate_sha = hashlib.sha256((ADACHI_DIR / 'testPaint.gcode').read_bytes()).hexdigest()
     assert candidate_sha == followup['candidate_sha256'], 'Working Folder_Adachi/testPaint.gcode changed'
 
+    print('PASS: endstop check uses seven timed queries and commands no motion or valve.')
     print(f'PASS: {len(gcode_files)} single-motion test files validated across 3 hostile modal states.')
     print('  - All files enforce safety preamble/epilogue, M220 S100, explicit F, Z<=47.25, no Z+XY diagonals, M400 valve barriers.')
     print('  - All 9 original gcodes/*.gcode and Working Folder_Adachi/testPaint.gcode remain byte-identical.')

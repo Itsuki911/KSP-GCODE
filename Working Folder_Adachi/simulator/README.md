@@ -8,7 +8,7 @@
 - `workpiece_model.py` — `Worker-Image.jpeg` を参考に座標・高さ整合を取って新規設計したパラメトリック 3D ワークモデル（鋳物本体、中央加工リング、外周5ボルトボス C1〜C5、段差パッド Raised 1/2、青色パージパッド）。軌道の視認性を損なわない半透明＋輪郭線設計。
 - `ksp_machine.xml` — MuJoCo 3D 機構モデル（ターンテーブル回転軸 X + 半径スライド Y + 昇降ヘッド Z + ボールバルブサーボレバー）。
 - `mujoco_sim.py` — MuJoCo によるヘッドレス衝突・最小クリアランス（床面＋ワーク各部位との `mj_geomDistance`）・逆動力学トルク/推力計算、および 3D ワーク＋軌道線を同時描画するリアルタイム 3D GUI ビューワ。
-- `visualize.py` — 半透明 3D ワーク＋高視認性軌道線の Plotly 3D アニメーション HTML（凡例クリックでワーク表示 ON/OFF 切替可能）、Matplotlib PNG サマリ、一覧ダッシュボード `output/index.html` を生成。
+- `visualize.py` — 単一 HTML 完結型（ダウンロードして開くだけで動作）の Three.js 3D マルチビューアニメーション HTML（**実機モード：ワーク回転＋ノズル Y/Z 移動** ⇔ **ワーク固定モード** 切替、斜め/真上/真横/正面/ノズル近接カメラ、3D+真上+真横の同時多視点表示、同期2Dテレメトリ、下部コントロール＆凡例の分離配置）、Matplotlib PNG サマリ、一覧ダッシュボード `output/index.html` を生成。
 - `run_sim.py` — 統合 CLI エントリポイント（`--no-workpiece` でワーク非表示も可）。
 
 ## 使い方
